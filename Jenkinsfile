@@ -8,7 +8,7 @@ pipeline {
     }
     stage('hello') {
       steps {
-        sh 'php hello.php'
+        sh 'php CustomController.php'
       }
     }
   }
