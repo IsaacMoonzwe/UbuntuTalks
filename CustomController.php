@@ -1,5 +1,5 @@
 <?php
-
+echo "Hello";
 use function GuzzleHttp\json_encode;
 
 class CustomController extends MyAppController
