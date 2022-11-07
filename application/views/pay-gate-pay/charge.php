@@ -44,8 +44,8 @@ $currencySymbolRight = CommonHelper::getCurrencySymbolRight();
     </div>
 </section>
 <script type="text/javascript">
-    $(function () {
-        setTimeout(function () {
+    $(function() {
+        setTimeout(function() {
             $('form[name="payGateProcessForm"]').submit()
         }, 5000);
     });

@@ -25,6 +25,7 @@ class PaypalStandardSettingsController extends PaymentSettingsController
     {
         $frm = new Form('frmPaymentMethods');
         $frm->addRequiredField(Label::getLabel('LBL_MERCHANT_EMAIL', $this->adminLangId), 'merchant_email');
+        $frm->addRequiredField(Label::getLabel('LBL_CLIENT_ID', $this->adminLangId), 'paypal_standard_client_id');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES', $this->adminLangId));
         return $frm;
     }

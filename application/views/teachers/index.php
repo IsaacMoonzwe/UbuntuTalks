@@ -13,25 +13,39 @@ $filters = array();
 $this->includeTemplate('teachers/_partial/teacherTopFilters.php', ['frmTeacherSrch' => $frmTeacherSrch, 'daysArr' => $daysArr, 'timeSlotArr' => $timeSlotArr, 'minPrice' => $minPrice, 'maxPrice' => $maxPrice, 'keyword' => $keyword, 'siteLangId' => $siteLangId]);
 /* ] */
 ?>
-<style>.container--narrow img{margin-top:10px;}
-.fc-direction-ltr{float:left;margin-left:10px;}
-.hide-top-section{display:none !important;}
-.display-section{display:block !important;}
+<style>
+    .container--narrow img {
+        margin-top: 10px;
+    }
 
+    .fc-direction-ltr {
+        float: left;
+        margin-left: 10px;
+    }
+
+    .hide-top-section {
+        display: none !important;
+    }
+
+    .display-section {
+        display: block !important;
+    }
 </style>
 
-<?php //if($_SESSION['show_Process'] == 1){ ?>
-    <section class="section process-page teacherslist">
-        <div class="container container--narrow">
-            <div class="main__title">
-                <?php echo FatUtility::decodeHtmlEntities($teacherBanner); ?>
-            </div>
-            <div class="who-we__content">
-                <?php echo FatUtility::decodeHtmlEntities($processPage); ?>
-            </div>
+<?php //if($_SESSION['show_Process'] == 1){ 
+?>
+<section class="section process-page teacherslist">
+    <div class="container container--narrow">
+        <div class="main__title">
+            <?php echo FatUtility::decodeHtmlEntities($teacherBanner); ?>
         </div>
-    </section>
-<?php //} ?>
+        <div class="who-we__content">
+            <?php echo FatUtility::decodeHtmlEntities($processPage); ?>
+        </div>
+    </div>
+</section>
+<?php //} 
+?>
 
 <!-- <section class="section--gray" style="background: #fff !important; "> -->
 <section class="section--gray" style="">
@@ -44,29 +58,33 @@ $this->includeTemplate('teachers/_partial/teacherTopFilters.php', ['frmTeacherSr
     </div>
 </section>
 <script>
-    $(document).ready(function(){
-        jQuery(document).on('click','.is-prev,.is-backward,.is-next,.is-forward',function(){
-                setTimeout(function(){
+    $(document).ready(function() {
+        jQuery(document).on('click', '.is-prev,.is-backward,.is-next,.is-forward', function() {
+            $.loader.show();
+            setTimeout(function() {
+                $.loader.hide();
+            }, 3000);
+            setTimeout(function() {
                 var page = jQuery('.pagination').find('button.is-active').text();
-                if(page == 1) {
-                  $("section.section.process-page.teacherslist").removeClass("hide-top-section");
+                if (page == 1) {
+                    $("section.section.process-page.teacherslist").removeClass("hide-top-section");
                     $("section.section.process-page.teacherslist").addClass("display-section");
                 } else {
                     $("section.section.process-page.teacherslist").removeClass("display-section");
                     $("section.section.process-page.teacherslist").addClass("hide-top-section");
                 }
-                }, 1000);
-            });
-            jQuery(document).on('click','.pagination button',function(){
-                var page = $(this).text();
-                if(page == 1) {
+            }, 1000);
+        });
+        jQuery(document).on('click', '.pagination button', function() {
+            var page = $(this).text();
+            if (page == 1) {
                 $("section.section.process-page.teacherslist").removeClass("hide-top-section");
-                    $("section.section.process-page.teacherslist").addClass("display-section");
-                } else {
-                    $("section.section.process-page.teacherslist").removeClass("display-section");
-                    $("section.section.process-page.teacherslist").addClass("hide-top-section");
-                }
-            });
+                $("section.section.process-page.teacherslist").addClass("display-section");
+            } else {
+                $("section.section.process-page.teacherslist").removeClass("display-section");
+                $("section.section.process-page.teacherslist").addClass("hide-top-section");
+            }
+        });
     });
     if (window.history.replaceState) {
         window.history.replaceState(null, null, window.location.href);

@@ -43,7 +43,6 @@ class HomeController extends AdminBaseController
                     $dashboardInfo['visitsCount'] = (isset($visitCount)) ? $visitCount : '';
                 }
             } catch (exception $e) {
-                
             }
             $statsObj = new AdminStatistic();
             $dashboardInfo["stats"] = [];
@@ -80,6 +79,11 @@ class HomeController extends AdminBaseController
         if (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0; rv:11.0') !== false) {
             $this->_template->addCss('css/ie.css');
         }
+
+        $srch = new SearchBase('tbl_event_users');
+        $UserListing = $srch->getResultSet();
+        $EventUserListing = FatApp::getDb()->fetchAll($UserListing);
+        $this->set('EventUserListing', $EventUserListing);
         $this->set('dashboardInfo', $dashboardInfo);
         $this->_template->render();
     }
@@ -172,5 +176,4 @@ class HomeController extends AdminBaseController
         Message::addErrorMessage(Label::getLabel('MSG_Please_select_any_language', $this->adminLangId));
         FatUtility::dieWithError(Message::getHtml());
     }
-
 }

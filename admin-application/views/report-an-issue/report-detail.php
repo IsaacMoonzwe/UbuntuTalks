@@ -111,6 +111,9 @@ $agendafrm->developerTags['fld_default_col'] = 6;
                                             <div class="field_cover">
                                                 <?php //echo $agendafrm->getFieldHTML('report_comments_id'); 
                                                 ?>
+                                                <?php if ($value['report_comments_status'] == '0') { ?>
+                                                 <input type="button" onclick="ChangeStatus(<?php echo $value['report_comments_id'];?>)" id="change_status" name="report_comments_id" value="Comment Already Added">
+                                                 <?php } ?>
                                                 <input type="hidden" id="report_comments_id" name="report_comments_id" value="<?php echo $value['report_comments_id']; ?>">
                                                 <input type="hidden" id="user_id" name="user_id" value="<?php echo $value['user_id']; ?>">
                                                 <?php echo $agendafrm->getFieldHTML('btn_submit'); ?>

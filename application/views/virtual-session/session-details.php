@@ -1,6 +1,18 @@
+<?php
+
+defined('SYSTEM_INIT') or die('Invalid Usage.');
+$agendafrm->setFormTagAttribute('class', 'web_form form_horizontal');
+$agendafrm->setFormTagAttribute('onsubmit', 'agendaSetupTestimonial(this); return(false);');
+$agendafrm->developerTags['colClassPrefix'] = 'col-md-';
+$agendafrm->developerTags['fld_default_col'] = 6;
+
+?>
+<style>
+
+</style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 <!-- Header -->
-<section class="section section--contect">
+<section class="section section--contect virtual-session-page">
     <div class="container container--fixed container--narrow">
         <div class="section contact-form">
             <div class="container container--narrow">
@@ -72,6 +84,82 @@
                                         <a role="button" href="<?php echo $SessionWiseListing['virtual_session_email_link']; ?>" class="mail-btn"><i class="fa fa-envelope" aria-hidden="true"></i>
                                             </i><?php echo Label::getLabel('LBL_Email', $adminLangId); ?></a>
                                     </div>
+
+                                    <div class="visibility-comment">
+                                        <h2>This Post Has <?php echo $CommentSectionWiseCountListing['counting']; ?> Comments</h2>
+                                        <hr>
+                                        <ul class="visibility-user">
+                                            <?php
+                                            $today = date("F j, Y");
+                                            $EndDate = date("F j, Y", strtotime($VirtualSessionList['virtual_main_session_end_time']));
+
+                                            if (strtotime($EndDate) < strtotime($today)) {
+                                            ?><p class="close-comment">Comments are closed.</p>
+                                            <?php }
+                                            foreach ($CommentSectionWiseListing as $value) {
+                                                $today = date("F j, Y, g:i a");
+                                                $EndDate = date("F j, Y, g:i a", strtotime($value['main_session_time']));
+                                                $newDate = date("F j, Y, g:i a", strtotime($value['virtual_session_comments_added_on']));
+                                            ?>
+                                                <li class="d-flexs">
+                                                    <div>
+                                                        <img src="http://2.gravatar.com/avatar/826bccc02146976db57ad96094427a83?s=50&d=mm&r=gg" alt="user">
+                                                    </div>
+                                                    <div class="post-txt">
+                                                        <b><?php echo $value['user_info']['user_first_name'] ?></b>
+                                                        <h6><?php echo $newDate; ?></h6>
+                                                        <p><?php echo $value['virtual_session_comments_information']; ?></p>
+                                                    </div>
+                                                </li>
+                                                <hr>
+
+                                            <?php
+                                            }
+                                            ?>
+
+                                        </ul>
+                                    </div>
+                                    <?php if (strtotime($EndDate) > strtotime($today)) {
+                                    ?>
+                                        <section class="section">
+                                            <div class="sectionbody space">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div class="tabs_nav_container responsive flat">
+                                                            <div class="tabs_panel_wrap">
+                                                                <div class="tabs_panel">
+                                                                    <?php echo $agendafrm->getFormTag() ?>
+                                                                    <div class="field-set">
+                                                                        <div class="caption-wraper">
+                                                                            <label class="field_label"><?php echo Label::getLabel('LBL_Comments:', $siteLangId) ?></label>
+                                                                        </div>
+                                                                        <div class="field-wraper">
+                                                                            <div class="field_cover">
+                                                                                <?php echo $agendafrm->getFieldHTML('virtual_session_comments_information'); ?>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row save-button">
+                                                                        <div class="col-md-12">
+                                                                            <div class="field-set">
+                                                                                <div class="field-wraper">
+                                                                                    <div class="field_cover">
+                                                                                        <?php echo $agendafrm->getFieldHTML('virtual_session_id'); ?>
+                                                                                        <?php echo $agendafrm->getFieldHTML('virtual_session_comments_id'); ?>
+                                                                                        <?php echo $agendafrm->getFieldHTML('user_id'); ?>
+                                                                                        <?php echo $agendafrm->getFieldHTML('btn_submit'); ?>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </section>
+                                    <?php } ?>
                                     <div class="more-explore">
                                         <h2><?php echo Label::getLabel('LBL_More_To_Explore', $adminLangId); ?></h2>
                                         <hr>
@@ -97,7 +185,6 @@
                                                 </div>
                                             <?php }  ?>
                                         </div>
-
                                     </div>
                                 </div>
                             </div>

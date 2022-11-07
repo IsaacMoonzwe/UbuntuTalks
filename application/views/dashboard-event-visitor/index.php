@@ -1,5 +1,6 @@
 <?php
 defined('SYSTEM_INIT') or exit('Invalid Usage.');
+$activeMettingTool = FatApp::getConfig('CONF_ACTIVE_MEETING_TOOL', FatUtility::VAR_STRING, ApplicationConstants::MEETING_COMET_CHAT);
 $contactFrm->setFormTagAttribute('class', 'form form--normal');
 $captchaFld = $contactFrm->getField('htmlNote');
 $captchaFld->htmlBeforeField = '<div class="field-set">
@@ -10,7 +11,11 @@ $captchaFld->htmlAfterField = '</div></div></div>';
 $contactFrm->setFormTagAttribute('action', CommonHelper::generateUrl('contact', 'contactSubmit'));
 $contactFrm->developerTags['colClassPrefix'] = 'col-md-';
 $contactFrm->developerTags['fld_default_col'] = 12;
+
 ?>
+<script>
+    var isCometChatMeetingToolActive = '<?php echo $activeMettingTool == ApplicationConstants::MEETING_COMET_CHAT ?>';
+</script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="site events-dashboard-page">
     <aside class="sidebar">
@@ -57,7 +62,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                 <div class="profile">
                     <a href="#profile-target" class="trigger-js profile__trigger">
                         <div class="profile__meta d-flex align-items-center">
-                            <div class="profile__media margin-right-4 mobile-icons">
+                            <!-- <div class="profile__media margin-right-4 mobile-icons">
                                 <?php
                                 $str = $userDetails['user_first_name'];
                                 $first_character = substr($str, 0, 1);
@@ -67,10 +72,18 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                 <svg class="icon icon--arrow">
                                     <use xlink:href="/images/sprite.yo-coach.svg#arrow-black"></use>
                                 </svg>
+                            </div> -->
+                            <div class="avtar" data-title="<?php echo CommonHelper::getFirstChar($userFirstName); ?>">
+                                <?php
+
+                                if ($isProfilePicUploaded) {
+                                    echo '<img src="' . CommonHelper::generateUrl('Image', 'user', array($userId, 'MEDIUM'), CONF_WEBROOT_FRONT_URL) . '?' . time() . '"  alt="' . $userFirstName . '" />';
+                                }
+                                ?>
                             </div>
                             <div class="profile__details">
                                 <h6 class="profile__title"><?php echo $userDetails['user_full_name']; ?></h6>
-                                <small class="color-black">Logged</small>
+                                <small class="color-black"><?php echo Label::getLabel('LBL_Logged'); ?></small>
                             </div>
                         </div>
                     </a>
@@ -170,6 +183,14 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                             <span class="mobile-view-toggle"><?php echo Label::getLabel('LBL_FAQ'); ?></span>
                                         </a>
                                     </li>
+                                    <li class="menu__item">
+                                        <a class="nav-link" id="disclaimer-tab" data-toggle="tab" href="#disclaimer" role="tab" aria-controls="disclaimer" aria-selected="false">
+                                            <svg class="icon icon--students margin-right-2">
+                                                <use xlink:href="/dashboard/images/sprite.yo-coach.svg#wallet"></use>
+                                            </svg>
+                                            <span class="mobile-view-toggle"><?php echo Label::getLabel('LBL_Disclaimer_Section'); ?></span>
+                                        </a>
+                                    </li>
                                 </ul>
                             </nav>
                         </div>
@@ -190,7 +211,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                     <div class="page__body">
                         <div class="stats-row margin-bottom-6">
                             <div class="row align-items-center">
-                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="col-lg-3 col-md-6 col-sm-6">
                                     <div class="stat">
                                         <div class="stat__amount">
                                             <span><?php echo Label::getLabel('LBL_Sponsorship_Plan'); ?></span>
@@ -214,10 +235,10 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                         <a href="javascript:void(0)" class="stat__action"></a>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="col-lg-3 col-md-6 col-sm-6">
                                     <div class="stat">
                                         <div class="stat__amount">
-                                            <span><?php echo Label::getLabel('LBL_Total_Event_Plan'); ?></span>
+                                            <span><?php echo Label::getLabel('LBL_Event_Plan'); ?></span>
                                             <h5>
                                                 <?php
                                                 $total_events = sizeOf($EventplanResult);
@@ -232,7 +253,27 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                         <a href="javascript:void(0)" class="stat__action"></a>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
+
+                                <div class="col-lg-3 col-md-6 col-sm-6">
+                                    <div class="stat">
+                                        <div class="stat__amount">
+                                            <span><?php echo Label::getLabel('LBL_Benefit_Concert'); ?></span>
+                                            <h5>
+                                                <?php
+                                                $total = 0;
+                                                $total_events = sizeOf($BenefitConcertplanResult);
+                                                echo $total_events;
+                                                ?></h5>
+                                        </div>
+                                        <div class="stat__media bg-secondary">
+                                            <svg class="icon icon--money icon--40 color-white">
+                                                <use xlink:href="/dashboard/images/sprite.yo-coach.svg#stats_1"></use>
+                                            </svg>
+                                        </div>
+                                        <a href="javascript:void(0)" class="stat__action"></a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-md-6 col-sm-6">
                                     <div class="stat">
                                         <div class="stat__amount">
                                             <span><?php echo Label::getLabel('LBL_Donation_Amount'); ?></span>
@@ -263,11 +304,11 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                 <div class="modal-content">
                                     <span class="closes">&times;</span>
                                     <table id="example" class="table table-striped table-bordered donation-table display nowrap" style="width:100%">
-                                        <h2 class="title">Donation Information</h2>
+                                        <h2 class="title"><?php echo Label::getLabel('LBL_Donation_Information'); ?></h2>
                                         <thead>
                                             <tr>
                                                 <th><?php echo Label::getLabel('LBL_Donation_Amount'); ?></th>
-                                                <th><?php echo Label::getLabel('LBL_Recieved'); ?>Recieved</th>
+                                                <th><?php echo Label::getLabel('LBL_Recieved'); ?></th>
                                                 <th><?php echo Label::getLabel('LBL_Donation_Receipt'); ?></th>
                                             </tr>
                                         </thead>
@@ -309,7 +350,10 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                         <thead>
                                                             <tr>
                                                                 <th><?php echo Label::getLabel('LBL_Events'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Stating_Date'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Ending_Date'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Total_Tickets'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Coupon_Code'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Tickets'); ?></th>
                                                             </tr>
                                                         </thead>
@@ -318,11 +362,39 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                             $sr_no = 1;
                                                             if (!empty($EventplanResult)) {
                                                                 foreach ($EventplanResult as $key => $value) {
+                                                                    $Currentdate = date('Y-m-d H:i');
                                                             ?>
                                                                     <tr>
-                                                                        <td><?php echo $value['plan_name']; ?></td>
-                                                                        <td><?php echo $value['event_user_ticket_count']; ?></td>
-                                                                        <td><a href="<?php echo $value['event_user_ticket_download_url']; ?>" download="<?php echo $value['plan_name'] . '.jpeg'; ?>"><i class="fa fa-ticket" style="font-size:24px;color:red"></i></a></td>
+                                                                        <?php
+                                                                        if ($value['plan_end_date'] < $Currentdate) {
+                                                                        ?>
+                                                                            <td><?php echo $value['plan_name'] . '<span class="expiry"> (Expired)</span>'; ?></td>
+                                                                            <td><?php echo $value['plan_start_date']; ?></td>
+                                                                            <td><?php echo $value['plan_end_date']; ?></td>
+                                                                            <td><?php echo $value['event_user_ticket_count']; ?></td>
+                                                                            <td class="expiry">Event Is Expired</td>
+                                                                        <?php
+                                                                        } else {
+                                                                        ?>
+                                                                            <td><?php echo $value['plan_name']; ?></td>
+                                                                            <td><?php echo $value['plan_start_date']; ?></td>
+                                                                            <td><?php echo $value['plan_end_date']; ?></td>
+                                                                            <td><?php echo $value['event_user_ticket_count']; ?></td>
+                                                                            <td class="ccode">
+                                                                                <?php
+                                                                                if (!empty($value['coupon_code'])) {
+                                                                                    echo Label::getLabel('LBL_Activated');
+                                                                                } else {
+                                                                                    echo Label::getLabel('LBL_Not_Activated');
+                                                                                }
+                                                                                ?>
+                                                                            </td>
+                                                                            <td><a href="<?php echo $value['event_user_ticket_download_url']; ?>" download="<?php echo $value['plan_name'] . '.jpeg'; ?>"><i class="fa fa-ticket" style="font-size:24px;color:red"></i></a></td>
+
+                                                                        <?php
+                                                                        }
+                                                                        ?>
+
                                                                     </tr>
                                                             <?php
                                                                     $sr_no++;
@@ -345,7 +417,10 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                     <table id="sponsorship" class="table event-listing table-striped table-bordered donation-table display nowrap" style="width:100%">
                                                         <thead>
                                                             <tr>
+                                                                <th><?php echo Label::getLabel('LBL_Events_(Sponsor)'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Sponsorship_Plan'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Sponsorship_Plan'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Coupon_Code'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Qty'); ?></th>
 
                                                             </tr>
@@ -353,12 +428,29 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                         <tbody>
                                                             <?php
                                                             $sr_no = 1;
-                                                            if (!empty($PurchaseSponserShip)) {
-                                                                foreach ($PurchaseSponserShip as $key => $value) {
+                                                            if (!empty($sponserEventData)) {
+                                                                foreach ($sponserEventData as $key => $value) {
+                                                                    $Currentdate = date('Y-m-d H:i');
+                                                                    $expired = '';
+                                                                    if ($value['event_ending_time'] < $Currentdate) {
+                                                                        $expired = '(Expired)';
+                                                                    }
+
                                                             ?>
                                                                     <tr>
-                                                                        <td><?php echo $key; ?></td>
-                                                                        <td><?php echo $value; ?></td>
+                                                                        <td><?php echo $value['event_name']; ?><span class='expiry'><?php echo $expired; ?></span></td>
+                                                                        <td><?php echo $value['event_ending_time']; ?></td>
+                                                                        <td><?php echo $value['plan']; ?></td>
+                                                                        <td class="ccode">
+                                                                            <?php
+                                                                            if (!empty($value['coupon_code'])) {
+                                                                                echo Label::getLabel('LBL_Activated');
+                                                                            } else {
+                                                                                echo Label::getLabel('LBL_Not_Activated');
+                                                                            }
+                                                                            ?>
+                                                                        </td>
+                                                                        <td><?php echo $value[$value['event_name']]; ?></td>
                                                                     </tr>
                                                             <?php
                                                                     $sr_no++;
@@ -368,6 +460,74 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                             }
                                                             ?>
 
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                            <!-- Benefit Concert Tickets Listing -->
+                                            <div class="row events-tickets-section" id="benefit-concert-listing">
+                                                <div class="col-lg-12">
+                                                    <div>
+                                                        <h4 class="events-head-title"><?php echo Label::getLabel('LBL_Benefit_Concert_Ticket_Listing'); ?></h4>
+                                                    </div>
+                                                    <table id="benefit-concert" class="table event-listing table-striped table-bordered donation-table display nowrap" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th><?php echo Label::getLabel('LBL_Concert_Tickets_Category'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Stating_Date'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Ending_Date'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Total_Tickets'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Coupon_Code'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Tickets'); ?></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php
+                                                            $sr_no = 1;
+                                                            if (!empty($BenefitConcertplanResult)) {
+                                                                foreach ($BenefitConcertplanResult as $key => $value) {
+                                                                    $Currentdate = date('Y-m-d H:i');
+                                                            ?>
+                                                                    <tr>
+                                                                        <?php
+                                                                        if ($value['plan_end_date'] < $Currentdate) {
+                                                                        ?>
+                                                                            <td><?php echo $value['plan_name'] . '<span class="expiry"> (Expired)</span>'; ?></td>
+                                                                            <td><?php echo $value['plan_start_date']; ?></td>
+                                                                            <td><?php echo $value['plan_end_date']; ?></td>
+                                                                            <td><?php echo $value['event_user_ticket_count']; ?></td>
+                                                                            <td class="expiry">Event Is Expired</td>
+                                                                        <?php
+                                                                        } else {
+                                                                        ?>
+                                                                            <td><?php echo $value['plan_name']; ?></td>
+                                                                            <td><?php echo $value['plan_start_date']; ?></td>
+                                                                            <td><?php echo $value['plan_end_date']; ?></td>
+                                                                            <td><?php echo $value['event_user_ticket_count']; ?></td>
+                                                                            <td class="ccode">
+                                                                                <?php
+                                                                                if (!empty($value['coupon_code'])) {
+                                                                                    echo Label::getLabel('LBL_Activated');
+                                                                                } else {
+                                                                                    echo Label::getLabel('LBL_Not_Activated');
+                                                                                }
+                                                                                ?>
+                                                                            </td>
+                                                                            <td><a href="<?php echo $value['event_user_ticket_download_url']; ?>" download="<?php echo $value['plan_name'] . '.jpeg'; ?>"><i class="fa fa-ticket" style="font-size:24px;color:red"></i></a></td>
+
+                                                                        <?php
+                                                                        }
+                                                                        ?>
+
+                                                                    </tr>
+                                                            <?php
+                                                                    $sr_no++;
+                                                                }
+                                                            } else {
+                                                                echo Label::getLabel('LBL_No_Records');
+                                                            }
+                                                            ?>
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -403,15 +563,20 @@ $contactFrm->developerTags['fld_default_col'] = 12;
 
                                 <!-- Report An Issue Section -->
                                 <div class="tab-pane fade" id="reportanissue" role="tabpanel" aria-labelledby="reportanissue-tab">
-                                    <?php
-                                    $this->includeTemplate('dashboard-event-visitor/report-an-issue.php', ['siteLangId' => $siteLangId]);
-                                    ?>
                                 </div>
                                 <!-- End Report An Issue Section -->
 
                                 <!-- Start Event Faq Section -->
                                 <div class="tab-pane fade" id="eventfaq" role="tabpanel" aria-labelledby="eventfaq-tab">
                                     <div class="padding-6 events-tickets-section">
+                                    </div>
+                                </div>
+                                <!-- End Event Faq Section -->
+
+                                <!-- Start Event Faq Section -->
+                                <div class="tab-pane fade" id="disclaimer" role="tabpanel" aria-labelledby="disclaimer-tab">
+                                    <div class="padding-6 events-tickets-section">
+                                        <?php echo FatUtility::decodeHtmlEntities($DisclaimerSection); ?>
                                     </div>
                                 </div>
                                 <!-- End Event Faq Section -->
@@ -436,14 +601,24 @@ $contactFrm->developerTags['fld_default_col'] = 12;
         var table = $('#example').DataTable({
             pageLength: 10,
             scrollY: 200,
+            responsive: true
         });
 
         var table = $('#plan').DataTable({
-
+            pageLength: 10,
+            scrollY: 300,
+            responsive: true
         });
 
         var table = $('#sponsorship').DataTable({
-
+            pageLength: 10,
+            scrollY: 300,
+            responsive: true
+        });
+        var table = $('#benefit-concert').DataTable({
+            pageLength: 10,
+            scrollY: 300,
+            responsive: true
         });
     });
     $(document).ready(function() {

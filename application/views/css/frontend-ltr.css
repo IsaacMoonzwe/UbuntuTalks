@@ -40,9 +40,6 @@
   visibility: visible;
 }
 
-
-
-
 html {
   scroll-behavior: auto;
 }
@@ -310,6 +307,26 @@ nav.menu.nav--primary-offset {
 }
 
 @media (max-width: 991px) {
+
+  .Entertaiment-information h1 {
+    padding-top: 15px !important;
+    text-align: center;
+  }
+
+  .header-primary .header__right {
+    width: 26% !important;
+  }
+
+  .col-md-12.donation-title h1 p span {
+    text-align: center;
+    font-size: 32px;
+    line-height: 40px;
+  }
+
+  .row.image-section .tab-content-img {
+    margin-bottom: 15px;
+  }
+
   .event-page-section ul#seperrateprogramTab {
     display: block !important;
   }
@@ -390,7 +407,7 @@ nav.menu.nav--primary-offset {
     width: fit-content !important;
   }
 
-  .header__right {
+  body .header-primary .header__right {
     width: fit-content !important;
   }
 
@@ -2415,6 +2432,10 @@ p {
 }
 
 @media (max-width: 991px) {
+  p.plan-title-desktop {
+    display: none;
+  }
+
   .slideshow__form .slideshow-input input[type="text"] {
     height: 50px;
   }
@@ -5123,7 +5144,17 @@ p {
   }
 }
 
+@media (min-width: 991px) and (max-width: 3500px) {
+  p.plan-title-mobile {
+    display: none;
+  }
+}
+
 @media (min-width: 991px) and (max-width: 1199px) {
+  p.plan-title-mobile {
+    display: none;
+  }
+
   .box__primary {
     width: calc(100% - 350px);
   }
@@ -5136,6 +5167,10 @@ p {
 }
 
 @media (max-width: 991px) {
+  .events-Video-desktop {
+    display: none !important;
+  }
+
   .box__primary {
     padding: var(--padding-6);
     width: 100%;
@@ -6631,6 +6666,111 @@ button.btn.btn-primary.video-btn.profile-video {
 
 /* Event Page CSSS */
 
+#video {
+  position: relative;
+  padding-bottom: 57.20%;
+  /* 16:9 */
+  height: 0;
+}
+
+#video iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.col-lg-6 {}
+
+#frame1 {
+  border-style: solid;
+  border-width: 3px 3px 3px 3px;
+  border-color: #FFFFFF;
+  box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%);
+}
+
+img.dinner-image-logo {
+  float: right;
+}
+
+.sponsor-information {
+  padding-top: 40px;
+}
+
+.Entertaiment-information {
+  padding-top: 40px;
+}
+
+.ticket-description {
+  font-weight: 500;
+  color: rgb(0, 0, 0);
+  font-size: 16px;
+  font-family: Nunito;
+  line-height: 26px;
+}
+
+.aboutus-joyus-section h2 p {
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+  font-size: 20px;
+}
+
+#SymposiumDinner .card-list {
+  min-height: auto !important;
+}
+
+.diners-page-buttons a.donation-sponosor-button {
+  width: 165px !important;
+  margin-right: 15px;
+  margin-top: 15px;
+}
+
+.row.image-section span {
+  font-size: 16px;
+  font-weight: 500;
+  color: rgb(17, 17, 17);
+  line-height: 26px;
+  font-family: Nunito;
+}
+
+
+.events-buttons li a {
+  width: 100px;
+}
+
+
+h1.concert-title {
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+  font-size: 20px;
+  font-family: Nunito;
+}
+
+.sidebar-btns.benefits-sponsor-button a {
+  text-transform: capitalize;
+  color: #FFF;
+  background-color: #006313;
+  font-size: 17px;
+  padding: 12px 25px 12px 25px;
+  border-radius: 5px !important;
+  width: 155px !important;
+  text-align: center;
+}
+
+.row.image-section {
+  /* display: contents; */
+  margin: 0 auto;
+}
+
+.row.image-section.video-section-block {
+  margin-bottom: 30px;
+}
+
+.aboutus-joyus-section {
+  padding-top: 15px;
+}
+
 p.ticket-decription {
   min-height: 120px;
   height: auto;
@@ -6745,7 +6885,7 @@ a.donation-sponosor-button {
   font-size: 17px;
   padding: 12px 25px 12px 25px;
   border-radius: 5px;
-  width: 190px;
+  width: 155px !important;
   text-align: center;
 }
 
@@ -6798,10 +6938,10 @@ body .speakers-heading-main h3.speaker_heading {
   border-radius: 5px !important;
   color: #fff;
   background-color: #006313;
-  padding: 10px 20px 10px 20px;
+  padding: 12px 25px 12px 25px;
   margin-top: 15px;
   font-size: 18px;
-  width: 190px !important;
+  width: 155px !important;
   text-align: center;
 }
 
@@ -7719,6 +7859,14 @@ td.check-icons {
   text-align: center;
 }
 
+body #sponsorship .price_tabel h4 {
+  font-size: 29px !important;
+}
+
+.price_tabel.dinner-table {
+  padding-top: 25px;
+}
+
 .price_tabel h4 {
   text-align: left !important;
   margin: 30px 0px;
@@ -8132,7 +8280,7 @@ h6.event-name {
 }
 
 .container.container--narrow.login-Registration li a {
-  border-radius: 5px;
+  width: 100% !important;
   font-size: 14px;
   text-transform: uppercase;
 }
@@ -8771,13 +8919,56 @@ span.card-landscape__title {
 }
 
 @media (max-width: 991px) {
+  .row.image-section.video-section-block h2 {
+    padding-top: 15px;
+    text-align: center;
+  }
+
+  .row.image-section.video-section-block {
+    display: flex !important;
+    flex-direction: column-reverse !important;
+  }
+
+  .header-dropdown__target.is-visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  iframe#frame1 {
+    margin-top: 15px;
+    width: 640px;
+    height: 260px;
+  }
+
+  .row.image-section.video-section-block {
+    margin-bottom: 10px;
+  }
+
+  table {
+    overflow: auto;
+    display: block;
+  }
+
+  .sidebar-btns.benefits-sponsor-button a {
+    margin-top: 15px !important;
+  }
+
+  .box-foot__right {
+    margin: 0 auto;
+    display: block !important;
+  }
+
+  .box__head {
+    z-index: auto !important;
+  }
+
   #clock {
     display: block;
     width: 100% !important;
     margin-left: auto;
     margin-right: auto;
     margin-top: 0px;
-    padding: 20px;
+    padding: 0px;
     text-align: center;
     background-color: white;
   }
@@ -8972,6 +9163,32 @@ span.card-landscape__title {
 }
 
 @media (max-width: 767px) {
+  body #sponsorship .price_tabel h4 {
+    font-size: 24px !important;
+  }
+
+  .Entertaiment-information {
+    padding-top: 20px;
+  }
+
+  .dinner-description h1 {
+    font-size: 22px !important;
+  }
+
+  .sponsor-information {
+    padding-top: 20px;
+  }
+
+  .diners-page-buttons a.donation-sponosor-button {
+    display: inline-block;
+    margin: inherit !important;
+    margin-top: 15px !important;
+    margin-bottom: 15px !important;
+    margin-right: 10px !important;
+    font-size: 15px;
+    width: 145px !important;
+  }
+
   ul#travelAccommodationTab {
     overflow: auto;
     white-space: nowrap;
@@ -10341,6 +10558,10 @@ body .widget_calendr tbody td .cell-lightgreen-50 {
 }
 
 @media (max-width: 991px) {
+  .event-page-section {
+    padding: 0px 0 10px 0 !important;
+  }
+
   .events-tab-detail .details {
     padding-top: 0px !important;
   }

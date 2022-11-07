@@ -9,6 +9,7 @@ else
 {
     ob_start();
 }
+
 ini_set('display_errors', CONF_DEVELOPMENT_MODE);
 error_reporting(CONF_DEVELOPMENT_MODE ? E_ALL : E_ALL & ~E_NOTICE & ~E_WARNING);
 require_once CONF_INSTALLATION_PATH . 'library/autoloader.php';
@@ -16,6 +17,7 @@ require_once CONF_INSTALLATION_PATH . 'vendor/autoload.php';
 AttachedFile::registerS3ClientStream();
 /* --- Redirect SSL --- */
 $protocol = FatApp::getConfig('CONF_USE_SSL', FatUtility::VAR_INT, false) ? 'https://' : 'http://';
+
 /* AWS */
 if ((($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') != 'https') && (FatApp::getConfig('CONF_USE_SSL') == 1))
 {
@@ -30,6 +32,7 @@ date_default_timezone_set($timezone);
 $timezonOffset = date('P');
 $query = "SET NAMES utf8mb4; SET time_zone = '" . $timezonOffset . "';";
 $dbCon = FatApp::getDb()->getConnectionObject();
+
 if ($dbCon->multi_query($query))
 {
     while ($dbCon->next_result())

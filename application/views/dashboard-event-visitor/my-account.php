@@ -6,14 +6,10 @@ $profileFrm->developerTags['colClassPrefix'] = 'col-md-';
 $profileFrm->developerTags['fld_default_col'] = 6;
 $firstNameField = $profileFrm->getField('user_first_name');
 $firstNameField->addFieldTagAttribute('placeholder', $firstNameField->getCaption());
-
 $foodAllergiesNameField = $profileFrm->getField('user_food_allergies');
 $foodAllergiesNameField->addFieldTagAttribute('placeholder', $foodAllergiesNameField->getCaption());
-
 $otherFoodrestrictionField = $profileFrm->getField('user_other_food_restriction');
 $otherFoodrestrictionField->addFieldTagAttribute('placeholder', $otherFoodrestrictionField->getCaption());
-
-
 $lastNameField = $profileFrm->getField('user_last_name');
 $lastNameField->addFieldTagAttribute('placeholder', $lastNameField->getCaption());
 $registerPlanField = $profileFrm->getField('user_sponsorship_plan');
@@ -47,11 +43,11 @@ $ChangesubmitBtn = $ChnagePasswordfrm->getField('btn_submit');
 $ChangesubmitBtn->setFieldTagAttribute('form', $ChnagePasswordfrm->getFormTagAttribute('id'));
 
 // Profile Image
-// $profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('DashboardEventVisitor', 'setUpProfileImage'));
-// $profileImgFrm->setFormTagAttribute('onsubmit', 'sumbmitProfileImage(false); return(false);');
-// $profileImgFrm->setFormTagAttribute('id', 'frmProfile');
-// $profileImgFrm->setFormTagAttribute('class', 'form form--horizontal');
-// $profileImageField = $profileImgFrm->getField('user_profile_image');
+$profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('DashboardEventVisitor', 'setUpProfileImage'));
+$profileImgFrm->setFormTagAttribute('onsubmit', 'sumbmitProfileImage(false); return(false);');
+$profileImgFrm->setFormTagAttribute('id', 'frmProfile');
+$profileImgFrm->setFormTagAttribute('class', 'form form--horizontal');
+$profileImageField = $profileImgFrm->getField('user_profile_image');
 
 ?>
 
@@ -66,6 +62,7 @@ $ChangesubmitBtn->setFieldTagAttribute('form', $ChnagePasswordfrm->getFormTagAtt
 
         <div class="tab">
             <button class="tablinks" onclick="openCity(event, 'PersonalInfo')" id="defaultOpen">Personal Info</button>
+            <button class="tablinks" onclick="openCity(event, 'ProfileImage')">Photos</button>
             <button class="tablinks" onclick="openCity(event, 'Email')">Email</button>
             <button class="tablinks" onclick="openCity(event, 'Password')">Password</button>
             <button class="tablinks" onclick="getCookieConsentForm(false)">Cookie Consent</button>
@@ -211,6 +208,76 @@ $ChangesubmitBtn->setFieldTagAttribute('form', $ChnagePasswordfrm->getFormTagAtt
                     </div>
                     </form>
                     <?php echo $profileFrm->getExternalJS(); ?>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="ProfileImage" class="tabcontent">
+            <div class="padding-6">
+                <div class="max-width-80">
+                    <?php
+                    echo $profileImgFrm->getFormTag();
+                    echo $profileImgFrm->getFieldHtml('update_profile_img');
+                    echo $profileImgFrm->getFieldHtml('rotate_left');
+                    echo $profileImgFrm->getFieldHtml('rotate_right');
+                    echo $profileImgFrm->getFieldHtml('remove_profile_img');
+                    echo $profileImgFrm->getFieldHtml('action');
+                    echo $profileImgFrm->getFieldHtml('img_data');
+                    ?>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="field-set">
+                                <div class="caption-wraper">
+                                    <label class="field_label"><?php echo $profileImageField->getCaption(); ?>
+                                        <?php if ($profileImageField->requirement->isRequired()) { ?>
+                                            <span class="spn_must_field">*</span>
+                                        <?php } ?>
+                                    </label>
+                                    <small class="margin-0"><?php echo Label::getLabel('LBL_PROFILE_IMAGE_FIELD_INFO_TEXT'); ?></small>
+                                </div>
+                                <div class="field-wraper">
+                                    <div class="field_cover">
+                                        <div class="profile-media">
+                                            <div class="avtar avtar--xlarge" data-title="<?php echo CommonHelper::getFirstChar($userFirstName); ?>">
+                                                <?php
+                                                if ($isProfilePicUploaded) {
+                                                    echo '<img src="' . CommonHelper::generateUrl('Image', 'user', array($userId, 'MEDIUM'), CONF_WEBROOT_FRONT_URL) . '?' . time() . '"  alt="' . $userFirstName . '" />';
+                                                }
+                                                ?>
+                                            </div>
+                                            <div class="buttons-group margin-top-4">
+                                                <span class="btn btn--bordered color-primary btn--small btn--fileupload btn--wide margin-right-2">
+                                                    <?php
+                                                    echo $profileImageField->getHTML();
+                                                    echo ($isProfilePicUploaded) ? Label::getLabel('LBL_Edit') : Label::getLabel('LBL_Add');
+                                                    ?>
+                                                </span>
+                                                <?php if (true == $isProfilePicUploaded) { ?>
+                                                    <a class="btn btn--bordered color-red btn--small btn--wide" href="javascript:void(0);" onClick="removeProfileImage()"><?php echo Label::getLabel('LBL_Remove'); ?></a>
+                                                <?php } ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row submit-row">
+                        <div class="col-sm-auto">
+                            <div class="field-set">
+                                <div class="field-wraper">
+                                    <div class="field_cover">
+                                        <?php
+                                        echo $profileImgFrm->getFieldHtml('btn_submit');
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
+                    <?php echo $profileImgFrm->getExternalJS(); ?>
                 </div>
             </div>
         </div>
@@ -484,6 +551,7 @@ $ChangesubmitBtn->setFieldTagAttribute('form', $ChnagePasswordfrm->getFormTagAtt
 
     function openCity(evt, cityName) {
         var i, tabcontent, tablinks;
+
         tabcontent = document.getElementsByClassName("tabcontent");
         for (i = 0; i < tabcontent.length; i++) {
             tabcontent[i].style.display = "none";

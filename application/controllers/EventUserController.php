@@ -53,6 +53,96 @@ class EventUserController extends MyEventAppController
         $this->set('redirectUrl', $redirectUrl);
         $this->_template->render(false, false);
     }
+    //Concert Ticket
+    public function ConcertTicketSuccess($orderId)
+    {
+        $request_body = file_get_contents('php://input');
+        $data = json_decode($request_body);
+
+        if ($data) {
+            // $ticketUrl=$post['ticketUrl'];
+            $_SESSION['concertUrl'] = $data->ticketUrl;
+            //   $ticket_download=$post['ticket_download'];
+            $_SESSION['concertDownloadUrl'] = $data->download_ticketUrl;
+            // FatApp::redirectUser(CommonHelper::generateUrl('EventUser', 'paymentSuccess', [$orderId, 1], CONF_WEBROOT_FRONTEND));
+            $redirectUrl = CommonHelper::generateUrl('EventUser', 'paymentSuccess', [$orderId, 1], CONF_WEBROOT_FRONTEND);
+            $this->set('redirectUrl', $redirectUrl);
+        }
+        // if ($rememberme == applicationConstants::YES) {
+        //     if (true !== $this->setUserLoginCookie($userId)) {
+        //         //Message::addErrorMessage(Label::getLabel('MSG_Problem_in_configuring_remember_me'));
+        //     }
+        // }
+        FatUtility::dieJsonSuccess(['redirectUrl' => CommonHelper::generateUrl('EventUser', 'paymentSuccess', [$orderId, 1], CONF_WEBROOT_FRONTEND), 'msg' => Label::getLabel("MSG_LOGIN_SUCCESSFULL")]);
+    }
+    public function ConcertTicket($orderId = null, $planSelected = '')
+    {
+        $orderData = new SearchBase('tbl_order_products');
+        $orderData->addCondition('op_order_id', '=', $orderId);
+        $orderResult = FatApp::getDb()->fetch($orderData->getResultSet());
+        $ticketPlanData = new SearchBase('tbl_event_concert_ticket_plan');
+        $ticketPlanData->addCondition('event_concert_ticket_plan_id', '=', $orderResult['op_grpcls_id']);
+        $ticketPlanResult = FatApp::getDb()->fetch($ticketPlanData->getResultSet());
+        $planData = new SearchBase('tbl_benefit_concert');
+        $planData->addCondition('benefit_concert_id', '=', $ticketPlanResult['event_user_concert_id']);
+
+        $planResult = FatApp::getDb()->fetch($planData->getResultSet());
+        $this->set('planSelected', $planResult['benefit_concert_plan_title']);
+        $this->set('planPrice', $planResult['benefit_concert_plan_price']);
+        $this->set('tickets', $_SESSION['concert_ticket']);
+        $this->set('orderId', $orderId);
+        $redirectUrl = CommonHelper::generateUrl('EventUser', 'paymentSuccess', [$orderId, 1], CONF_WEBROOT_FRONTEND);
+        $order_type = FatApp::getPostedData('ticketUrl', FatUtility::VAR_STRING, '');
+        $post = FatApp::getPostedData();
+        $this->set('redirectUrl', $redirectUrl);
+        $this->_template->render(false, false);
+    }
+
+    //symposium Ticket
+    public function SymposiumTicketSuccess($orderId)
+    {
+        $request_body = file_get_contents('php://input');
+        $data = json_decode($request_body);
+
+        if ($data) {
+            // $ticketUrl=$post['ticketUrl'];
+            $_SESSION['symposiumUrl'] = $data->ticketUrl;
+            //   $ticket_download=$post['ticket_download'];
+            $_SESSION['symposiumDownloadUrl'] = $data->download_ticketUrl;
+            // FatApp::redirectUser(CommonHelper::generateUrl('EventUser', 'paymentSuccess', [$orderId, 1], CONF_WEBROOT_FRONTEND));
+            $redirectUrl = CommonHelper::generateUrl('EventUser', 'paymentSuccess', [$orderId, 1], CONF_WEBROOT_FRONTEND);
+            $this->set('redirectUrl', $redirectUrl);
+        }
+        // if ($rememberme == applicationConstants::YES) {
+        //     if (true !== $this->setUserLoginCookie($userId)) {
+        //         //Message::addErrorMessage(Label::getLabel('MSG_Problem_in_configuring_remember_me'));
+        //     }
+        // }
+        FatUtility::dieJsonSuccess(['redirectUrl' => CommonHelper::generateUrl('EventUser', 'paymentSuccess', [$orderId, 1], CONF_WEBROOT_FRONTEND), 'msg' => Label::getLabel("MSG_LOGIN_SUCCESSFULL")]);
+    }
+    public function SymposiumTicket($orderId = null, $planSelected = '')
+    {
+        $orderData = new SearchBase('tbl_order_products');
+        $orderData->addCondition('op_order_id', '=', $orderId);
+        $orderResult = FatApp::getDb()->fetch($orderData->getResultSet());
+
+        $ticketPlanData = new SearchBase('tbl_pre_symposium_dinner_ticket_plan');
+        $ticketPlanData->addCondition('pre_symposium_dinner_ticket_plan_id', '=', $orderResult['op_grpcls_id']);
+        $ticketPlanResult = FatApp::getDb()->fetch($ticketPlanData->getResultSet());
+        $planData = new SearchBase('tbl_pre_symposium_dinner');
+        $planData->addCondition('pre_symposium_dinner_id', '=', $ticketPlanResult['event_user_pre_symposium_dinner_id']);
+
+        $planResult = FatApp::getDb()->fetch($planData->getResultSet());
+        $this->set('planSelected', $planResult['pre_symposium_dinner_plan_title']);
+        $this->set('planPrice', $planResult['pre_symposium_dinner_plan_price']);
+        $this->set('tickets', $_SESSION['symposium_ticket']);
+        $this->set('orderId', $orderId);
+        $redirectUrl = CommonHelper::generateUrl('EventUser', 'paymentSuccess', [$orderId, 1], CONF_WEBROOT_FRONTEND);
+        $order_type = FatApp::getPostedData('ticketUrl', FatUtility::VAR_STRING, '');
+        $post = FatApp::getPostedData();
+        $this->set('redirectUrl', $redirectUrl);
+        $this->_template->render(false, false);
+    }
     public function DonationSuccess($orderId)
     {
         $request_body = file_get_contents('php://input');
@@ -283,6 +373,120 @@ class EventUserController extends MyEventAppController
                 unset($_SESSION['event_ticket_id']);
                 unset($_SESSION['planSelected']);
             }
+        } elseif (isset($_SESSION['concert_ticket'])) {
+            $title_message = Label::getLabel('LBL_Thank_You_For_Purchase_Ticket_For_Concert');
+            $message =  Label::getLabel('LBL_Ticket_Has_Been_Genrated_Please_Check_In_Your_Email!');
+            $ticket = (int)$_SESSION['concert_ticket'];
+
+            $record = new TableRecord('tbl_event_concert_ticket_plan');
+            $record->assignValues(['event_user_id' => EventUserAuthentication::getLoggedUserId(), 'event_user_ticket_count' => $_SESSION['concert_ticket'], 'ticket_count' => 10, 'event_user_ticket_pay_status' => EventUser::EVENT_DONATION_SUCCESS]);
+            if (isset($_SESSION['concertUrl']) && isset($_SESSION['concertDownloadUrl'])) {
+                $ticket_generate_url = $_SESSION['concertUrl'];
+                $ticket_download = $_SESSION['concertDownloadUrl'];
+            }
+            if (!$record->update(['smt' => 'event_concert_ticket_plan_id = ?', 'vals' => [$orderResult['op_grpcls_id']]])) {
+                FatUtility::dieJsonError(Label::getLabel('LBL_SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN'));
+            }
+            $userRow = EventUser::getAttributesById(EventUserAuthentication::getLoggedUserId(), array(
+                'user_id', 'user_url_name', 'user_first_name', 'user_last_name',
+                'user_gender', 'user_phone', 'user_phone_code', 'user_country_id',
+                'user_is_teacher', 'user_timezone', 'user_profile_info', 'user_sponsorship_plan', 'user_become_sponsership_plan',
+            ));
+            if (!isset($_SESSION['concertUrl'])) {
+                FatApp::redirectUser(CommonHelper::generateUrl('EventUser', 'ConcertTicket', [$orderId, $_SESSION['concertPlan']]));
+            } elseif ($ticket_download != '' && $ticket_generate_url != '') {
+                $record = new TableRecord('tbl_event_concert_ticket_plan');
+                $record->assignValues(['event_user_ticket_url' => $ticket_generate_url, 'event_user_ticket_download_url' => $ticket_download]);
+                if (!$record->update(['smt' => 'event_concert_ticket_plan_id = ?', 'vals' => [$orderResult['op_grpcls_id']]])) {
+                    FatUtility::dieJsonError(Label::getLabel('LBL_SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN'));
+                }
+                $srch = $userObj->getUserSearchObj();
+                $rs = $srch->getResultSet();
+                $usersRow = FatApp::getDb()->fetch($rs);
+                $userRow['user_email'] = $usersRow['credential_email'];
+                $data = [
+                    'user_first_name' => $userRow['user_first_name'],
+                    'user_last_name' => $userRow['user_last_name'],
+                    'user_email' => $userRow['user_email'],
+                    'plan' => $_SESSION['concertPlan'],
+                    'file_upload' => $_SESSION['concertUrl'],
+                ];
+                $email = new EmailHandler();
+                if (true !== $email->sendConcertplanEmail($this->siteLangId, $data)) {
+                    return false;
+                }
+                unset($_SESSION['donation']);
+                unset($_SESSION['event']);
+                unset($_SESSION['reg_sponser']);
+                unset($_SESSION['become_sponser']);
+                unset($_SESSION['sponsor']);
+                unset($_SESSION['Event_userId']);
+                unset($_SESSION['ticketDownloadUrl']);
+                unset($_SESSION['ticketUrl']);
+                unset($_SESSION['concertDownloadUrl']);
+                unset($_SESSION['concertUrl']);
+                unset($_SESSION['ticket_count']);
+                unset($_SESSION['event_ticket_id']);
+                unset($_SESSION['planSelected']);
+                unset($_SESSION['concert_ticket']);
+                unset($_SESSION['concertPlan']);
+            }
+        } elseif (isset($_SESSION['symposium_ticket'])) {
+            $title_message = Label::getLabel('LBL_Thank_You_For_Purchase_Ticket');
+            $message =  Label::getLabel('LBL_Ticket_Has_Been_Genrated_Please_Check_In_Your_Email!');
+            $record = new TableRecord('tbl_pre_symposium_dinner_ticket_plan');
+            $record->assignValues(['event_user_id' => EventUserAuthentication::getLoggedUserId(), 'event_user_ticket_count' => $_SESSION['symposium_ticket'], 'event_user_ticket_pay_status' => EventUser::EVENT_DONATION_SUCCESS]);
+            if (isset($_SESSION['symposiumUrl']) && isset($_SESSION['symposiumDownloadUrl'])) {
+                $ticket_generate_url = $_SESSION['symposiumUrl'];
+                $ticket_download = $_SESSION['symposiumDownloadUrl'];
+            }
+            if (!$record->update(['smt' => 'pre_symposium_dinner_ticket_plan_id = ?', 'vals' => [$orderResult['op_grpcls_id']]])) {
+                FatUtility::dieJsonError(Label::getLabel('LBL_SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN'));
+            }
+            $userRow = EventUser::getAttributesById(EventUserAuthentication::getLoggedUserId(), array(
+                'user_id', 'user_url_name', 'user_first_name', 'user_last_name',
+                'user_gender', 'user_phone', 'user_phone_code', 'user_country_id',
+                'user_is_teacher', 'user_timezone', 'user_profile_info', 'user_sponsorship_plan', 'user_become_sponsership_plan',
+            ));
+            if (!isset($_SESSION['symposiumUrl'])) {
+                FatApp::redirectUser(CommonHelper::generateUrl('EventUser', 'SymposiumTicket', [$orderId, $_SESSION['symposiumPlan']]));
+            } elseif ($ticket_download != '' && $ticket_generate_url != '') {
+                $record = new TableRecord('tbl_pre_symposium_dinner_ticket_plan');
+                $record->assignValues(['event_user_ticket_url' => $ticket_generate_url, 'event_user_ticket_download_url' => $ticket_download]);
+                if (!$record->update(['smt' => 'pre_symposium_dinner_ticket_plan_id = ?', 'vals' => [$orderResult['op_grpcls_id']]])) {
+                    FatUtility::dieJsonError(Label::getLabel('LBL_SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN'));
+                }
+                $srch = $userObj->getUserSearchObj();
+                $rs = $srch->getResultSet();
+                $usersRow = FatApp::getDb()->fetch($rs);
+                $userRow['user_email'] = $usersRow['credential_email'];
+                $data = [
+                    'user_first_name' => $userRow['user_first_name'],
+                    'user_last_name' => $userRow['user_last_name'],
+                    'user_email' => $userRow['user_email'],
+                    'plan' => $_SESSION['symposiumPlan'],
+                    'file_upload' => $_SESSION['symposiumUrl'],
+                ];
+                $email = new EmailHandler();
+                if (true !== $email->sendSymposiumplanEmail($this->siteLangId, $data)) {
+                    return false;
+                }
+                unset($_SESSION['donation']);
+                unset($_SESSION['event']);
+                unset($_SESSION['reg_sponser']);
+                unset($_SESSION['become_sponser']);
+                unset($_SESSION['sponsor']);
+                unset($_SESSION['Event_userId']);
+                unset($_SESSION['ticketDownloadUrl']);
+                unset($_SESSION['ticketUrl']);
+                unset($_SESSION['ticket_count']);
+                unset($_SESSION['symposiumDownloadUrl']);
+                unset($_SESSION['symposiumUrl']);
+                unset($_SESSION['symposium_ticket']);
+                unset($_SESSION['symposiumPlan']);
+                unset($_SESSION['event_ticket_id']);
+                unset($_SESSION['planSelected']);
+            }
         }
         $userObj->save();
         $userTutorID = $_SESSION['Event_userId'];
@@ -299,6 +503,11 @@ class EventUserController extends MyEventAppController
         unset($_SESSION['event_ticket_id']);
         unset($_SESSION['planSelected']);
         unset($_SESSION['cart']);
+        unset($_SESSION['symposiumPlan']);
+        unset($_SESSION['symposium_ticket']);
+
+        unset($_SESSION['concert_ticket']);
+        unset($_SESSION['concertPlan']);
         $this->set('setMonthAndWeekName', true);
         $this->set('textMessage', $textMessage);
         $this->set('title_message', $title_message);
@@ -642,6 +851,9 @@ class EventUserController extends MyEventAppController
         unset($_SESSION['ticket_count']);
         unset($_SESSION['event_ticket_id']);
         unset($_SESSION['planSelected']);
+
+        unset($_SESSION['concert_ticket']);
+        unset($_SESSION['concertPlan']);
         //code for donation
         $_SESSION['donation'] = 'event_donation';
         $donation_record = new TableRecord('tbl_event_user_donation');
@@ -732,6 +944,7 @@ class EventUserController extends MyEventAppController
         $this->_template->render(false, false);
         // $this->_template->render(false, false);
     }
+
     // event ticket payment summary
     public function GetEventTicketsPaymentSummary($method = '', $ticketCount = 1, $checkLogged = 1)
     {
@@ -820,6 +1033,13 @@ class EventUserController extends MyEventAppController
         $pmRs = $pmSrch->getResultSet();
         $paymentMethods = FatApp::getDb()->fetchAll($pmRs);
         $orderId = isset($_SESSION['order_id']) ? $_SESSION['order_id'] : '';
+
+        $EventTicketsCouponCodeListing = new SearchBase('tbl_coupons');
+        $EventTicketsCouponCodeListing->addCondition('coupon_identifier', '=', 'EventRegistration');
+        $EventTicketsCCListing = $EventTicketsCouponCodeListing->getResultSet();
+        $EventTicketsCouponCodeFinalListing = FatApp::getDb()->fetchAll($EventTicketsCCListing);
+        $this->set('EventTicketsCouponCodeFinalListing', $EventTicketsCouponCodeFinalListing);
+
         $this->set('planResult', $planResult);
         $this->set('tickets', $_SESSION['ticket_count']);
         $this->set('planSelected', $method);
@@ -873,7 +1093,7 @@ class EventUserController extends MyEventAppController
         }
     }
     //BecomeSponser plan paymentsummary
-    public function GetEventBecomeSponserPaymentSummary($method = null, $qty = null, $checkLogged = 1)
+    public function GetEventBecomeSponserPaymentSummary($method = null, $qty = null, $selectedPlan = null, $checkLogged = 1)
     {
         $userId = 0;
         if ($checkLogged > 0) {
@@ -882,17 +1102,29 @@ class EventUserController extends MyEventAppController
         //become sponser
         $post = FatApp::getPostedData();
         $_SESSION['Event_userId'] = $userId;
+        // $plan_json = json_decode($selectedPlan);
+        // $allKeysOfPlan = array_keys((array)$plan_json);
+        // $selectedEvent='';
+        // foreach ($allKeysOfPlan as $select => $plan) {
         $sponser_record = new TableRecord('tbl_event_user_become_sponser');
         $sponser_record->assignValues([
             'event_user_id' => $userId,
             'event_user_sponsrship_id' => serialize($method),
             'event_user_sponsership_qty' => serialize($qty),
+            'event_user_sponser_selected_plan' => $selectedPlan,
             'event_user_payment_status' => EventUser::EVENT_DONATION_FAILURE
         ]);
         if (!$sponser_record->addNew([], [])) {
             Message::addErrorMessage($donation_record->getError());
             throw new Exception('');
         }
+
+        $eventData = new SearchBase('tbl_events_sponsorship_categories');
+        $eventData->addCondition('events_sponsorship_categories_id', '=', $selectedPlan);
+        $eventResult = FatApp::getDb()->fetch($eventData->getResultSet());
+        $selectedEvent = $eventResult['events_sponsorship_categories_plan_title'];
+
+        // }
         $use_plan_srch = new SearchBase('tbl_event_user_become_sponser');
         $use_plan_srch->addCondition('event_user_payment_status', '=', EventUser::EVENT_DONATION_FAILURE);
         $use_plan_srch->addCondition('event_user_id', '=', $userId);
@@ -940,6 +1172,7 @@ class EventUserController extends MyEventAppController
             'planTitle' => $planTitle,
             'planQty' => $planQty,
             'planPrice' => $planPrice,
+            'selectedEvent' => $selectedEvent,
         ];
         $record = new TableRecord('tbl_user_cart');
         $cart_arr = $cart['cart'];
@@ -973,6 +1206,7 @@ class EventUserController extends MyEventAppController
         $cartData['itemPrice'] = $cartTotal;
         $cartData['cartTotal'] = $cartTotal;
         $cartData['total'] = $cartTotal;
+        $cartData['selectedEvent'] = $selectedEvent;
         $cartData['orderPaymentGatewayCharges'] = 10;
         $cartData['orderNetAmount'] = $cartTotal;
         $cartData['planTitle'] = $planTitle;
@@ -995,6 +1229,13 @@ class EventUserController extends MyEventAppController
         $pmRs = $pmSrch->getResultSet();
         $paymentMethods = FatApp::getDb()->fetchAll($pmRs);
         $orderId = isset($_SESSION['order_id']) ? $_SESSION['order_id'] : '';
+
+        $SponsorshipCouponCodeListing = new SearchBase('tbl_coupons');
+        $SponsorshipCouponCodeListing->addCondition('coupon_identifier', '=', 'EventSponserShip');
+        $SponsorshipCCListing = $SponsorshipCouponCodeListing->getResultSet();
+        $SponsorshipCouponCodeFinalListing = FatApp::getDb()->fetchAll($SponsorshipCCListing);
+        $this->set('SponsorshipCouponCodeFinalListing', $SponsorshipCouponCodeFinalListing);
+
         $this->set('become_plan', $method);
         $this->set('paymentMethods', $paymentMethods);
         $this->set('cartData', $cartData);
@@ -1530,8 +1771,9 @@ class EventUserController extends MyEventAppController
         ];
         FatUtility::dieJsonSuccess($data);
     }
-    //Become sponser sponsership list
-    public function GetEventBecomeSponserPlan($checked = 1)
+
+    //Become Select Events sponser sponsership list
+    public function GetSelectEventBecomeSponserPlan($checked = 1)
     {
         $userId = 0;
         unset($_SESSION['donation']);
@@ -1544,12 +1786,72 @@ class EventUserController extends MyEventAppController
         unset($_SESSION['ticket_count']);
         unset($_SESSION['event_ticket_id']);
         unset($_SESSION['planSelected']);
+        unset($_SESSION['symposiumPlan']);
+        unset($_SESSION['symposium_ticket']);
+
+        unset($_SESSION['concert_ticket']);
+        unset($_SESSION['concertPlan']);
         if ($checked > 0) {
             $userId = EventUserAuthentication::getLoggedUserId();
         }
         $_SESSION['Event_userId'] = $userId;
+        $planData = new SearchBase('tbl_events_sponsorship_categories');
+        $planData->addCondition('events_sponsorship_categories_deleted', '=', 0);
+        $planData->addCondition('events_sponsorship_categories_active', '=', 1);
+        $planData->addOrder('events_sponsorship_categories_display_order', 'ASC');
+        $planResult = FatApp::getDb()->fetchAll($planData->getResultSet());
+        if (empty($planResult)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_NO_PLAN_AVAIABLE'));
+        }
+        if (isset($_SESSION['become_sponser'])) {
+            $plan = $_SESSION['become_sponser'];
+            $this->set('method', $_SESSION['become_sponser']);
+        } else {
+            unset($_SESSION['become_sponser']);
+            $this->set('method', $planResult[0]['events_sponsorship_categories_plan_title']);
+        }
+        $this->set('slotDurations', $planResult);
+        $this->_template->render(false, false);
+    }
+
+
+    //Become sponser sponsership list
+    public function GetEventBecomeSponserPlan($selectSponserEventPlan = '', $checked = 1)
+    {
+        $userId = 0;
+        unset($_SESSION['donation']);
+        unset($_SESSION['summary']);
+        unset($_SESSION['removeCoupon']);
+        unset($_SESSION['sponsor']);
+        unset($_SESSION['cart']);
+        unset($_SESSION['ticketDownloadUrl']);
+        unset($_SESSION['ticketUrl']);
+        unset($_SESSION['ticket_count']);
+        unset($_SESSION['event_ticket_id']);
+        unset($_SESSION['planSelected']);
+        unset($_SESSION['symposiumPlan']);
+        unset($_SESSION['symposium_ticket']);
+
+        unset($_SESSION['concert_ticket']);
+        unset($_SESSION['concertPlan']);
+        if ($checked > 0) {
+            $userId = EventUserAuthentication::getLoggedUserId();
+        }
+        $planDataCat = new SearchBase('tbl_events_sponsorship_categories');
+        $planDataCat->addCondition('events_sponsorship_categories_deleted', '=', 0);
+        $planDataCat->addCondition('events_sponsorship_categories_active', '=', 1);
+        $planDataCat->addCondition('events_sponsorship_categories_id', '=', $selectSponserEventPlan);
+        $planResultCat = FatApp::getDb()->fetch($planDataCat->getResultSet());
+
+        $_SESSION['Event_userId'] = $userId;
         $planData = new SearchBase('tbl_sponsorshipcategories');
         $planData->addCondition('sponsorshipcategories_deleted', '=', 0);
+        if (!empty($planResultCat) && $planResultCat['events_sponsorship_categories_plan_title'] == 'Pre Symposium Dinner') {
+
+            $planData->addCondition('sponsorshipcategories_type', '=', 'Dinner');
+        } else {
+            $planData->addCondition('sponsorshipcategories_type', '=', 'Regular');
+        }
         $planResult = FatApp::getDb()->fetchAll($planData->getResultSet());
         if (empty($planResult)) {
             FatUtility::dieJsonError(Label::getLabel('LBL_NO_PLAN_AVAIABLE'));
@@ -1570,6 +1872,9 @@ class EventUserController extends MyEventAppController
         if ($checkLogged > 0) {
             $userId = EventUserAuthentication::getLoggedUserId();
         }
+        unset($_SESSION['symposiumPlan']);
+        unset($_SESSION['symposium_ticket']);
+
         unset($_SESSION['become_sponser']);
         unset($_SESSION['sponsor']);
         unset($_SESSION['ticketDownloadUrl']);
@@ -1577,6 +1882,9 @@ class EventUserController extends MyEventAppController
         unset($_SESSION['ticket_count']);
         unset($_SESSION['event_ticket_id']);
         unset($_SESSION['planSelected']);
+
+        unset($_SESSION['concert_ticket']);
+        unset($_SESSION['concertPlan']);
         $_SESSION['Event_userId'] = $userId;
         if ($fromPayment == 1) {
             $donation_data = new SearchBase('tbl_event_user_donation');
@@ -1666,6 +1974,10 @@ class EventUserController extends MyEventAppController
             $pendingOrderHoldSrch->addCondition('coupon_identifier', '=', 'EventSponserShip');
         } else if ($fromSelector == 'registrationPlan') {
             $pendingOrderHoldSrch->addCondition('coupon_identifier', '=', 'EventRegistration');
+        } else if ($fromSelector == 'benefitConcertPlan') {
+            $pendingOrderHoldSrch->addCondition('coupon_identifier', '=', 'BenefitConcert');
+        } else if ($fromSelector == 'SymposiumDinnerPlan') {
+            $pendingOrderHoldSrch->addCondition('coupon_identifier', '=', 'SymposiumDinnerPlan');
         } else {
             $pendingOrderHoldSrch->addCondition('coupon_identifier', '=', 'Events');
         }
@@ -1715,10 +2027,6 @@ class EventUserController extends MyEventAppController
         if (empty($couponData)) {
             return false;
         }
-        // if (!FatApp::getDb()->insertFromArray(DiscountCoupons::DB_TBL_COUPON_HOLD, $holdCouponData, true, [], $holdCouponData)) {
-        //     FatUtility::dieJsonError(Label::getLabel('LBL_Action_Trying_Perform_Not_Valid', $this->siteLangId));
-        // }
-        // $cartObj->removeUsedRewardPoints();
         $totalSiteCommission = 0;
         $cartTaxTotal = 0;
         $cartTotal = $cartSubTotal;
@@ -1768,7 +2076,7 @@ class EventUserController extends MyEventAppController
         if (isset($cartObj) && array_key_exists('reward_points', $cartObj)) {
             unset($cartObj['reward_points']);
             $_SESSION['cart'] = $cartObj;
-            // $this->updateUserCart();
+            // $this->updateUserCart(); 
         }
         unset($_SESSION['summary']);
         $_SESSION['removeCoupon'] = $_SESSION['cart'];
@@ -1879,9 +2187,529 @@ class EventUserController extends MyEventAppController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
+
+    //Get Symposium Plans
+
+    public function GetSymposiumPlan($fromBack = 0)
+    {
+        unset($_SESSION['donation']);
+        unset($_SESSION['cart']);
+        unset($_SESSION['reg_sponser']);
+        unset($_SESSION['become_sponser']);
+        unset($_SESSION['sponsor']);
+        unset($_SESSION['summary']);
+        unset($_SESSION['removeCoupon']);
+        unset($_SESSION['ticketDownloadUrl']);
+        unset($_SESSION['ticketUrl']);
+        unset($_SESSION['ticket_count']);
+        unset($_SESSION['ticketDownloadUrl']);
+        unset($_SESSION['ticketUrl']);
+        unset($_SESSION['ticket_count']);
+        unset($_SESSION['event_ticket_id']);
+        unset($_SESSION['planSelected']);
+        unset($_SESSION['event_ticket_id']);
+        $planData = new SearchBase('tbl_pre_symposium_dinner');
+        $planData->addCondition('pre_symposium_dinner_deleted', '=', 0);
+        $planData->addCondition('pre_symposium_dinner_active', '=', 1);
+        $planData->addCondition('pre_symposium_dinner_ending_date', '>', date('Y-m-d h:i'));
+        $planData->addOrder('pre_symposium_dinner_id', 'ASC');
+        $planResult = FatApp::getDb()->fetchAll($planData->getResultSet());
+        if (empty($planResult)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_NO_PLAN_AVAIABLE'));
+        }
+        if ($fromBack <= 0) {
+            unset($_SESSION['symposiumPlan']);
+        }
+        if (isset($_SESSION['symposiumPlan'])) {
+            $this->set('planSelected', $_SESSION['symposiumPlan']);
+        }
+        $tickets = new SearchBase('tbl_pre_symposium_dinner_ticket_plan');
+        $tickets->addCondition('event_user_ticket_pay_status', '=', 1);
+        $tickets->addMultipleFields(['SUM(event_user_ticket_count) as TotalTicket', 'event_user_pre_symposium_dinner_id']);
+        $tickets->addGroupBy('event_user_pre_symposium_dinner_id');
+        $tickets->addOrder('event_user_pre_symposium_dinner_id', 'ASC');
+        $ticketManage = FatApp::getDb()->fetchAll($tickets->getResultSet());
+        $this->set('ticketManage', $ticketManage);
+        $this->set('slotDurations', $planResult);
+        $this->_template->render(false, false);
+    }
+    //Concert Tickets
+    public function GetSymposiumTickets($planSelected = '', $checked = 1, $fromPlan = 0, $ticketCount = 1)
+    {
+        $_SESSION['symposiumPlan'] = $planSelected;
+        $this->set('planSelected', $planSelected);
+        if ($fromPlan <= 0) {
+            unset($_SESSION['symposium_ticket']);
+        }
+        $userId = 0;
+        if ($checked > 0) {
+            $userId = EventUserAuthentication::getLoggedUserId();
+            $_SESSION['Event_userId'] = $userId;
+        }
+        $planData = new SearchBase('tbl_pre_symposium_dinner');
+        $planData->addCondition('pre_symposium_dinner_plan_title', '=', $planSelected);
+        $planResult = FatApp::getDb()->fetch($planData->getResultSet());
+        $donation_record = new TableRecord('tbl_pre_symposium_dinner_ticket_plan');
+        $donation_record->assignValues([
+            'event_user_id' => $userId,
+            'event_user_pre_symposium_dinner_id' => $planResult['pre_symposium_dinner_id'],
+            'event_user_ticket_pay_status' => EventUser::EVENT_DONATION_FAILURE
+        ]);
+        if (!$donation_record->addNew([], [])) {
+            Message::addErrorMessage($donation_record->getError());
+            throw new Exception('');
+        }
+        $tickets = new SearchBase('tbl_pre_symposium_dinner_ticket_plan');
+        $tickets->addCondition('event_user_ticket_pay_status', '=', 1);
+        $tickets->addCondition('event_user_pre_symposium_dinner_id', '=', $planResult['pre_symposium_dinner_id']);
+        $tickets->addMultipleFields(['SUM(event_user_ticket_count) as TotalTicket', 'event_user_pre_symposium_dinner_id']);
+        $tickets->addGroupBy('event_user_pre_symposium_dinner_id');
+
+        $ticketManager = $tickets->getResultSet();
+        $ticketManagerDetails = FatApp::getDb()->fetch($ticketManager);
+
+        $ticketSrch = new SearchBase('tbl_pre_symposium_dinner_ticket_plan');
+        $ticketSrch->addCondition('event_user_pre_symposium_dinner_id', '=', $planResult['pre_symposium_dinner_id']);
+        if ($checked > 0) {
+            $ticketSrch->addCondition('event_user_id', '=', $userId);
+        }
+        $ticketData = FatApp::getDb()->fetchAll($ticketSrch->getResultSet());
+        $lastRecord = end($ticketData);
+
+        $_SESSION['pre_symposium_dinner_ticket_plan_id'] = $lastRecord['pre_symposium_dinner_ticket_plan_id'];
+        if (isset($_SESSION['symposium_ticket'])) {
+            $this->set('tickets', $_SESSION['symposium_ticket']);
+        } else {
+            $this->set('tickets', $ticketCount);
+        }
+        $this->set('planResult', $planResult);
+        $this->set('ticketManagerDetails', $ticketManagerDetails);
+        $this->_template->render(false, false);
+    }
+    public function RegisterSymposiumUserData($fromEvent = '', $fromBack = 0, $checked = 0)
+    {
+        $userId = 0;
+        if ($checked > 0) {
+            $userId = EventUserAuthentication::getLoggedUserId();
+            $_SESSION['Event_userId'] = $userId;
+            // $userId=$_SESSION['Event_userId'];
+        }
+        $frm = $this->getSignUpForm($userId);
+        if (0 < $userId) {
+            $data = EventUser::getAttributesById(EventUserAuthentication::getLoggedUserId(), array(
+                'user_id', 'user_url_name', 'user_first_name', 'user_last_name',
+                'user_gender', 'user_phone', 'user_phone_code', 'user_country_id',
+                'user_is_teacher', 'user_timezone', 'user_profile_info', 'user_sponsorship_plan', 'user_become_sponsership_plan',
+            ));
+            $usersrch = new SearchBase('tbl_event_user_credentials');
+            $usersrch->addCondition('credential_user_id', '=', $data['user_id']);
+            $usersrchData = FatApp::getDb()->fetch($usersrch->getResultSet());
+            $data['user_email'] = $usersrchData['credential_email'];
+            if ($data === false) {
+                FatUtility::dieWithError($this->str_invalid_request);
+            }
+            $frm->fill($data);
+        }
+        $cPageSrch = ContentPage::getSearchObject($this->siteLangId);
+        $cPageSrch->addCondition('cpage_id', '=', FatApp::getConfig('CONF_TERMS_AND_CONDITIONS_PAGE', FatUtility::VAR_INT, 0));
+        $cpage = FatApp::getDb()->fetch($cPageSrch->getResultSet());
+        if (!empty($cpage) && is_array($cpage)) {
+            $termsAndConditionsLinkHref = CommonHelper::generateUrl('Cms', 'view', [$cpage['cpage_id']]);
+        } else {
+            $termsAndConditionsLinkHref = 'javascript:void(0)';
+        }
+        $this->set('termsAndConditionsLinkHref', $termsAndConditionsLinkHref);
+        /* ] */
+        /* [ */
+        $cPPageSrch = ContentPage::getSearchObject($this->siteLangId);
+        $cPPageSrch->addCondition('cpage_id', '=', FatApp::getConfig('CONF_PRIVACY_POLICY_PAGE', FatUtility::VAR_INT, 0));
+        $cpppage = FatApp::getDb()->fetch($cPPageSrch->getResultSet());
+        if (!empty($cpppage) && is_array($cpppage)) {
+            $privacyPolicyLinkHref = CommonHelper::generateUrl('Cms', 'view', [$cpppage['cpage_id']]);
+        } else {
+            $privacyPolicyLinkHref = 'javascript:void(0)';
+        }
+        $this->set('privacyPolicyLinkHref', $privacyPolicyLinkHref);
+        /* ] */
+        $loginFrm = $this->getLoginForm('', 1);
+        $this->set('loginFrm', $loginFrm);
+        $this->set('languages', Language::getAllNames());
+        $this->set('userId', $userId);
+        $this->set('method', $fromEvent);
+        $this->set('ticket', $fromBack);
+        $this->set('frm', $frm);
+        $this->_template->render(false, false);
+    }
+    public function GetSymposiumTicketsPaymentSummary($method = '', $ticketCount = 1, $checkLogged = 1)
+    {
+        $_SESSION['Event_userId'] = 0;
+        if ($checkLogged > 0) {
+            $userId = EventUserAuthentication::getLoggedUserId();
+            $_SESSION['Event_userId'] = EventUserAuthentication::getLoggedUserId();
+        }
+        $userId = EventUserAuthentication::getLoggedUserId();
+        //event plan ticket Summary
+        $_SESSION['symposium_ticket'] = $ticketCount;
+        $userObj = new EventUser();
+        if ($userId > 0) {
+            $userRow = EventUser::getAttributesById($userId);
+            $this->set('userData', $userRow);
+        }
+        $planData = new SearchBase('tbl_pre_symposium_dinner');
+        $planData->addCondition('pre_symposium_dinner_plan_title', '=', $method);
+        $planResult = FatApp::getDb()->fetch($planData->getResultSet());
+        //  foreach ($sponsorshipList as $key => $value) {
+        // $testimonialImages = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_EVENT_PLAN_IMAGE, $planResult['benefit_concert_id'], 0, -1);
+        // $planResult['plan_image'] = $testimonialImages;
+        //       $Sponsershiprecords[$key] = $value;
+        //}
+        // echo "<pre>";
+        // print_r($planResult);
+        $grpclsId = $_SESSION['pre_symposium_dinner_ticket_plan_id'];
+        $key = $userId . '_' . $grpclsId;
+        $cartTotal = $planResult['pre_symposium_dinner_plan_price'] * $ticketCount;
+        $cart['cart'][$key] = [
+            'teacherId' => $userId,
+            'grpclsId' => $grpclsId,
+            'startDateTime' => date('Y-m-d H:i:s'),
+            'endDateTime' => date('Y-m-d H:i:s'),
+            'isFreeTrial' => applicationConstants::NO,
+            'lessonQty' => 1,
+        ];
+        $record = new TableRecord('tbl_user_cart');
+        $cart_arr = $cart['cart'];
+        $cart_arr = serialize($cart_arr);
+        $record->assignValues([
+            "usercart_user_id" => $userId,
+            "usercart_type" => 4,
+            "usercart_details" => $cart_arr,
+            "usercart_added_date" => date('Y-m-d H:i:s')
+        ]);
+        if (!$record->addNew([], ['usercart_details' => $cart_arr, "usercart_added_date" => date('Y-m-d H:i:s')])) {
+            Message::addErrorMessage($record->getError());
+            throw new Exception('');
+        }
+        $cartData = [];
+        $cartData['key'] = $key;
+        $cartData['grpclsId'] = $grpclsId;
+        $cartData['teacherId'] = $userId;
+        $cartData['user_id'] = $userId;
+        $cartData['isFreeTrial'] = applicationConstants::NO;
+        $cartData['lessonQty'] = 1;
+        $cartData['languageId'] = $this->siteLangId;
+        $cartData['lessonDuration'] = 60;
+        $cartData['lpackage_is_free_trial'] = applicationConstants::NO;
+        $cartData['lpackage_lessons'] = 1;
+        $cartData['startDateTime'] = date('Y-m-d H:i:s');
+        $cartData['endDateTime'] = date('Y-m-d H:i:s');
+        $cartData['startDateTime'] = date('Y-m-d H:i:s');
+        $cartData['endDateTime'] = date('Y-m-d H:i:s');
+        $cartData['itemName'] = $method;
+        $cartData['itemPrice'] = $planResult['pre_symposium_dinner_plan_price'];
+        $cartData['cartTotal'] = $cartTotal;
+        $cartData['orderPaymentGatewayCharges'] = 1;
+        $cartData['orderNetAmount'] = $cartTotal;
+        $cartData['total'] = $cartTotal;
+        $_SESSION['cart'] = $cartData;
+        $userWalletBalance = EventUser::getUserBalance($userId);
+        $paymentMethods = [];
+        /* Payment Methods[ */
+        $pmSrch = PaymentMethods::getSearchObject($this->siteLangId);
+        $pmSrch->doNotCalculateRecords();
+        $pmSrch->doNotLimitRecords();
+        $pmSrch->addMultipleFields([
+            'pmethod_id',
+            'IFNULL(pmethod_name, pmethod_identifier) as pmethod_name',
+            'pmethod_code',
+            'pmethod_description'
+        ]);
+        $pmSrch->addCondition('pmethod_type', '=', PaymentMethods::TYPE_PAYMENT_METHOD);
+        $pmRs = $pmSrch->getResultSet();
+        $paymentMethods = FatApp::getDb()->fetchAll($pmRs);
+        $orderId = isset($_SESSION['order_id']) ? $_SESSION['order_id'] : '';
+
+        $BenefitConcertCouponCodeListing = new SearchBase('tbl_coupons');
+        $BenefitConcertCouponCodeListing->addCondition('coupon_identifier', '=', 'BenefitConcert');
+        $BenefirConcertCCListing = $BenefitConcertCouponCodeListing->getResultSet();
+        $BenefitConcertCouponCodeFinalListing = FatApp::getDb()->fetchAll($BenefirConcertCCListing);
+        $this->set('BenefitConcertCouponCodeFinalListing', $BenefitConcertCouponCodeFinalListing);
+        $this->set('planResult', $planResult);
+        $this->set('tickets', $_SESSION['symposium_ticket']);
+        $this->set('planSelected', $method);
+        $this->set('paymentMethods', $paymentMethods);
+        $this->set('cartData', $cartData);
+        $this->set('userType', EventUser::USER_TYPE_LEANER);
+        $this->set('userId', $userId);
+        $this->_template->render(false, false);
+    }
+
+
+
+
+
+    //exist
+    //Get Concert Plans
+
+    public function GetConcertPlan($fromBack = 0)
+    {
+        unset($_SESSION['symposiumPlan']);
+        unset($_SESSION['symposium_ticket']);
+
+        unset($_SESSION['donation']);
+        unset($_SESSION['cart']);
+        unset($_SESSION['reg_sponser']);
+        unset($_SESSION['become_sponser']);
+        unset($_SESSION['sponsor']);
+        unset($_SESSION['summary']);
+        unset($_SESSION['removeCoupon']);
+        unset($_SESSION['ticketDownloadUrl']);
+        unset($_SESSION['ticketUrl']);
+        unset($_SESSION['ticket_count']);
+        unset($_SESSION['ticketDownloadUrl']);
+        unset($_SESSION['ticketUrl']);
+        unset($_SESSION['ticket_count']);
+        unset($_SESSION['event_ticket_id']);
+        unset($_SESSION['planSelected']);
+        unset($_SESSION['event_ticket_id']);
+        $planData = new SearchBase('tbl_benefit_concert');
+        $planData->addCondition('benefit_concert_deleted', '=', 0);
+        $planData->addCondition('benefit_concert_active', '=', 1);
+        $planData->addCondition('benefit_concert_ending_date', '>', date('Y-m-d h:i'));
+        $planData->addOrder('benefit_concert_id', 'ASC');
+        $planResult = FatApp::getDb()->fetchAll($planData->getResultSet());
+        if (empty($planResult)) {
+            FatUtility::dieJsonError(Label::getLabel('LBL_NO_PLAN_AVAIABLE'));
+        }
+        if ($fromBack <= 0) {
+            unset($_SESSION['concertPlan']);
+        }
+        if (isset($_SESSION['concertPlan'])) {
+            $this->set('planSelected', $_SESSION['concertPlan']);
+        }
+        $tickets = new SearchBase('tbl_event_concert_ticket_plan');
+        $tickets->addCondition('event_user_ticket_pay_status', '=', 1);
+        $tickets->addMultipleFields(['SUM(event_user_ticket_count) as TotalTicket', 'event_user_concert_id']);
+        $tickets->addGroupBy('event_user_concert_id');
+        $tickets->addOrder('event_user_concert_id', 'ASC');
+        $ticketManage = FatApp::getDb()->fetchAll($tickets->getResultSet());
+        $this->set('ticketManage', $ticketManage);
+        $this->set('slotDurations', $planResult);
+        $this->_template->render(false, false);
+    }
+    //Concert Tickets
+    public function GetConcertTickets($planSelected = '', $checked = 1, $fromPlan = 0, $ticketCount = 1)
+    {
+        $_SESSION['concertPlan'] = $planSelected;
+        $this->set('planSelected', $planSelected);
+        if ($fromPlan <= 0) {
+            unset($_SESSION['concert_ticket']);
+        }
+        $userId = 0;
+        if ($checked > 0) {
+            $userId = EventUserAuthentication::getLoggedUserId();
+            $_SESSION['Event_userId'] = $userId;
+        }
+        $planData = new SearchBase('tbl_benefit_concert');
+        $planData->addCondition('benefit_concert_plan_title', '=', $planSelected);
+        $planResult = FatApp::getDb()->fetch($planData->getResultSet());
+        $donation_record = new TableRecord('tbl_event_concert_ticket_plan');
+        $donation_record->assignValues([
+            'event_user_id' => $userId,
+            'event_user_concert_id' => $planResult['benefit_concert_id'],
+            'event_user_ticket_pay_status' => EventUser::EVENT_DONATION_FAILURE
+        ]);
+        if (!$donation_record->addNew([], [])) {
+            Message::addErrorMessage($donation_record->getError());
+            throw new Exception('');
+        }
+        $tickets = new SearchBase('tbl_event_concert_ticket_plan');
+        $tickets->addCondition('event_user_ticket_pay_status', '=', 1);
+        $tickets->addCondition('event_user_concert_id', '=', $planResult['benefit_concert_id']);
+        $tickets->addMultipleFields(['SUM(event_user_ticket_count) as TotalTicket', 'event_user_concert_id']);
+        $tickets->addGroupBy('event_user_concert_id');
+
+        $ticketManager = $tickets->getResultSet();
+        $ticketManagerDetails = FatApp::getDb()->fetch($ticketManager);
+
+        $ticketSrch = new SearchBase('tbl_event_concert_ticket_plan');
+        $ticketSrch->addCondition('event_user_concert_id', '=', $planResult['benefit_concert_id']);
+        if ($checked > 0) {
+            $ticketSrch->addCondition('event_user_id', '=', $userId);
+        }
+        $ticketData = FatApp::getDb()->fetchAll($ticketSrch->getResultSet());
+        $lastRecord = end($ticketData);
+
+        $_SESSION['event_corcert_ticket_id'] = $lastRecord['event_concert_ticket_plan_id'];
+        if (isset($_SESSION['concert_ticket'])) {
+            $this->set('tickets', $_SESSION['concert_ticket']);
+        } else {
+            $this->set('tickets', $ticketCount);
+        }
+        $this->set('planResult', $planResult);
+        $this->set('ticketManagerDetails', $ticketManagerDetails);
+        $this->_template->render(false, false);
+    }
+    public function RegisterConcertUserData($fromEvent = '', $fromBack = 0, $checked = 0)
+    {
+        $userId = 0;
+        if ($checked > 0) {
+            $userId = EventUserAuthentication::getLoggedUserId();
+            $_SESSION['Event_userId'] = $userId;
+            // $userId=$_SESSION['Event_userId'];
+        }
+        $frm = $this->getSignUpForm($userId);
+        if (0 < $userId) {
+            $data = EventUser::getAttributesById(EventUserAuthentication::getLoggedUserId(), array(
+                'user_id', 'user_url_name', 'user_first_name', 'user_last_name',
+                'user_gender', 'user_phone', 'user_phone_code', 'user_country_id',
+                'user_is_teacher', 'user_timezone', 'user_profile_info', 'user_sponsorship_plan', 'user_become_sponsership_plan',
+            ));
+            $usersrch = new SearchBase('tbl_event_user_credentials');
+            $usersrch->addCondition('credential_user_id', '=', $data['user_id']);
+            $usersrchData = FatApp::getDb()->fetch($usersrch->getResultSet());
+            $data['user_email'] = $usersrchData['credential_email'];
+            if ($data === false) {
+                FatUtility::dieWithError($this->str_invalid_request);
+            }
+            $frm->fill($data);
+        }
+        $cPageSrch = ContentPage::getSearchObject($this->siteLangId);
+        $cPageSrch->addCondition('cpage_id', '=', FatApp::getConfig('CONF_TERMS_AND_CONDITIONS_PAGE', FatUtility::VAR_INT, 0));
+        $cpage = FatApp::getDb()->fetch($cPageSrch->getResultSet());
+        if (!empty($cpage) && is_array($cpage)) {
+            $termsAndConditionsLinkHref = CommonHelper::generateUrl('Cms', 'view', [$cpage['cpage_id']]);
+        } else {
+            $termsAndConditionsLinkHref = 'javascript:void(0)';
+        }
+        $this->set('termsAndConditionsLinkHref', $termsAndConditionsLinkHref);
+        /* ] */
+        /* [ */
+        $cPPageSrch = ContentPage::getSearchObject($this->siteLangId);
+        $cPPageSrch->addCondition('cpage_id', '=', FatApp::getConfig('CONF_PRIVACY_POLICY_PAGE', FatUtility::VAR_INT, 0));
+        $cpppage = FatApp::getDb()->fetch($cPPageSrch->getResultSet());
+        if (!empty($cpppage) && is_array($cpppage)) {
+            $privacyPolicyLinkHref = CommonHelper::generateUrl('Cms', 'view', [$cpppage['cpage_id']]);
+        } else {
+            $privacyPolicyLinkHref = 'javascript:void(0)';
+        }
+        $this->set('privacyPolicyLinkHref', $privacyPolicyLinkHref);
+        /* ] */
+        $loginFrm = $this->getLoginForm('', 1);
+        $this->set('loginFrm', $loginFrm);
+        $this->set('languages', Language::getAllNames());
+        $this->set('userId', $userId);
+        $this->set('method', $fromEvent);
+        $this->set('ticket', $fromBack);
+        $this->set('frm', $frm);
+        $this->_template->render(false, false);
+    }
+    public function GetConcertTicketsPaymentSummary($method = '', $ticketCount = 1, $checkLogged = 1)
+    {
+        $_SESSION['Event_userId'] = 0;
+        if ($checkLogged > 0) {
+            $userId = EventUserAuthentication::getLoggedUserId();
+            $_SESSION['Event_userId'] = EventUserAuthentication::getLoggedUserId();
+        }
+        $userId = EventUserAuthentication::getLoggedUserId();
+        //event plan ticket Summary
+        $_SESSION['concert_ticket'] = $ticketCount;
+        $userObj = new EventUser();
+        if ($userId > 0) {
+            $userRow = EventUser::getAttributesById($userId);
+            $this->set('userData', $userRow);
+        }
+        $planData = new SearchBase('tbl_benefit_concert');
+        $planData->addCondition('benefit_concert_plan_title', '=', $method);
+        $planResult = FatApp::getDb()->fetch($planData->getResultSet());
+        //  foreach ($sponsorshipList as $key => $value) {
+        // $testimonialImages = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_EVENT_PLAN_IMAGE, $planResult['benefit_concert_id'], 0, -1);
+        // $planResult['plan_image'] = $testimonialImages;
+        //       $Sponsershiprecords[$key] = $value;
+        //}
+        // echo "<pre>";
+        // print_r($planResult);
+        $grpclsId = $_SESSION['event_corcert_ticket_id'];
+        $key = $userId . '_' . $grpclsId;
+        $cartTotal = $planResult['benefit_concert_plan_price'] * $ticketCount;
+        $cart['cart'][$key] = [
+            'teacherId' => $userId,
+            'grpclsId' => $grpclsId,
+            'startDateTime' => date('Y-m-d H:i:s'),
+            'endDateTime' => date('Y-m-d H:i:s'),
+            'isFreeTrial' => applicationConstants::NO,
+            'lessonQty' => 1,
+        ];
+        $record = new TableRecord('tbl_user_cart');
+        $cart_arr = $cart['cart'];
+        $cart_arr = serialize($cart_arr);
+        $record->assignValues([
+            "usercart_user_id" => $userId,
+            "usercart_type" => 4,
+            "usercart_details" => $cart_arr,
+            "usercart_added_date" => date('Y-m-d H:i:s')
+        ]);
+        if (!$record->addNew([], ['usercart_details' => $cart_arr, "usercart_added_date" => date('Y-m-d H:i:s')])) {
+            Message::addErrorMessage($record->getError());
+            throw new Exception('');
+        }
+        $cartData = [];
+        $cartData['key'] = $key;
+        $cartData['grpclsId'] = $grpclsId;
+        $cartData['teacherId'] = $userId;
+        $cartData['user_id'] = $userId;
+        $cartData['isFreeTrial'] = applicationConstants::NO;
+        $cartData['lessonQty'] = 1;
+        $cartData['languageId'] = $this->siteLangId;
+        $cartData['lessonDuration'] = 60;
+        $cartData['lpackage_is_free_trial'] = applicationConstants::NO;
+        $cartData['lpackage_lessons'] = 1;
+        $cartData['startDateTime'] = date('Y-m-d H:i:s');
+        $cartData['endDateTime'] = date('Y-m-d H:i:s');
+        $cartData['startDateTime'] = date('Y-m-d H:i:s');
+        $cartData['endDateTime'] = date('Y-m-d H:i:s');
+        $cartData['itemName'] = $method;
+        $cartData['itemPrice'] = $planResult['benefit_concert_plan_price'];
+        $cartData['cartTotal'] = $cartTotal;
+        $cartData['orderPaymentGatewayCharges'] = 1;
+        $cartData['orderNetAmount'] = $cartTotal;
+        $cartData['total'] = $cartTotal;
+        $_SESSION['cart'] = $cartData;
+        $userWalletBalance = EventUser::getUserBalance($userId);
+        $paymentMethods = [];
+        /* Payment Methods[ */
+        $pmSrch = PaymentMethods::getSearchObject($this->siteLangId);
+        $pmSrch->doNotCalculateRecords();
+        $pmSrch->doNotLimitRecords();
+        $pmSrch->addMultipleFields([
+            'pmethod_id',
+            'IFNULL(pmethod_name, pmethod_identifier) as pmethod_name',
+            'pmethod_code',
+            'pmethod_description'
+        ]);
+        $pmSrch->addCondition('pmethod_type', '=', PaymentMethods::TYPE_PAYMENT_METHOD);
+        $pmRs = $pmSrch->getResultSet();
+        $paymentMethods = FatApp::getDb()->fetchAll($pmRs);
+        $orderId = isset($_SESSION['order_id']) ? $_SESSION['order_id'] : '';
+
+        $BenefitConcertCouponCodeListing = new SearchBase('tbl_coupons');
+        $BenefitConcertCouponCodeListing->addCondition('coupon_identifier', '=', 'BenefitConcert');
+        $BenefirConcertCCListing = $BenefitConcertCouponCodeListing->getResultSet();
+        $BenefitConcertCouponCodeFinalListing = FatApp::getDb()->fetchAll($BenefirConcertCCListing);
+        $this->set('BenefitConcertCouponCodeFinalListing', $BenefitConcertCouponCodeFinalListing);
+        $this->set('planResult', $planResult);
+        $this->set('tickets', $_SESSION['concert_ticket']);
+        $this->set('planSelected', $method);
+        $this->set('paymentMethods', $paymentMethods);
+        $this->set('cartData', $cartData);
+        $this->set('userType', EventUser::USER_TYPE_LEANER);
+        $this->set('userId', $userId);
+        $this->_template->render(false, false);
+    }
     //REgistration sponser sponsership list
     public function GetEventPlan($fromBack = 0)
     {
+        unset($_SESSION['symposiumPlan']);
+        unset($_SESSION['symposium_ticket']);
         unset($_SESSION['donation']);
         unset($_SESSION['cart']);
         unset($_SESSION['reg_sponser']);

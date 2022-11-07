@@ -222,14 +222,33 @@ if (!empty($planResult['plan_image'])) {
                         </div>
                     </div>
                     <div class="coupon-box slide-target-coupon-js">
-                        <div class="coupon-box__head">
-                            <p><?PHP echo Label::getLabel('LBL_AVAILABLE_COUPONS'); ?></p>
-                            <a href="javascript:void(0);" class="btn btn--bordered color-black btn--close">
-                                <svg class="icon icon--close">
-                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#close'; ?>"></use>
-                                </svg>
-                            </a>
-                        </div>
+                        <?php
+                        foreach ($EventTicketsCouponCodeFinalListing as $value) {
+                            if ($value['coupon_end_date'] > date('Y-m-d')) {
+                        ?>
+                                <div class="coupon-box__head">
+                                    <p><?PHP echo Label::getLabel('LBL_AVAILABLE_COUPONS'); ?></p>
+                                    <a href="javascript:void(0);" class="btn btn--bordered color-black btn--close">
+                                        <svg class="icon icon--close">
+                                            <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#close'; ?>"></use>
+                                        </svg>
+                                    </a>
+                                </div>
+                            <?php
+                            } else {
+                            ?>
+                                <div class="coupon-box__head">
+                                    <p><?PHP echo Label::getLabel('LBL_NOT_AVAILABLE_COUPONS'); ?></p>
+                                    <a href="javascript:void(0);" class="btn btn--bordered color-black btn--close">
+                                        <svg class="icon icon--close">
+                                            <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#close'; ?>"></use>
+                                        </svg>
+                                    </a>
+                                </div>
+                        <?php
+                            }
+                        }
+                        ?>
                         <div class="coupon-box__body">
                             <?php foreach ($couponsList as $key => $coupon) { ?>
                                 <div class="coupon-list">

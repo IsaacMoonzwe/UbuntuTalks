@@ -89,6 +89,24 @@ $contactFrm->developerTags['fld_default_col'] = 12;
       <div class="video-media ratio ratio--16by9 events-Video-mobile">
          <iframe src="https://www.youtube.com/embed/hMAK0owYRYU&feature=youtu.be?autoplay=1&rel=0&loop=1&playlist=hMAK0owYRYU&mute=1" allowfullscreen="" width="900" height="400" frameborder="0"></iframe>
       </div>
+      <div class="events-Video-mobile">
+         <div id="clock">
+            <div class="block"> <span class="digit" id="monthss"></span> Months
+            </div>
+
+            <div class="block"> <span class="digit" id="dayss"></span> Days
+            </div>
+
+            <div class="block"> <span class="digit" id="hourss"></span> Hours
+            </div>
+
+            <div class="block"> <span class="digit" id="minutess"></span> Minutes
+            </div>
+
+            <div class="block"> <span class="digit" id="secondss"></span> Seconds
+            </div>
+         </div>
+      </div>
    </div>
 </section>
 
@@ -112,11 +130,12 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                   <li class="nav-item">
                      <a class="nav-link" id="sponsorship-tab" data-toggle="tab" href="#sponsorship" role="tab" aria-controls="sponsorship" aria-selected="false"><?php echo Label::getLabel('LBL_Sponsorship', $adminLangId); ?></a>
                   </li>
-
                   <li class="nav-item">
-                     <a class="nav-link" id="donation-tab" data-toggle="tab" href="#donation" role="tab" aria-controls="donation" aria-selected="false"><?php echo Label::getLabel('LBL_Donation', $adminLangId); ?></a>
+                     <a class="nav-link" id="SymposiumDinner-tab" data-toggle="tab" href="#SymposiumDinner" role="tab" aria-controls="SymposiumDinner" aria-selected="false"><?php echo Label::getLabel('LBL_Pre-Symposium_Dinner', $adminLangId); ?></a>
                   </li>
-
+                  <li class="nav-item">
+                     <a class="nav-link" id="donation-tab" data-toggle="tab" href="#donation" role="tab" aria-controls="donation" aria-selected="false"><?php echo Label::getLabel('LBL_Benefit_Concert', $adminLangId); ?></a>
+                  </li>
                   <li class="nav-item">
                      <a class="nav-link" id="agenda-tab" data-toggle="tab" href="#agenda" role="tab" aria-controls="agenda" aria-selected="false"><?php echo Label::getLabel('LBL_Agenda', $adminLangId); ?></a>
                   </li>
@@ -126,9 +145,9 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                   <li class="nav-item">
                      <a class="nav-link" id="codeofconduct-tab" data-toggle="tab" href="#codeofconduct" role="tab" aria-controls="codeofconduct" aria-selected="false"><?php echo Label::getLabel('LBL_Code_Of_Conduct', $adminLangId); ?></a>
                   </li>
-                  <li class="nav-item">
+                  <!-- <li class="nav-item">
                      <a class="nav-link" id="DisclaimerSection-tab" data-toggle="tab" href="#DisclaimerSection" role="tab" aria-controls="DisclaimerSection" aria-selected="false"><?php echo Label::getLabel('LBL_Disclaimer_Section', $adminLangId); ?></a>
-                  </li>
+                  </li> -->
                   <li class="nav-item">
                      <a class="nav-link" id="safety-tab" data-toggle="tab" href="#safety" role="tab" aria-controls="safety" aria-selected="false"><?php echo Label::getLabel('LBL_Covid_19_Safety', $adminLangId); ?></a>
                   </li>
@@ -494,10 +513,10 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                            <?php echo FatUtility::decodeHtmlEntities($SponsorContent); ?>
                         </div>
                         <div class="col-md-12 donation-button">
-                           <a href="javascript:void(0)" onclick="GetEventBecomeSponserPlan();" class="donation-sponosor-button">Sponsor Now</a>
+                           <a href="javascript:void(0)" onclick="GetSelectEventBecomeSponserPlan();" class="donation-sponosor-button">Sponsor Now</a>
                         </div>
                         <div class="price_tabel">
-                           <h4><?php echo Label::getLabel('LBL_Sponsorship_Categories', $adminLangId); ?></h4>
+                           <h4><?php echo Label::getLabel('LBL_Sponsorship_Categories_For_UT_Symposium_And_Benefit_Concert', $adminLangId); ?></h4>
                            <table>
                               <tr>
                                  <th class="table-title"><?php echo Label::getLabel('LBL_Sponsorship_Categories', $adminLangId); ?></th>
@@ -583,9 +602,109 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                  <?php }
                                  } ?>
                               </tr>
+
+                              <tr>
+                                 <td class="price_row"><?php echo Label::getLabel('LBL_Full_-_Color_Ad_In_Printed_Program_Guide', $adminLangId); ?></td>
+                                 <?php foreach ($SponsorshipCategoriesList as  $value) {
+                                    if ($value['sponsorshipcategories_program_guide'] == 'no') { ?>
+                                       <td class="check-icons"><i class="fa fa-ban ban-icon"></i></td>
+                                    <?php } else { ?>
+                                       <th class="table-title"><?php echo $value['sponsorshipcategories_program_guide']; ?></th>
+                                 <?php }
+                                 } ?>
+                              </tr>
+                           </table>
+                        </div>
+                        <div class="price_tabel dinner-table">
+                           <h4><?php echo Label::getLabel('LBL_Sponsorship_Categories_For_Pre_Symposium_Dinner', $adminLangId); ?></h4>
+                           <table>
+                              <tr>
+                                 <th class="table-title"><?php echo Label::getLabel('LBL_Sponsorship_Categories', $adminLangId); ?></th>
+                                 <?php foreach ($SponsorshipCategoriesDinnerList as  $value) { ?>
+                                    <th class="table-title silver-colour"><?php echo $value['sponsorshipcategories_name']; ?></th>
+                                 <?php } ?>
+                              </tr>
+                              <tr class="price_row">
+                                 <th class="table-title"><?php echo Label::getLabel('LBL_Price', $adminLangId); ?></th>
+                                 <?php foreach ($SponsorshipCategoriesDinnerList as  $value) { ?>
+                                    <th class="table-title"><?php echo "$" . $value['sponsorshipcategories_plan_price']; ?></th>
+                                 <?php } ?>
+                              </tr>
+                              <tr>
+                                 <td class="price_row"><?php echo Label::getLabel('LBL_Conference_Passes', $adminLangId); ?></td>
+                                 <?php foreach ($SponsorshipCategoriesDinnerList as  $value) { ?>
+                                    <th class="table-title"><?php echo $value['sponsorshipcategories_tickets']; ?></th>
+                                 <?php } ?>
+                              </tr>
+                              <tr>
+                                 <td class="price_row"><?php echo Label::getLabel('LBL_20%_Discount_On_Additional_Passes', $adminLangId); ?></td>
+                                 <?php foreach ($SponsorshipCategoriesDinnerList as  $value) {
+                                    if ($value['sponsorshipcategories_additional_passes'] == 'Yes') { ?>
+                                       <td class="check-icons"><i class="fa fa-check right-icon"></i></td>
+                                    <?php } else { ?>
+                                       <td class="check-icons"><i class="fa fa-ban ban-icon"></i></td>
+                                 <?php }
+                                 } ?>
+                              </tr>
+                              <tr>
+                                 <td class="price_row"><?php echo Label::getLabel('LBL_Exhibit_Booth', $adminLangId); ?><sup><?php echo Label::getLabel('LBL_1', $adminLangId); ?></sup></td>
+                                 <?php foreach ($SponsorshipCategoriesDinnerList as  $value) { ?>
+                                    <th class="table-title"><?php echo $value['sponsorshipcategories_exhitbit_booth']; ?></th>
+                                 <?php } ?>
+                              </tr>
+                              <tr>
+                                 <td class="price_row"><?php echo Label::getLabel('LBL_Logo_Link_and_Blurb_On_The_Sponsor_Page', $adminLangId); ?></td>
+                                 <?php foreach ($SponsorshipCategoriesDinnerList as  $value) {
+                                    if ($value['sponsorshipcategories_logo_link_blurb'] == 'Yes') { ?>
+                                       <td class="check-icons"><i class="fa fa-check right-icon"></i></td>
+                                    <?php } else { ?>
+                                       <td class="check-icons"><i class="fa fa-ban ban-icon"></i></td>
+                                 <?php }
+                                 } ?>
+                              </tr>
+                              <tr>
+                                 <td class="price_row"><?php echo Label::getLabel('LBL_Logo_In_The_Website_Footer', $adminLangId); ?></td>
+                                 <?php foreach ($SponsorshipCategoriesDinnerList as  $value) {
+                                    if ($value['sponsorshipcategories_logo_footer'] == 'Yes') { ?>
+                                       <td class="check-icons"><i class="fa fa-check right-icon"></i></td>
+                                    <?php } else { ?>
+                                       <td class="check-icons"><i class="fa fa-ban ban-icon"></i></td>
+                                 <?php }
+                                 } ?>
+                              </tr>
+                              <tr>
+                                 <td class="price_row"><?php echo Label::getLabel('LBL_Static_Banner_Ad_To_Rotate_On_the_confernece_website', $adminLangId); ?></td>
+                                 <?php foreach ($SponsorshipCategoriesDinnerList as  $value) {
+                                    if ($value['sponsorshipcategories_banner'] == 'Yes') { ?>
+                                       <td class="check-icons"><i class="fa fa-check right-icon"></i></td>
+                                    <?php } else { ?>
+                                       <td class="check-icons"><i class="fa fa-ban ban-icon"></i></td>
+                                 <?php }
+                                 } ?>
+                              </tr>
+                              <tr>
+                                 <td class="price_row"><?php echo Label::getLabel('LBL_Logo_On_Onsite_Sponsor_Signage', $adminLangId); ?></td>
+                                 <?php foreach ($SponsorshipCategoriesDinnerList as  $value) {
+                                    if ($value['sponsorshipcategories_logo_sponsor_signage'] == 'Yes') { ?>
+                                       <td class="check-icons"><i class="fa fa-check right-icon"></i></td>
+                                    <?php } else { ?>
+                                       <td class="check-icons"><i class="fa fa-ban ban-icon"></i></td>
+                                 <?php }
+                                 } ?>
+                              </tr>
+                              <tr>
+                                 <td class="price_row"><?php echo Label::getLabel('LBL_Company_Named_In_Pre-_Conf_Attendee_Email', $adminLangId); ?></td>
+                                 <?php foreach ($SponsorshipCategoriesDinnerList as  $value) {
+                                    if ($value['sponsorshipcategories_attendee_email'] == 'Yes') { ?>
+                                       <td class="check-icons"><i class="fa fa-check right-icon"></i></td>
+                                    <?php } else { ?>
+                                       <td class="check-icons"><i class="fa fa-ban ban-icon"></i></td>
+                                 <?php }
+                                 } ?>
+                              </tr>
                               <!-- <tr>
                                  <td class="price_row"><?php echo Label::getLabel('LBL_Lead_Retrivel_Scanners', $adminLangId); ?></td>
-                                 <?php foreach ($SponsorshipCategoriesList as  $value) {
+                                 <?php foreach ($SponsorshipCategoriesDinnerList as  $value) {
                                     if ($value['sponsorshipcategories_retrieval_scanners'] == 'No') { ?>
                                        <td class="check-icons"><i class="fa fa-ban ban-icon"></i></td>
                                     <?php } else { ?>
@@ -595,7 +714,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                               </tr> -->
                               <tr>
                                  <td class="price_row"><?php echo Label::getLabel('LBL_Full_-_Color_Ad_In_Printed_Program_Guide', $adminLangId); ?></td>
-                                 <?php foreach ($SponsorshipCategoriesList as  $value) {
+                                 <?php foreach ($SponsorshipCategoriesDinnerList as  $value) {
                                     if ($value['sponsorshipcategories_program_guide'] == 'no') { ?>
                                        <td class="check-icons"><i class="fa fa-ban ban-icon"></i></td>
                                     <?php } else { ?>
@@ -608,7 +727,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                               <a href="https://ubuntutalks.com/image/editor-image/1662959770-NewUTSymposium2023SponsorFlyer.jpeg" download="UT_Symposium_2023_ Sponsor_Flyer.jpeg" class="more-info-btn"><?php echo Label::getLabel('LBL_UT_Symposium_Sponsor_Flyer', $adminLangId); ?></a>
                            </div>
                            <div class="sponsorpage-button">
-                              <a href="#" onclick="GetEventBecomeSponserPlan();" class="button-more-info-btn"><?php echo Label::getLabel('LBL_Log_In_To_Sponsor', $adminLangId); ?></a>
+                              <a href="#" onclick="GetSelectEventBecomeSponserPlan();" class="button-more-info-btn"><?php echo Label::getLabel('LBL_Log_In_To_Sponsor', $adminLangId); ?></a>
                            </div>
 
 
@@ -720,7 +839,71 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                         <a class="speakers-tab" href="#tabs" id="main_menu"><?php echo Label::getLabel('LBL_Main_Menu', $adminLangId); ?></a>
                      </div>
                   </div>
-                  <!-- Donation Section -->
+                  <!-- Pre-Symposium Dinner Section -->
+                  <div class="tab-pane fade" id="SymposiumDinner" role="tabpanel" aria-labelledby="SymposiumDinner-tab">
+                     <div class="col-md-12">
+                        <?php echo FatUtility::decodeHtmlEntities($PreSymposiumDinner); ?>
+                     </div>
+                     <div class="col-md-12 donation-title">
+                        <div class="registration_card">
+                           <h1 class="concert-title"><?php echo Label::getLabel('LBL_Tickets', $adminLangId); ?></h1>
+                           <div class="row">
+                              <?php
+                              $index = 0;
+                              foreach ($PreSymposiumDinnersDetailsList as  $value) {  ?>
+                                 <div class="col-lg-4">
+                                    <div class="card-list">
+                                       <div class="ticket-card-header">
+                                          <div>
+                                             <h4 class="ticket-name">
+                                                <div class="lt-line-clamp lt-line-clamp--multi-line">
+                                                   <?php echo $value['pre_symposium_dinner_plan_title']; ?>
+                                                </div>
+                                             </h4>
+                                          </div>
+                                       </div>
+                                       <div class="ticket-card-nav">
+                                          <div>
+                                             <h2 class="ticket-price"><?php echo "$" . $value['pre_symposium_dinner_plan_price']; ?></h2>
+                                             <div class="ticket-date">
+                                                <p class="ticket-decription"><?php echo $value['pre_symposium_dinner_plan_description']; ?></p>
+                                                <div class="ticket-information">
+                                                   <?php if ($value['pre_symposium_dinner_plan_note'] != '') { ?>
+                                                      <p class="note">Note: <?php echo $value['pre_symposium_dinner_plan_note']; ?></p>
+                                                   <?php } ?>
+                                                   <div class="purchase-button">
+                                                      <?php
+                                                      $Currentdate = date('Y-m-d h:i');
+                                                      if ($value['pre_symposium_dinner_ending_date'] < $Currentdate) {
+                                                      ?>
+                                                         <a href="javascript:void(0)" class="btn btn--primary events-buttons not-avilable"><?php echo Label::getLabel('LBL_Not_Available'); ?></a>
+                                                      <?php
+                                                      } elseif ($ticketManagerDetails[$index]['event_user_concert_id'] == $value['pre_symposium_dinner_id'] && $ticketManagerDetails[$index]['TotalTicket'] >= $value['pre_symposium_dinner_avilable_tickets']) { ?>
+                                                         <a href="javascript:void(0)" class="btn btn--primary events-buttons not-avilable"><?php echo Label::getLabel('LBL_Not_Available'); ?></a>
+                                                      <?php } else {
+                                                      ?>
+                                                         <a href="javascript:void(0)" onclick="GetSymposiumPlan();" class="btn btn--primary events-buttons"><?php echo Label::getLabel('LBL_Purchase'); ?></a>
+                                                      <?php
+                                                      }
+                                                      ?>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+
+                              <?php $index++;
+                              } ?>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="main-menu">
+                        <a class="speakers-tab" href="#tabs" id="main_menu"><?php echo Label::getLabel('LBL_Main_Menu', $adminLangId); ?></a>
+                     </div>
+                  </div>
+                  <!-- Benefit Concert Section -->
                   <div class="tab-pane fade" id="donation" role="tabpanel" aria-labelledby="donation-tab">
                      <div class="col-md-12 donation-title">
                         <?php echo FatUtility::decodeHtmlEntities($DonationContent); ?>
@@ -728,7 +911,101 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                      <div class="col-md-12 donation-button">
                         <a href="javascript:void(0)" onclick="GetEventDonation();" class="donation-sponosor-button">Donate Now</a>
                      </div>
-                     <div class="main-menu">
+                     <div class="aboutus-joyus-section">
+                        <div class="col-md-12 donation-title">
+                           <div class="row">
+                              <?php
+                              foreach ($BenefitConcertArtistsDetailsList as $value) {
+                                 $lastWords = substr($value['benefit_concert_artists_video_link'], strrpos($value['benefit_concert_artists_video_link'], '/') + 1);
+
+                              ?>
+                                 <div class="row image-section video-section-block">
+                                    <div class="col-lg-6">
+                                       <h2>
+                                          <p class="plan-title-desktop"><?php echo $value['benefit_concert_artists_plan_title']; ?></p>
+                                       </h2>
+                                       <div>
+                                          <span class="benefits-artist-description"><?php echo $value['benefit_concert_artists_plan_description']; ?></span>
+                                       </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                       <h2>
+                                          <p class="plan-title-mobile"><?php echo $value['benefit_concert_artists_plan_title']; ?></p>
+                                       </h2>
+                                       <div id="video">
+                                          <iframe id="frame1" src="<?php echo $value['benefit_concert_artists_video_link']; ?>&amp;feature=youtu.be?autoplay=1&amp;rel=0&amp;loop=1&amp;playlist=<?php echo $lastWords; ?>&amp;mute=1" allowfullscreen="" width="100%" height="100%" frameborder="0"></iframe>
+                                       </div>
+                                    </div>
+                                 </div>
+                              <?php } ?>
+                           </div>
+                        </div>
+                        <div class="col-md-12 sidebar-btns benefits-sponsor-button">
+                           <a href="#sponsorship" class="more-info-btn sponsor"><?php echo Label::getLabel('LBL_Sponsor', $adminLangId); ?></a>
+                        </div>
+                     </div>
+                     <div class="aboutus-joyus-section" style="padding-top:20px ;">
+                        <div class="col-md-12 donation-title">
+                           <?php echo FatUtility::decodeHtmlEntities($AboutVenue); ?>
+                        </div>
+                     </div>
+                     <div class="col-md-12 donation-title">
+                        <div class="registration_card">
+                           <h1 class="concert-title"><?php echo Label::getLabel('LBL_Tickets', $adminLangId); ?></h1>
+                           <div class="row">
+                              <?php
+
+                              $index = 0;
+                              foreach ($BenefitConcertDetailsList as  $value) {  ?>
+                                 <div class="col-lg-4">
+                                    <div class="card-list">
+                                       <div class="ticket-card-header">
+                                          <div>
+                                             <h4 class="ticket-name">
+                                                <div class="lt-line-clamp lt-line-clamp--multi-line">
+                                                   <?php echo $value['benefit_concert_plan_title']; ?>
+                                                </div>
+                                          </div>
+                                          </h4>
+                                       </div>
+                                       <div class="ticket-card-nav">
+                                          <div>
+                                             <h2 class="ticket-price"><?php echo "$" . $value['benefit_concert_plan_price']; ?></h2>
+                                             <div class="ticket-date">
+                                                <p class="ticket-decription"><?php echo $value['benefit_concert_plan_description']; ?></p>
+                                                <div class="ticket-information">
+                                                   <?php if ($value['benefit_concert_plan_note'] != '') { ?>
+                                                      <p class="note">Note: <?php echo $value['benefit_concert_plan_note']; ?></p>
+                                                   <?php } ?>
+                                                   <div class="purchase-button">
+                                                      <?php
+                                                      $Currentdate = date('Y-m-d h:i');
+                                                      if ($value['benefit_concert_ending_date'] < $Currentdate) {
+                                                      ?>
+                                                         <a href="javascript:void(0)" class="btn btn--primary events-buttons not-avilable"><?php echo Label::getLabel('LBL_Not_Available'); ?></a>
+                                                      <?php
+                                                      } elseif ($ticketManagerDetails[$index]['event_user_concert_id'] == $value['benefit_concert_id'] && $ticketManagerDetails[$index]['TotalTicket'] >= $value['benefit_concert_avilable_tickets']) { ?>
+                                                         <a href="javascript:void(0)" class="btn btn--primary events-buttons not-avilable"><?php echo Label::getLabel('LBL_Not_Available'); ?></a>
+                                                      <?php } else {
+                                                      ?>
+                                                         <a href="javascript:void(0)" onclick="GetConcertPlan();" class="btn btn--primary events-buttons"><?php echo Label::getLabel('LBL_Purchase'); ?></a>
+                                                      <?php
+                                                      }
+                                                      ?>
+                                                   </div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+
+                              <?php $index++;
+                              } ?>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="col-md-12 main-menu">
                         <a class="speakers-tab" href="#tabs" id="main_menu"><?php echo Label::getLabel('LBL_Main_Menu', $adminLangId); ?></a>
                      </div>
                   </div>
@@ -926,15 +1203,6 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                         <a class="speakers-tab" href="#tabs" id="main_menu"><?php echo Label::getLabel('LBL_Main_Menu', $adminLangId); ?></a>
                      </div>
                   </div>
-                  <!-- Disclaimer Section -->
-                  <div class="tab-pane fade" id="DisclaimerSection" role="tabpanel" aria-labelledby="DisclaimerSection-tab">
-                     <div class="col-md-12 donation-title">
-                        <?php echo FatUtility::decodeHtmlEntities($DisclaimerSection); ?>
-                     </div>
-                     <div class="main-menu">
-                        <a class="speakers-tab" href="#tabs" id="main_menu"><?php echo Label::getLabel('LBL_Main_Menu', $adminLangId); ?></a>
-                     </div>
-                  </div>
                   <!-- Covid Information -->
                   <div class="tab-pane fade" id="safety" role="tabpanel" aria-labelledby="safety-tab">
                      <div class="tab-detail">
@@ -1069,6 +1337,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
 </section>
 
 <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script src='https://www.google.com/recaptcha/api.js'></script>
@@ -1079,7 +1348,37 @@ $contactFrm->developerTags['fld_default_col'] = 12;
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.css" integrity="sha512-OTcub78R3msOCtY3Tc6FzeDJ8N9qvQn1Ph49ou13xgA9VsH9+LRxoFU6EqLhW4+PKRfU+/HReXmSZXHEkpYoOA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" integrity="sha512-sMXtMNL1zRzolHYKEujM2AqCLUR9F2C4/05cdbxjjLSRvMQIciEPCQZo++nk7go3BtSuK9kfa/s+a4f4i5pLkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDL7EmtEH4QGTYEhHkIt4tqf4QJ71YK_yY&callback=initMap"></script>
+
 <script>
+   $(document).ready(function() {
+      var dateStrings = "2023/03/30"
+      var deadlines = new Date(dateStrings);
+
+      function updateClocks() {
+         var todays = Date();
+         var diffs = Date.parse(deadlines) - Date.parse(todays);
+         if (diffs <= 0) {
+            clearInterval(intervals);
+         } else {
+            var secondss = Math.floor((diffs / 1000) % 60);
+            var minutess = Math.floor((diffs / 1000 / 60) % 60);
+            var hourss = Math.floor((diffs / 1000 / 60 / 60) % 24);
+            var dayss = Math.floor(diffs / (1000 * 60 * 60 * 24) % 30.5);
+            var monthss = Math.floor(diffs / (1000 * 60 * 60 * 24 * 30.5) % 12);
+
+            $("#monthss").text(('0' + monthss).slice(-2));
+            $("#dayss").text(('0' + dayss).slice(-2));
+            $("#hourss").text(('0' + hourss).slice(-2));
+            $("#minutess").text(('0' + minutess).slice(-2));
+            $("#secondss").text(('0' + secondss).slice(-2));
+
+         } //EOF ELSE
+
+      } //EOF FUNCTION
+
+      var intervals = setInterval(updateClocks, 1000);
+
+   });
    $(document).ready(function() {
       var dateString = "2023/03/30"
       var deadline = new Date(dateString);
@@ -1109,50 +1408,13 @@ $contactFrm->developerTags['fld_default_col'] = 12;
       var interval = setInterval(updateClock, 1000);
 
    }); //EOF DOCUMENT.READY
+
+
    $(document).ready(function() {
-      // (function() {
-      //    const second = 1000,
-      //       minute = second * 60,
-      //       hour = minute * 60,
-      //       day = hour * 24;
-
-      //    //I'm adding this section so I don't have to keep updating this pen every year :-)
-      //    //remove this if you don't need it
-      //    let today = new Date(),
-      //       dd = String(today.getDate()).padStart(2, "0"),
-      //       mm = String(today.getMonth() + 1).padStart(2, "0"),
-      //       yyyy = today.getFullYear(),
-      //       nextYear = yyyy + 1,
-      //       dayMonth = "09/30/",
-      //       birthday = dayMonth + yyyy;
-
-      //    today = mm + "/" + dd + "/" + yyyy;
-      //    if (today > birthday) {
-      //       birthday = dayMonth + nextYear;
-      //    }
-      //    //end
-
-      //    const countDown = new Date(birthday).getTime(),
-      //       x = setInterval(function() {
-
-      //          const now = new Date().getTime(),
-      //             distance = countDown - now;
-
-      //          document.getElementById("days").innerText = Math.floor(distance / (day)),
-      //             document.getElementById("hours").innerText = Math.floor((distance % (day)) / (hour)),
-      //             document.getElementById("minutes").innerText = Math.floor((distance % (hour)) / (minute)),
-      //             document.getElementById("seconds").innerText = Math.floor((distance % (minute)) / second);
-
-      //          //do something later when date is reached
-      //          if (distance < 0) {
-      //             document.getElementById("headline").innerText = "It's my birthday!";
-      //             document.getElementById("countdown").style.display = "none";
-      //             document.getElementById("content").style.display = "block";
-      //             clearInterval(x);
-      //          }
-      //          //seconds
-      //       }, 0)
-      // }());
+      setTimeout(function() {
+         $(".ytp-large-play-button").trigger("click");
+         console.log("Hello");
+      }, 10000);
       var btn = $('#button');
 
       $(window).scroll(function() {
@@ -1181,6 +1443,10 @@ $contactFrm->developerTags['fld_default_col'] = 12;
          var newWindowWidth = $(window).width();
          if (newWindowWidth < 992) {
             $(".events-tabs #myTab a").click(function() {
+               $.loader.show();
+               setTimeout(function(){
+                  $.loader.hide();
+               }, 3000);
                $('html, body').animate({
                   scrollTop: $(".sidebar-social").offset().top
                }, 500);

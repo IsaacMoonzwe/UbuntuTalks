@@ -12,6 +12,9 @@ class LanguageSymposium extends MyAppModel
     const BLOCK_SPONSORSHIP_INFORMATION = 28;
     const BLOCK_CODE_OF_CONDUCT_INFORMATION = 29;
     const BLOCK_DISCLAIMER_SECTION = 30;
+    const BLOCK_ABOUT_JOYOUS_CELEBRATION = 31;
+    const BLOCK_ABOUT_VENUE = 32;
+    const BLOCK_PRE_SYMPOSIUM_DINNER = 34;
 
     private $pageType;
 
@@ -26,11 +29,11 @@ class LanguageSymposium extends MyAppModel
         $srch = new SearchBase(static::DB_TBL, 'ep');
         if ($langId > 0) {
             $srch->joinTable(
-                    static::DB_TBL_LANG,
-                    'LEFT OUTER JOIN',
-                    'ep_l.' . static::DB_TBL_LANG_PREFIX . 'epage_id = ep.' . static::tblFld('id') . ' and
+                static::DB_TBL_LANG,
+                'LEFT OUTER JOIN',
+                'ep_l.' . static::DB_TBL_LANG_PREFIX . 'epage_id = ep.' . static::tblFld('id') . ' and
 			     ep_l.' . static::DB_TBL_LANG_PREFIX . 'lang_id = ' . $langId,
-                    'ep_l'
+                'ep_l'
             );
         }
         if ($isActive) {
@@ -63,10 +66,10 @@ class LanguageSymposium extends MyAppModel
         unset($data['epage_id']);
         $assignValues = $data;
         if (!FatApp::getDb()->updateFromArray(
-                        static::DB_TBL,
-                        $assignValues,
-                        array('smt' => static::DB_TBL_PREFIX . 'id = ? ', 'vals' => array((int) $epage_id))
-                )) {
+            static::DB_TBL,
+            $assignValues,
+            array('smt' => static::DB_TBL_PREFIX . 'id = ? ', 'vals' => array((int) $epage_id))
+        )) {
             $this->error = FatApp::getDb()->getError();
             return false;
         }
@@ -88,5 +91,4 @@ class LanguageSymposium extends MyAppModel
         }
         return $resultData['language_symposium_content'];
     }
-
 }

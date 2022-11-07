@@ -18,8 +18,14 @@ var eventCart = {
     donationAmount: 1,
     countOfTickets: 1,
     becomeSponserPlanQty: {},
-    checkEventUserLogged:0,
-    eventUserSelectedStaus:'Login',
+    checkEventUserLogged: 0,
+    selectSponserEventPlan: null,
+    becomeSponserSelectedPlan: {},
+    eventUserSelectedStaus: 'Login',
+    concertPlan: '',
+    concertTicket: 1,
+    symposiumPlan:'',
+    symposiumTicket:1,
   },
   couponCode: "",
   isWalletSelect: 0,
@@ -221,7 +227,7 @@ var eventCart = {
   },
   confirmOrder: function (orderType) {
     $.loader.show();
-      if (isEventUserLogged() == 0) {
+    if (isEventUserLogged() == 0) {
       $.loader.hide();
       EventLogInFormPopUp('purchasePlan');
       return false;
@@ -273,6 +279,8 @@ $(document).bind("afterClose.facebox", function () {
     lessonDuration: 0,
     lessonQty: 0,
     isCompany: 0,
+    becomeSponserSelectedPlan: {},
+    selectSponserEventPlan: null,
   };
   eventCart.couponCode = "";
   eventCart.isWalletSelect = 0;

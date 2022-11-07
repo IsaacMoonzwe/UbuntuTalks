@@ -103,7 +103,6 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                 </li>
                 <li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_UT_Events', $adminLangId); ?></a>
                     <ul>
-
                         <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('EventUsers'); ?>"><?php echo Label::getLabel('LBL_Events_User_Listing', $adminLangId); ?></a></li>
                         <?php } ?>
@@ -111,7 +110,13 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                             <li><a href="<?php echo CommonHelper::generateUrl('LanguageSymposium'); ?>"><?php echo Label::getLabel('LBL_UT_Content_Blocks', $adminLangId); ?></a></li>
                         <?php } ?>
                         <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
+                            <li><a href="<?php echo CommonHelper::generateUrl('EventsReportAnIssue', 'viewSchedules', ['all']); ?>"><?php echo Label::getLabel('LBL_Events_Report_Issue', $adminLangId); ?></a></li>
+                        <?php } ?>
+                        <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('ProgramAndSpeakers'); ?>"><?php echo Label::getLabel('LBL_Program_&_Speakers', $adminLangId); ?></a></li>
+                        <?php } ?>
+                        <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
+                            <li><a href="<?php echo CommonHelper::generateUrl('EventsSponsorshipCategories'); ?>"><?php echo Label::getLabel('LBL_Sponsorship_Categories', $adminLangId); ?></a></li>
                         <?php } ?>
                         <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('Sponsorship'); ?>"><?php echo Label::getLabel('LBL_Sponsorship', $adminLangId); ?></a></li>
@@ -124,6 +129,15 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                         <?php } ?>
                         <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('RegistrationPlan'); ?>"><?php echo Label::getLabel('LBL_Registration_Plan_Details', $adminLangId); ?></a></li>
+                        <?php } ?>
+                        <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
+                            <li><a href="<?php echo CommonHelper::generateUrl('BenefitConcert'); ?>"><?php echo Label::getLabel('LBL_Benefit_Concert_Tickets_Category', $adminLangId); ?></a></li>
+                        <?php } ?>
+                        <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
+                            <li><a href="<?php echo CommonHelper::generateUrl('PreSymposiumDinner'); ?>"><?php echo Label::getLabel('LBL_Pre_Symposium_Dinner_Tickets_Category', $adminLangId); ?></a></li>
+                        <?php } ?>
+                        <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
+                            <li><a href="<?php echo CommonHelper::generateUrl('BenefitConcertArtists'); ?>"><?php echo Label::getLabel('LBL_Benefit_Concert_Artists', $adminLangId); ?></a></li>
                         <?php } ?>
                         <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('SponsorshipProgramGuide'); ?>"><?php echo Label::getLabel('LBL_Sponsorship_Program_Guide', $adminLangId); ?></a></li>

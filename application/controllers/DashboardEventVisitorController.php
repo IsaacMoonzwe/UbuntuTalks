@@ -14,20 +14,146 @@ class DashboardEventVisitorController extends MyEventAppController
         $userId = EventUserAuthentication::getLoggedUserId();
         $userObj = new EventUser($userId);
         $userDetails = $userObj->getDashboardData(CommonHelper::getLangId());
+
         $EventplanData = new SearchBase('tbl_event_user_ticket_plan');
         $EventplanData->addCondition('event_user_ticket_pay_status', '=', 1);
         $EventplanData->addCondition('event_user_id', '=', $userId);
         $EventplanResult = FatApp::getDb()->fetchAll($EventplanData->getResultSet());
         foreach ($EventplanResult as $key => $value) {
+
             $EventsTicketsplanData = new SearchBase('tbl_three_reasons');
             $EventsTicketsplanData->addCondition('three_reasons_deleted', '=', 0);
             $EventsTicketsplanData->addCondition('three_reasons_id', '=', $value['event_user_plan_id']);
             $EventsTicketsplanResult = FatApp::getDb()->fetch($EventsTicketsplanData->getResultSet());
+            $OrderProductDatas = new SearchBase('tbl_order_products');
+            $OrderProductDatas->addCondition('op_grpcls_id', '=', $value['event_user_ticket_plan_id']);
+            $OrderProductDatas->addCondition('op_teacher_id', '=', $userId);
+            $OrderProductDatas->addOrder('op_id', 'DESC');
+            $OrderProductsResults = FatApp::getDb()->fetch($OrderProductDatas->getResultSet());
+            $OrderDatas = new SearchBase('tbl_orders');
+            $OrderDatas->addCondition('order_id', '=', $OrderProductsResults['op_order_id']);
+            $OrderDatas->addCondition('order_is_paid', '=', 1);
+            $OrderResults = FatApp::getDb()->fetch($OrderDatas->getResultSet());
+            $value['order_data'] = $OrderProductsResults;
+            $value['coupon_code'] = $OrderResults['order_discount_coupon_code'];
+
             $value['plan_name'] = $EventsTicketsplanResult['registration_plan_title'];
+            $value['plan_start_date'] = $EventsTicketsplanResult['registration_starting_date'];
+            $value['plan_end_date'] = $EventsTicketsplanResult['registration_ending_date'];
             $EventplanResult[$key] = $value;
         }
         // echo "<pre>";
         // print_r($EventplanResult);
+
+
+        $BenefitConcertplanData = new SearchBase('tbl_event_concert_ticket_plan');
+        $BenefitConcertplanData->addCondition('event_user_ticket_pay_status', '=', 1);
+        $BenefitConcertplanData->addCondition('event_user_id', '=', $userId);
+        $BenefitConcertplanResult = FatApp::getDb()->fetchAll($BenefitConcertplanData->getResultSet());
+        foreach ($BenefitConcertplanResult as $key => $value) {
+            $BenefitConcertTicketsplanData = new SearchBase('tbl_benefit_concert');
+            $BenefitConcertTicketsplanData->addCondition('benefit_concert_deleted', '=', 0);
+            $BenefitConcertTicketsplanData->addCondition('benefit_concert_id', '=', $value['event_user_concert_id']);
+            $BenefitConcertTicketsplanResult = FatApp::getDb()->fetch($BenefitConcertTicketsplanData->getResultSet());
+            $value['plan_name'] = $BenefitConcertTicketsplanResult['benefit_concert_plan_title'];
+            $value['plan_start_date'] = $BenefitConcertTicketsplanResult['benefit_concert_starting_date'];
+            $value['plan_end_date'] = $BenefitConcertTicketsplanResult['benefit_concert_ending_date'];
+            $BenefitConcertplanResult[$key] = $value;
+        }
+
+        $SponsorshipeventplanData = new SearchBase('tbl_event_user_become_sponser');
+        $SponsorshipeventplanData->addCondition('event_user_payment_status', '=', 1);
+        $SponsorshipeventplanData->addCondition('event_user_id', '=', $userId);
+        //   $SponsorshipeventplanData->addMultipleFields(['*','COUNT(event_user_become_id) as total_data']);
+        //  $SponsorshipeventplanData->addGroupBy('event_user_sponser_selected_plan');
+        $SponsorshipeventplanResult = FatApp::getDb()->fetchAll($SponsorshipeventplanData->getResultSet());
+        $eventList = array();
+        $events = array();
+        $plan = '';
+        $index = 0;
+        $SponserEvent = array();
+        // echo "<pre>";
+        // print_r($SponsorshipeventplanResult);
+        foreach ($SponsorshipeventplanResult as $key => $value) {
+            $plan_name = '';
+            $plan_qty = '';
+
+            $sponserId = unserialize($value['event_user_sponsrship_id']);
+            $sponser_qty = unserialize($value['event_user_sponsership_qty']);
+            $qty_json = json_decode($sponser_qty);
+            $allValues = array_values((array)$qty_json);
+            $qty_index = 0;
+            $qty_plan = 0;
+
+            $json = json_decode($sponserId);
+            $allKeysOfEmployee = array_keys((array)$json);
+            $total_qty = 0;
+            
+            $SponEventsSelectionData = new SearchBase('tbl_events_sponsorship_categories');
+            $SponEventsSelectionData->addCondition('events_sponsorship_categories_id', '=', $value['event_user_sponser_selected_plan']);
+            $SponSorshipEventsSelectionplanResult = FatApp::getDb()->fetch($SponEventsSelectionData->getResultSet());
+            $events['event_name'] = $SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title'];
+            $events['event_ending_time'] = $SponSorshipEventsSelectionplanResult['events_sponsorship_categories_ending_date'];
+           if(!empty($SponSorshipEventsSelectionplanResult)){
+            foreach ($allKeysOfEmployee as $tempKey) {
+                $sponserPlan = new SearchBase('tbl_sponsorshipcategories');
+                $sponserPlan->addCondition('sponsorshipcategories_id', '=', $tempKey);
+                $sponserPlanResult = FatApp::getDb()->fetch($sponserPlan->getResultSet());
+                $plan_name = $plan_name . " " . $sponserPlanResult['sponsorshipcategories_name'] . ",";
+                $plan_qty = $plan_qty . " " . $allValues[$qty_index] . ",";
+                $qty_plan = $allValues[$qty_index];
+                $total_qty = $total_qty + $qty_plan;
+                if (array_key_exists($SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title'], $events)) {
+                    $plans = $events['plan'];
+                    unset($events['plan']);
+                    $plans = $plans . ',' . $sponserPlanResult['sponsorshipcategories_name'];
+                    $unique = implode(',', array_unique(str_word_count($plans, 1)));
+                    $events['plan'] = $unique;
+                    $total = $events[$SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title']] + $qty_plan;;
+                    unset($events[$SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title']]);
+                    $events[$SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title']] = $total;
+                } else {
+                    $plan = $sponserPlanResult['sponsorshipcategories_name'];
+                    $unique = implode(',', array_unique(str_word_count($plan, 1)));
+                    $events['plan'] = $unique;
+                    $events['index'] = $index;
+                    // $events['plan'] = $plan;
+                    $events[$SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title']] = $qty_plan;
+                }
+                if (array_key_exists($sponserPlanResult['sponsorshipcategories_name'], $eventList)) {
+                    $total = $eventList[$sponserPlanResult['sponsorshipcategories_name']] + $qty_plan;
+                    unset($eventList[$sponserPlanResult['sponsorshipcategories_name']]);
+                    $eventList[$sponserPlanResult['sponsorshipcategories_name']] = $total;
+                } else {
+                    $plan = $sponserPlanResult['sponsorshipcategories_name'];
+                    //$events['plan']=$plan;
+                    $eventList[$sponserPlanResult['sponsorshipcategories_name']] = $qty_plan;
+                }
+                $qty_index++;
+            }
+
+            $OrderProductData = new SearchBase('tbl_order_products');
+            $OrderProductData->addCondition('op_grpcls_id', '=', $value['event_user_become_id']);
+            $OrderProductData->addCondition('op_teacher_id', '=', $userId);
+            $OrderProductData->addOrder('op_id', 'DESC');
+            $OrderProductsResult = FatApp::getDb()->fetch($OrderProductData->getResultSet());
+            $OrderData = new SearchBase('tbl_orders');
+            $OrderData->addCondition('order_id', '=', $OrderProductsResult['op_order_id']);
+            $OrderData->addCondition('order_is_paid', '=', 1);
+            $OrderResult = FatApp::getDb()->fetch($OrderData->getResultSet());
+            $events['order_data'] = $OrderProductsResult;
+            $events['coupon_code'] = $OrderResult['order_discount_coupon_code'];
+            $value['total'] = $events[$SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title']];
+            $value['event_name'] = $SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title'];
+            $value['event_ending_time'] = $SponSorshipEventsSelectionplanResult['events_sponsorship_categories_ending_date'];
+            $value['sponser_plan'] = $plan_name;
+            $value['sponser_plan_qty'] = $plan_qty;
+            $SponsorshipeventplanResult[$key] = $value;
+            $SponserEvent[$SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title']] = $events;
+            }
+            $index++;
+        }
+        $sponserEventData = $SponserEvent;
 
         $SponsorshipplanData = new SearchBase('tbl_event_user_become_sponser');
         $SponsorshipplanData->addCondition('event_user_payment_status', '=', 1);
@@ -61,6 +187,10 @@ class DashboardEventVisitorController extends MyEventAppController
                 }
                 $qty_index++;
             }
+            $SponEventsSelectionData = new SearchBase('tbl_three_reasons');
+            $SponEventsSelectionData->addCondition('three_reasons_id', '=', $value['event_user_sponser_selected_plan']);
+            $SponSorshipEventsSelectionplanResult = FatApp::getDb()->fetch($SponEventsSelectionData->getResultSet());
+            $value['event_data'] = $SponSorshipEventsSelectionplanResult;
             $value['sponser_plan'] = $plan_name;
             $value['sponser_plan_qty'] = $plan_qty;
             $SponsorshipplanResult[$key] = $value;
@@ -74,7 +204,40 @@ class DashboardEventVisitorController extends MyEventAppController
         $DonationplanData->addCondition('event_user_user_id', '=', $userId);
         $DonationplanData->addOrder('event_user_donation_id', 'DESC');
         $DonationplanResult = FatApp::getDb()->fetchAll($DonationplanData->getResultSet());
+        $DisclaimerSection = LanguageSymposium::getBlockContent(LanguageSymposium::BLOCK_DISCLAIMER_SECTION, $this->siteLangId);
+        $userFirstName = EventUserAuthentication::getLoggedUserAttribute('user_first_name');
 
+
+
+        $BenefitConcertplanData = new SearchBase('tbl_event_concert_ticket_plan');
+        $BenefitConcertplanData->addCondition('event_user_ticket_pay_status', '=', 1);
+        $BenefitConcertplanData->addCondition('event_user_id', '=', $userId);
+
+        $BenefitConcertplanResult = FatApp::getDb()->fetchAll($BenefitConcertplanData->getResultSet());
+        foreach ($BenefitConcertplanResult as $key => $value) {
+
+            $OrderProductData = new SearchBase('tbl_order_products');
+            $OrderProductData->addCondition('op_grpcls_id', '=', $value['event_concert_ticket_plan_id']);
+            $OrderProductData->addCondition('op_teacher_id', '=', $userId);
+            $OrderProductData->addOrder('op_id', 'DESC');
+            $OrderProductsResult = FatApp::getDb()->fetch($OrderProductData->getResultSet());
+            $OrderData = new SearchBase('tbl_orders');
+            $OrderData->addCondition('order_id', '=', $OrderProductsResult['op_order_id']);
+            $OrderData->addCondition('order_is_paid', '=', 1);
+            $OrderResult = FatApp::getDb()->fetch($OrderData->getResultSet());
+            $value['order_data'] = $OrderProductsResult;
+            $value['coupon_code'] = $OrderResult['order_discount_coupon_code'];
+
+            $value['plan_name'] = $BenefitConcertTicketsplanResult['benefit_concert_plan_title'];
+            $value['plan_start_date'] = $BenefitConcertTicketsplanResult['benefit_concert_starting_date'];
+            $value['plan_end_date'] = $BenefitConcertTicketsplanResult['benefit_concert_ending_date'];
+            $BenefitConcertplanResult[$key] = $value;
+        }
+        $this->set('BenefitConcertplanResult', $BenefitConcertplanResult);
+        $this->set('userFirstName', $userFirstName);
+        $this->set('DisclaimerSection', $DisclaimerSection);
+        $this->set('sponserEventData', $sponserEventData);
+        $this->set('SponsorshipeventplanResult', $SponsorshipeventplanResult);
         $this->set('DonationplanResult', $DonationplanResult);
         $this->set('TotalEventsTicketsplanResult', $TotalEventsTicketsplanResult);
         $this->set('SponsorshipplanResult', $SponsorshipplanResult);
@@ -87,12 +250,100 @@ class DashboardEventVisitorController extends MyEventAppController
         $this->_template->addJs('js/intlTelInput.js');
         $this->_template->addCss('css/intlTelInput.css');
         $this->set('isProfilePicUploaded', EventUser::isProfilePicUploaded());
+        $this->set('SponSorshipEventsSelectionplanResult', $SponSorshipEventsSelectionplanResult);
         $this->set('languages', Language::getAllNames(false));
         $this->set('userDetails', $userDetails);
         $this->set('contactFrm', $contactFrm);
+        $this->set('userId', $userId);
         $this->set('siteLangId', $this->siteLangId);
         $this->_template->render();
     }
+
+    public function report()
+    {
+        $testimonialId = FatUtility::int($testimonialId);
+        $agendafrm = $this->getAgendaForm($testimonialId);
+        if (0 < $testimonialId) {
+            $data = EventsReportComments::getAttributesById($testimonialId, [
+                'events_report_comments_id',
+                'user_id',
+                'events_report_comments_information'
+            ]);
+            if ($data === false) {
+
+                FatUtility::dieWithError($this->str_invalid_request);
+            }
+            $agendafrm->fill($data);
+            $this->set('records', $data);
+        }
+        $this->set('languages', Language::getAllNames());
+        $this->set('events_report_comments_id', $testimonialId);
+        $this->set('testimonial_id', $testimonialId);
+        $this->set('agendafrm', $agendafrm);
+        $this->_template->render(false, false);
+    }
+
+    private function getAgendaForm($testimonialId)
+    {
+        $userId = EventUserAuthentication::getLoggedUserId();
+        $testimonialId = FatUtility::int($testimonialId);
+        $agendafrm = new Form('frmAgendaTestimonials');
+        $agendafrm->addHiddenField(Label::getLabel('LBl_Id'), 'events_report_comments_id', $testimonialId);
+        $agendafrm->addHiddenField('', 'user_id', $userId);
+        $agendafrm->addTextarea(Label::getLabel('LBL_Event_Location', $this->adminLangId), 'events_report_comments_information');
+        $agendafrm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Submit', $this->adminLangId));
+        return $agendafrm;
+    }
+
+    public function form($testimonialId)
+    {
+        $testimonialId = FatUtility::int($testimonialId);
+        $frm = $this->getForm($testimonialId);
+        if (0 < $testimonialId) {
+            $data = EventsReportComments::getAttributesById($testimonialId, [
+                'user_id',
+                'events_report_comments_information'
+            ]);
+            if ($data === false) {
+                FatUtility::dieWithError($this->str_invalid_request);
+            }
+            $frm->fill($data);
+        }
+        $this->set('languages', Language::getAllNames());
+        $this->set('events_report_comments_id', $testimonialId);
+        $this->set('testimonial_id', $testimonialId);
+        $this->set('frm', $frm);
+        $this->_template->render(false, false);
+    }
+
+    public function agendasetup()
+    {
+        $post = FatApp::getPostedData();
+
+        if (false === $post) {
+            Message::addErrorMessage(current($frm->getValidationErrors()));
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+        $testimonialId = $post['events_report_comments_id'];
+        unset($post['events_report_comments_id']);
+        if ($testimonialId == 0) {
+            $post['events_report_comments_added_on'] = date('Y-m-d H:i:s');
+            $post['events_report_comments_user'] = 'Event';
+        }
+        $record = new EventsReportComments($testimonialId);
+        $record->assignValues($post);
+        if (!$record->save()) {
+            Message::addErrorMessage($record->getError());
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+        $res = EmailHandler::sendSmtpEmail('admin@ubuntutalks.com', 'Report Issue', $post['events_report_comments_information'], '', '', $this->siteLangId, '', '');
+        $this->set('msg', 'Report Issue Sent');
+        $this->set('testimonialId', $testimonialId);
+        $this->set('testimonial_id', $testimonialId);
+        $this->set('langId', $newTabLangId);
+        $this->_template->render(false, false, 'json-success.php');
+    }
+
 
     public function dailySchedule()
     {
@@ -278,6 +529,11 @@ class DashboardEventVisitorController extends MyEventAppController
         $userPendingRequest = $emailChangeReqObj->checkPendingRequestForUser(EventUserAuthentication::getLoggedUserId());
         $frm = $this->getChangeEmailForm();
         $ChnagePasswordfrm = $this->getChangePasswordForm();
+        $profileImgFrm = $this->getProfileImageForm();
+        $userFirstName = EventUserAuthentication::getLoggedUserAttribute('user_first_name');
+        $isProfilePicUploaded = EventUser::isProfilePicUploaded($userId);
+        $this->set('userFirstName', $userFirstName);
+        $this->set('isProfilePicUploaded', $isProfilePicUploaded);
         $this->set('ChnagePasswordfrm', $ChnagePasswordfrm);
         $this->set('frm', $frm);
         $this->set('userPendingRequest', $userPendingRequest);
@@ -285,6 +541,7 @@ class DashboardEventVisitorController extends MyEventAppController
         $this->set('userRow', $userRow);
         $this->set('profileFrm', $profileFrm);
         $this->set('profileImgFrm', $profileImgFrm);
+        $this->set('userId', $userId);
         $this->set('languages', Language::getAllNames(false));
         $this->set('userDetails', $userDetails);
         $this->set('siteLangId', $this->siteLangId);
@@ -654,10 +911,10 @@ class DashboardEventVisitorController extends MyEventAppController
     {
         $userId = EventUserAuthentication::getLoggedUserId();
         // $isTeacher = User::getAttributesById($userId, 'user_is_teacher');
-        $userSettings = UserSetting::getUserSettings($userId);
+        // $userSettings = UserSetting::getUserSettings($userId);
         $isTeacherDashboardActive = (EventUser::getDashboardActiveTab() == EventUser::USER_TEACHER_DASHBOARD);
         $profileImgFrm = $this->getProfileImageForm($isTeacherDashboardActive);
-        $profileImgFrm->fill(['us_video_link' => $userSettings['us_video_link'] ?? '']);
+        // $profileImgFrm->fill(['us_video_link' => $userSettings['us_video_link'] ?? '']);
         $userFirstName = EventUserAuthentication::getLoggedUserAttribute('user_first_name');
         $isProfilePicUploaded = EventUser::isProfilePicUploaded($userId);
         $this->set('profileImgFrm', $profileImgFrm);
@@ -689,7 +946,9 @@ class DashboardEventVisitorController extends MyEventAppController
 
     public function setUpProfileImage()
     {
+
         $userId = EventUserAuthentication::getLoggedUserId();
+
         $isTeacherDashboardActive = (EventUser::getDashboardActiveTab() == EventUser::USER_TEACHER_DASHBOARD);
         $profileImgFrm = $this->getProfileImageForm($isTeacherDashboardActive);
         $post = FatApp::getPostedData();
@@ -732,13 +991,39 @@ class DashboardEventVisitorController extends MyEventAppController
             CommonHelper::crop($data, CONF_UPLOADS_PATH . $res);
             $this->set('file', CommonHelper::generateFullUrl('Image', 'user', [$userId, 'MEDIUM', true], CONF_WEBROOT_FRONTEND) . '?' . time());
         }
-        if ($isTeacherDashboardActive) {
-            $userSettings = new UserSetting($userId);
-            if (!$userSettings->saveData(['us_video_link' => $post['us_video_link']])) {
-                FatUtility::dieJsonError($userSettings->getError());
-            }
-        }
+        // if ($isTeacherDashboardActive) {
+        //     $userSettings = new UserSetting($userId);
+        //     if (!$userSettings->saveData(['us_video_link' => $post['us_video_link']])) {
+        //         FatUtility::dieJsonError($userSettings->getError());
+        //     }
+        // }
         $this->set('msg', Label::getLabel('MSG_Data_uploaded_successfully'));
+        $this->_template->render(false, false, 'json-success.php');
+    }
+    public function removeProfileImage()
+    {
+        $userId = EventUserAuthentication::getLoggedUserId();
+        if (1 > $userId) {
+            Message::addErrorMessage(Label::getLabel('MSG_INVALID_REQUEST_ID'));
+            FatUtility::dieWithError(Message::getHtml());
+        }
+        $fileHandlerObj = new AttachedFile();
+        if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_USER_PROFILE_IMAGE, $userId)) {
+            Message::addErrorMessage($fileHandlerObj->getError());
+            FatUtility::dieWithError(Message::getHtml());
+        }
+        if (!$fileHandlerObj->deleteFile(AttachedFile::FILETYPE_USER_PROFILE_CROPED_IMAGE, $userId)) {
+            Message::addErrorMessage($fileHandlerObj->getError());
+            FatUtility::dieWithError(Message::getHtml());
+        }
+        if (CONF_USE_FAT_CACHE) {
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'ORIGINAL'), CONF_WEBROOT_FRONTEND));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'MEDIUM'), CONF_WEBROOT_FRONTEND));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'SMALL'), CONF_WEBROOT_FRONTEND));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId, 'EXTRASMALL'), CONF_WEBROOT_FRONTEND));
+            FatCache::delete(CommonHelper::generateUrl('Image', 'user', array($userId), CONF_WEBROOT_FRONTEND));
+        }
+        $this->set('msg', Label::getLabel('MSG_File_deleted_successfully'));
         $this->_template->render(false, false, 'json-success.php');
     }
 }

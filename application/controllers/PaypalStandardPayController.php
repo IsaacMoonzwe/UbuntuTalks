@@ -2,7 +2,6 @@
 
 class PaypalStandardPayController extends PaymentController
 {
-
     protected $keyName = "PaypalStandard";
     private $testEnvironmentUrl = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
     private $liveEnvironmentUrl = 'https://www.paypal.com/cgi-bin/webscr';
@@ -71,7 +70,11 @@ class PaypalStandardPayController extends PaymentController
         $frm->addHiddenField('', 'no_note', 1);
         $frm->addHiddenField('', 'no_shipping', 1);
         $frm->addHiddenField('', 'charset', "utf-8");
-        $frm->addHiddenField('', 'return', CommonHelper::generateFullUrl('custom', 'paymentSuccess', [$orderId]));
+        if (isset($_SESSION['event'])) {
+            $frm->addHiddenField('', 'return', CommonHelper::generateFullUrl('eventUser', 'paymentSuccess', [$orderId]));
+        } else {
+            $frm->addHiddenField('', 'return', CommonHelper::generateFullUrl('custom', 'paymentSuccess', [$orderId]));
+        }
         $frm->addHiddenField('', 'notify_url', CommonHelper::generateNoAuthUrl('PaypalStandardPay', 'callback'));
         $frm->addHiddenField('', 'cancel_return', CommonHelper::getPaymentCancelPageUrl());
         $frm->addHiddenField('', 'paymentaction', 'sale');  // authorization or sale
@@ -80,8 +83,10 @@ class PaypalStandardPayController extends PaymentController
         return $frm;
     }
 
-    public function charge($orderId)
+    public function charge($orderId,$sponsers=0)
     {
+        $pmObj = new PaymentSettings($this->keyName);
+        $paymentSettings = $pmObj->getPaymentSettings();
         if ($orderId == '') {
             Message::addErrorMessage(Label::getLabel('MSG_Invalid_Access', $this->siteLangId));
             CommonHelper::redirectUserReferer();
@@ -104,11 +109,22 @@ class PaypalStandardPayController extends PaymentController
         }
         if ($orderInfo && $orderInfo["order_is_paid"] == Order::ORDER_IS_PENDING) {
             $frm = $this->getPaymentForm($orderId);
+            if (isset($_SESSION['event'])) {
+                $this->set('return', CommonHelper::generateFullUrl('eventUser', 'paymentSuccess', [$orderId]));
+            } else {
+                $this->set('return', CommonHelper::generateFullUrl('custom', 'paymentSuccess', [$orderId]));
+            }
+            $this->set('notify_url', CommonHelper::generateFullUrl('PaypalStandardPay', 'callback', [$orderId]));
+            $this->set('cancel_return', CommonHelper::getPaymentCancelPageUrl());
+            $this->set('paymentaction', 'sale');  // authorization or sale
+            $this->set('custom', $orderId);
+
             $this->set('frm', $frm);
             $this->set('paymentAmount', $paymentAmount);
         } else {
             $this->set('error', Label::getLabel('MSG_INVALID_ORDER_PAID_CANCELLED', $this->siteLangId));
         }
+        $this->set('paymentSettings', $paymentSettings);
         $this->set('orderInfo', $orderInfo);
         $this->set('paymentAmount', $paymentAmount);
         $this->set('siteLangId', $this->siteLangId);
@@ -132,13 +148,13 @@ class PaypalStandardPayController extends PaymentController
         return $new;
     }
 
-    public function callback()
+    public function callback($orderId = null)
     {
-        
+
         $pmObj = new PaymentSettings($this->keyName);
         $paymentSettings = $pmObj->getPaymentSettings();
         $post = FatApp::getPostedData();
-        $orderId = (isset($post['custom'])) ? $post['custom'] : 0;
+        $orderId = (isset($orderId)) ? $orderId : 0;
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         $paymentGatewayCharge = $orderPaymentObj->getOrderPaymentGatewayAmount();
         $request = 'cmd=_notify-validate';
@@ -155,7 +171,16 @@ class PaypalStandardPayController extends PaymentController
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_HTTPHEADER, ['Connection: Close', 'User-Agent:paypalPayment']);
         $response = curl_exec($curl);
-        if ((strcmp($response, 'VERIFIED') == 0 || strcmp($response, 'UNVERIFIED') == 0) && isset($post['payment_status'])) {
+
+        $post['payment_status'] = $post['status'];
+        $post['receiver_email'] = $post['payer']['email_address'];
+
+        if (isset($post['status'])) {
+            if (strtoupper($post['payment_status']) == 'COMPLETED') {
+                $orderPaymentStatus = Order::ORDER_IS_PAID;
+            }
+            // }
+            // if ((strcmp($response, 'VERIFIED') == 0 || strcmp($response, 'UNVERIFIED') == 0) && isset($post['payment_status'])) {
             $orderPaymentStatus = Order::ORDER_IS_PENDING;
             if (strtoupper($post['payment_status']) == 'COMPLETED') {
                 $orderPaymentStatus = Order::ORDER_IS_PAID;
@@ -169,12 +194,20 @@ class PaypalStandardPayController extends PaymentController
                 $request .= "\n\n PP_STANDARD :: TOTAL PAID MISMATCH! " . strtolower($post['mc_gross']) . "\n\n";
             }
             if ($orderPaymentStatus == Order::ORDER_IS_PAID && $receiverMatch && $totalPaidMatch) {
-                $orderPaymentObj->addOrderPayment($paymentSettings["pmethod_code"], $post["txn_id"], $paymentGatewayCharge, 'Received Payment', $request . "#" . $response);
+                $orderPaymentObj->addOrderPayment($paymentSettings["pmethod_code"], $post["id"], $paymentGatewayCharge, 'Received Payment', $request . "#" . $response);
             } else {
-                $orderPaymentObj->addOrderPaymentComments($request);
+                // $orderPaymentObj->addOrderPaymentComments($request);
+                $orderPaymentObj->addOrderPayment($paymentSettings["pmethod_code"], $post["id"], $paymentGatewayCharge, 'Received Payment', $request . "#" . $response);
+            }
+            if (isset($_SESSION['event'])) {
+                FatUtility::dieJsonSuccess(['redirectUrl' => CommonHelper::generateUrl('EventUser', 'paymentSuccess', [$orderId], CONF_WEBROOT_FRONTEND), 'msg' => Label::getLabel("MSG_LOGIN_SUCCESSFULL")]);
+                // $this->set('return', CommonHelper::generateFullUrl('eventUser', 'paymentSuccess', [$orderId]));
+            } else {
+                FatUtility::dieJsonSuccess(['redirectUrl' => CommonHelper::generateUrl('custom', 'paymentSuccess', [$orderId], CONF_WEBROOT_FRONTEND), 'msg' => Label::getLabel("MSG_LOGIN_SUCCESSFULL")]);
+                $this->set('return', CommonHelper::generateFullUrl('custom', 'paymentSuccess', [$orderId]));
             }
         }
         curl_close($curl);
+        FatUtility::dieJsonSuccess(['redirectUrl' => CommonHelper::generateUrl('EventUser', 'paymentSuccess', [$orderId, 1], CONF_WEBROOT_FRONTEND), 'msg' => Label::getLabel("MSG_LOGIN_SUCCESSFULL")]);
     }
-
 }

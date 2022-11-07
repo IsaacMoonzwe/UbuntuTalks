@@ -17,3 +17,6 @@ defined('SYSTEM_INIT') or exit('Invalid Usage.');
         </div>
     </div>
 </section>
+<script>
+    //window.history.pushState("index", "Title",window.location.href.replace("index","category"));
+</script>

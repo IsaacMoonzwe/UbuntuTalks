@@ -38,7 +38,8 @@ if (isset($_SESSION['summary'])) {
             <ul>
                 <li class="step-nav_item is-completed"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_1'); ?></a><span class="step-icon"></span></li>
                 <li class="step-nav_item is-completed"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_2'); ?></a><span class="step-icon"></span></li>
-                <li class="step-nav_item is-process"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_3'); ?></a></li>
+                <li class="step-nav_item is-completed"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_3'); ?></a><span class="step-icon"></span></li>
+                <li class="step-nav_item is-process"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_4'); ?></a></li>
 
             </ul>
         </div>
@@ -165,8 +166,11 @@ if (isset($_SESSION['summary'])) {
                         ?>
                             <div class="payment__row">
                                 <div>
+                                    <?php if ($cartData['selectedEvent']) { ?> <b>
+                                            <p>Event's Sponsor : <?php echo $cartData['selectedEvent']; ?></p>
+                                        </b> <?php } ?>
 
-                                    <b><?php echo $value; ?></b>
+                                    <p>Sponsorship Plan : <b><?php echo $value; ?></b></p>
                                     <?php if (!empty($cartData['planQty'][$itemCount])) { ?>
                                         <p><?php echo str_replace(['{lesson-qty}'], [$cartData['planQty'][$itemCount]], Label::getLabel('LBL_Sponsorship_Count:_{lesson-qty}')); ?></p>
                                         <p><?php echo str_replace('{item-price}', CommonHelper::displayMoneyFormat(($cartData['planPrice'][$itemCount])), Label::getLabel('LBL_Sponsorship_Price:_{item-price}/sponsorship')); ?></p>
@@ -224,14 +228,33 @@ if (isset($_SESSION['summary'])) {
                         </div>
                     </div>
                     <div class="coupon-box slide-target-coupon-js">
-                        <div class="coupon-box__head">
-                            <p><?PHP echo Label::getLabel('LBL_AVAILABLE_COUPONS'); ?></p>
-                            <a href="javascript:void(0);" class="btn btn--bordered color-black btn--close">
-                                <svg class="icon icon--close">
-                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#close'; ?>"></use>
-                                </svg>
-                            </a>
-                        </div>
+                        <?php
+                        foreach ($SponsorshipCouponCodeFinalListing as $value) {
+                            if ($value['coupon_end_date'] > date('Y-m-d')) {
+                        ?>
+                                <div class="coupon-box__head">
+                                    <p><?PHP echo Label::getLabel('LBL_AVAILABLE_COUPONS'); ?></p>
+                                    <a href="javascript:void(0);" class="btn btn--bordered color-black btn--close">
+                                        <svg class="icon icon--close">
+                                            <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#close'; ?>"></use>
+                                        </svg>
+                                    </a>
+                                </div>
+                            <?php
+                            } else {
+                            ?>
+                                <div class="coupon-box__head">
+                                    <p><?PHP echo Label::getLabel('LBL_NOT_AVAILABLE_COUPONS'); ?></p>
+                                    <a href="javascript:void(0);" class="btn btn--bordered color-black btn--close">
+                                        <svg class="icon icon--close">
+                                            <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#close'; ?>"></use>
+                                        </svg>
+                                    </a>
+                                </div>
+                        <?php
+                            }
+                        }
+                        ?>
                         <div class="coupon-box__body">
                             <?php foreach ($couponsList as $key => $coupon) { ?>
                                 <div class="coupon-list">

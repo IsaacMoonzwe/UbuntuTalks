@@ -125,7 +125,11 @@ class PayGatePayController extends PaymentController
             Message::addErrorMessage(Label::getLabel('MSG_Your_Paymet_Status_' . $statusArr[$transactionStatus]));
             FatApp::redirectUser(CommonHelper::getPaymentCancelPageUrl());
         }
-        FatApp::redirectUser(CommonHelper::generateFullUrl('custom', 'paymentSuccess', [$orderId]));
+        if (isset($_SESSION['event'])) {
+            FatApp::redirectUser(CommonHelper::generateFullUrl('EventUser', 'paymentSuccess', [$orderId]));
+        } else {
+            FatApp::redirectUser(CommonHelper::generateFullUrl('custom', 'paymentSuccess', [$orderId]));
+        }
         exit;
     }
 
@@ -278,5 +282,4 @@ class PayGatePayController extends PaymentController
         $form->addHiddenField('', 'CHECKSUM', $checksum);
         return $form;
     }
-
 }

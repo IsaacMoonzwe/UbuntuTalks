@@ -51,11 +51,21 @@ class EventsController extends MyEventAppController
         $speakers_positions_listing->addCondition('speakers_position_active', '=', 1);
         $positionsListing = $speakers_positions_listing->getResultSet();
         $SpeakersPositionsListing = FatApp::getDb()->fetchAll($positionsListing);
+
         $srch_categories = new SearchBase('tbl_sponsorshipcategories');
         $srch_categories->addCondition('sponsorshipcategories_deleted', '=', 0);
-        $srch->addCondition('sponsorshipcategories_active', '=', 1);
+        $srch_categories->addCondition('sponsorshipcategories_active', '=', 1);
+        $srch_categories->addCondition('sponsorshipcategories_type', '=', 'Regular');
         $sponsorship_categories = $srch_categories->getResultSet();
         $SponsorshipCategoriesList = FatApp::getDb()->fetchAll($sponsorship_categories);
+
+        $srch_categories_dinner = new SearchBase('tbl_sponsorshipcategories');
+        $srch_categories_dinner->addCondition('sponsorshipcategories_deleted', '=', 0);
+        $srch_categories_dinner->addCondition('sponsorshipcategories_active', '=', 1);
+        $srch_categories_dinner->addCondition('sponsorshipcategories_type', '=', 'Dinner');
+        $sponsorship_categories_dinner = $srch_categories_dinner->getResultSet();
+        $SponsorshipCategoriesDinnerList = FatApp::getDb()->fetchAll($sponsorship_categories_dinner);
+
         $srch_events_details = new SearchBase('tbl_event_and_agenda');
         $events_categories = $srch_events_details->getResultSet();
         $EventsList = FatApp::getDb()->fetchAll($events_categories);
@@ -104,17 +114,48 @@ class EventsController extends MyEventAppController
         $Registration_categories->addOrder('three_reasons_display_order', 'ASC');
         $RegistrationPlan_categories = $Registration_categories->getResultSet();
         $RegistrationPlanDetailsList = FatApp::getDb()->fetchAll($RegistrationPlan_categories);
-        // echo "<pre>";
-        // print_r($RegistrationPlanDetailsList);
         $events_tickets = new SearchBase('tbl_event_and_agenda');
         $events_tickets->addCondition('event_and_agenda_deleted', '=', 0);
         $events_tickets->addCondition('event_and_agenda_active', '=', 1);
         $event_tickets_categories = $events_tickets->getResultSet();
         $EventTicketsDetailsList = FatApp::getDb()->fetchAll($event_tickets_categories);
+        $benefitConcert = new SearchBase('tbl_benefit_concert');
+        $benefitConcert->addCondition('benefit_concert_deleted', '=', 0);
+        $benefitConcert->addCondition('benefit_concert_active', '=', 1);
+        $benefitConcert->addOrder('benefit_concert_id', 'ASC');
+        $benefirConcert_categories = $benefitConcert->getResultSet();
+        $BenefitConcertDetailsList = FatApp::getDb()->fetchAll($benefirConcert_categories);
+        $tickets = new SearchBase('tbl_event_concert_ticket_plan');
+        $tickets->addCondition('event_user_ticket_pay_status', '=', 1);
+        $tickets->addMultipleFields(['SUM(event_user_ticket_count) as TotalTicket', 'event_user_concert_id']);
+        $tickets->addGroupBy('event_user_concert_id');
+        $tickets->addOrder('event_user_concert_id', 'ASC');
+        $ticketManager = $tickets->getResultSet();
+        $ticketManagerDetails = FatApp::getDb()->fetchAll($ticketManager);
         $SponsorContent = LanguageSymposium::getBlockContent(LanguageSymposium::BLOCK_SPONSORSHIP_INFORMATION, $this->siteLangId);
         $DonationContent = LanguageSymposium::getBlockContent(LanguageSymposium::BLOCK_DONATION_INFORMATION, $this->siteLangId);
         $CodeOfConductContent = LanguageSymposium::getBlockContent(LanguageSymposium::BLOCK_CODE_OF_CONDUCT_INFORMATION, $this->siteLangId);
         $DisclaimerSection = LanguageSymposium::getBlockContent(LanguageSymposium::BLOCK_DISCLAIMER_SECTION, $this->siteLangId);
+        $AboutVenue = LanguageSymposium::getBlockContent(LanguageSymposium::BLOCK_ABOUT_VENUE, $this->siteLangId);
+        $PreSymposiumDinner = LanguageSymposium::getBlockContent(LanguageSymposium::BLOCK_PRE_SYMPOSIUM_DINNER, $this->siteLangId);
+        $PreSymposiumDinners = new SearchBase('tbl_pre_symposium_dinner');
+        $PreSymposiumDinners->addCondition('pre_symposium_dinner_deleted', '=', 0);
+        $PreSymposiumDinners->addCondition('pre_symposium_dinner_active', '=', 1);
+        $PreSymposiumDinners->addOrder('pre_symposium_dinner_display_order', 'ASC');
+        $PreSymposiumDinners_categories = $PreSymposiumDinners->getResultSet();
+        $PreSymposiumDinnersDetailsList = FatApp::getDb()->fetchAll($PreSymposiumDinners_categories);
+        $BenefitConcertArtists = new SearchBase('tbl_benefit_concert_artists');
+        $BenefitConcertArtists->addCondition('benefit_concert_artists_deleted', '=', 0);
+        $BenefitConcertArtists->addCondition('benefit_concert_artists_active', '=', 1);
+        $BenefitConcertArtists->addOrder('benefit_concert_artists_display_order', 'ASC');
+        $BenefirConcertArtists_categories = $BenefitConcertArtists->getResultSet();
+        $BenefitConcertArtistsDetailsList = FatApp::getDb()->fetchAll($BenefirConcertArtists_categories);
+        $this->set('PreSymposiumDinner', $PreSymposiumDinner);
+        $this->set('PreSymposiumDinnersDetailsList', $PreSymposiumDinnersDetailsList);
+        $this->set('BenefitConcertArtistsDetailsList', $BenefitConcertArtistsDetailsList);
+        $this->set('ticketManagerDetails', $ticketManagerDetails);
+        $this->set('BenefitConcertDetailsList', $BenefitConcertDetailsList);
+        $this->set('AboutVenue', $AboutVenue);
         $this->set('DisclaimerSection', $DisclaimerSection);
         $this->set('CodeOfConductContent', $CodeOfConductContent);
         $this->set('DonationContent', $DonationContent);
@@ -129,6 +170,7 @@ class EventsController extends MyEventAppController
         $this->set('ThreeReasonsCategoriesList', $ThreeReasonsCategoriesList);
         $this->set('Sponsershiprecords', $Sponsershiprecords);
         $this->set('SponsorshipCategoriesList', $SponsorshipCategoriesList);
+        $this->set('SponsorshipCategoriesDinnerList', $SponsorshipCategoriesDinnerList);
         $this->set('records', $records);
         $this->set('ContactInformation', $ContactInformation);
         $this->set('PrivacyInformation', $PrivacyInformation);
@@ -152,6 +194,27 @@ class EventsController extends MyEventAppController
         $this->set('contactFrm', $contactFrm);
         $this->set('siteLangId', $this->siteLangId);
         $this->_template->render();
+    }
+
+    public function contactUs()
+    {
+        $contactFrm = $this->contactUsForm($this->siteLangId);
+        $post = FatApp::getPostedData();
+        if (!empty($post)) {
+            $post = $contactFrm->getFormDataFromArray($post);
+            $contactFrm->fill($post);
+        }
+        if (EventUserAuthentication::isUserLogged()) {
+            $userId = EventUserAuthentication::getLoggedUserId();
+            $userObj = new EventUser($userId);
+            $userDetails = $userObj->getDashboardData(CommonHelper::getLangId());
+            $this->set('userDetails', $userDetails);
+        }
+        $ContactInformation = EventContact::getBlockContent(EventContact::BLOCK_CONTACT_INFORMATION, $this->siteLangId);
+        $this->set('ContactInformation', $ContactInformation);
+        $this->set('contactFrm', $contactFrm);
+        $this->set('siteLangId', $this->siteLangId);
+        $this->_template->render(false, false);
     }
     public function contact()
     {

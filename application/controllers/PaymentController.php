@@ -35,5 +35,4 @@ class PaymentController extends MyAppController
             CommonHelper::redirectUserReferer();
         }
     }
-
 }

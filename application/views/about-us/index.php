@@ -2,6 +2,27 @@
 
 defined('SYSTEM_INIT') or exit('Invalid Usage.');
 ?>
+
+<style>
+    .lightbox-detail-text img {
+        width: 230px;
+        height: 230px;
+        border-radius: 100%;
+        float: left;
+        margin: 0px 30px 0px 0px;
+    }
+
+    h4.profile-description {
+        font-size: 17px !important;
+        padding-top: 30px;
+    }
+
+    @media only screen and (max-width: 600px) {
+        h4.profile-description {
+        padding-top: 10px;
+    }
+    }
+</style>
 <!-- About -->
 <section class="about">
     <?php echo FatUtility::decodeHtmlEntities($AboutUsContent); ?>
@@ -111,25 +132,45 @@ defined('SYSTEM_INIT') or exit('Invalid Usage.');
                     }    ?>
                     <div class="image-lightbox" id=<?php echo $value['meet_the_team_id']; ?>>
                         <div class="image-lightbox-wrapper"> <a href="#0" class="close"></a>
-
                             <div class="lightbox-detail-text">
-                                <div class="lightbox-top-detail">
+                                <div>
+                                    <?php echo $htmlAfterField; ?>
+                                    <h3 class="list-sub-title break-all">
+                                        <?php echo $value['meet_the_team_user_name']; ?>
+                                    </h3>
+                                    <h5 class="list-sub-title ">
+                                        <?php echo $value['meet_the_team_positions']; ?>
+                                    </h5>
+                                    <h4 class="profile-description">
+                                        <?php echo $value['meet_the_team_description']; ?>
+                                    </h4>
+                                </div>
+                                <!-- <div class="lightbox-top-detail">
                                     <div class="lightbox-image-box">
-                                        <?php echo $htmlAfterField; ?> </div>
+                                        <?php //echo $htmlAfterField; 
+                                        ?>
+                                        <?php //echo $value['meet_the_team_description']; 
+                                        ?>
+                                    </div>
                                     <div class="image-title">
                                         <h3 class="list-sub-title break-all">
-                                            <?php echo $value['meet_the_team_user_name']; ?></h3>
-                                        <h5 class="list-sub-title "><?php echo $value['meet_the_team_positions']; ?></h5>
+                                            <?php //echo $value['meet_the_team_user_name']; 
+                                            ?></h3>
+                                        <h5 class="list-sub-title "><?php //echo $value['meet_the_team_positions']; 
+                                                                    ?></h5>
+
                                     </div>
                                 </div>
                                 <div class="lightbox-bottom-detail">
                                     <div class="profile-details">
-                                        <h5 class="strong"><?php echo Label::getLabel('LBL_About_The_Speaker', $adminLangId); ?></h5>
+                                        <h5 class="strong" style="padding-bottom:0px;"><?php echo $value['meet_the_team_user_name']; ?></h5>
+                                        <h5 class="list-sub-title "><?php echo $value['meet_the_team_positions']; ?></h5>
                                         <div class="profile-description">
-                                            <?php echo $value['meet_the_team_description']; ?>
+                                            <?php //echo $value['meet_the_team_description']; 
+                                            ?>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -163,6 +204,7 @@ defined('SYSTEM_INIT') or exit('Invalid Usage.');
                                     </div>
                                     <div class="image-title">
                                         <h3><?php echo $value['meet_the_team_user_name']; ?></h3>
+                                        <!-- <h5 class="strong" style="padding-bottom:0px;"><?php echo $value['meet_the_team_user_name']; ?></h5> -->
                                         <p class="list-sub-title"><?php echo $value['meet_the_team_positions']; ?></p>
 
                                     </div>
@@ -182,23 +224,38 @@ defined('SYSTEM_INIT') or exit('Invalid Usage.');
                         <div class="image-lightbox-wrapper"> <a href="#0" class="close"></a>
 
                             <div class="lightbox-detail-text">
-                                <div class="lightbox-top-detail">
+                                <div>
+                                    <?php echo $htmlAfterField; ?>
+                                    <h3 class="list-sub-title break-all">
+                                        <?php echo $value['meet_the_team_user_name']; ?>
+                                    </h3>
+                                    <h5 class="list-sub-title ">
+                                        <?php echo $value['meet_the_team_positions']; ?>
+                                    </h5>
+                                    <h4 class="profile-description">
+                                        <?php echo $value['meet_the_team_description']; ?>
+                                    </h4>
+                                </div>
+                                <!-- <div class="lightbox-top-detail">
                                     <div class="lightbox-image-box">
                                         <?php echo $htmlAfterField; ?> </div>
                                     <div class="image-title">
                                         <h3 class="list-sub-title break-all">
-                                            <?php echo $value['meet_the_team_user_name']; ?></h3>
-                                        <h5 class="list-sub-title "><?php echo $value['meet_the_team_positions']; ?></h5>
+                                            <?php //echo $value['meet_the_team_user_name']; 
+                                            ?></h3>
+                                        <h5 class="list-sub-title "><?php //echo $value['meet_the_team_positions']; 
+                                                                    ?></h5>
                                     </div>
                                 </div>
                                 <div class="lightbox-bottom-detail">
                                     <div class="profile-details">
-                                        <h5 class="strong"><?php echo Label::getLabel('LBL_About_The_Speaker', $adminLangId); ?></h5>
+                                        <h5 class="strong" style="padding-bottom:0px;"><?php echo $value['meet_the_team_user_name']; ?></h5>
+                                        <h5 class="list-sub-title "><?php echo $value['meet_the_team_positions']; ?></h5>
                                         <div class="profile-description">
                                             <?php echo $value['meet_the_team_description']; ?>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -249,23 +306,38 @@ defined('SYSTEM_INIT') or exit('Invalid Usage.');
                     <div class="image-lightbox" id=<?php echo $value['meet_the_team_id']; ?>>
                         <div class="image-lightbox-wrapper"> <a href="#0" class="close"></a>
                             <div class="lightbox-detail-text">
-                                <div class="lightbox-top-detail">
+                                <div>
+                                    <?php echo $htmlAfterField; ?>
+                                    <h3 class="list-sub-title break-all">
+                                        <?php echo $value['meet_the_team_user_name']; ?>
+                                    </h3>
+                                    <h5 class="list-sub-title ">
+                                        <?php echo $value['meet_the_team_positions']; ?>
+                                    </h5>
+                                    <h4 class="profile-description">
+                                        <?php echo $value['meet_the_team_description']; ?>
+                                    </h4>
+                                </div>
+                                <!-- <div class="lightbox-top-detail">
                                     <div class="lightbox-image-box">
                                         <?php echo $htmlAfterField; ?> </div>
                                     <div class="image-title">
                                         <h3 class="list-sub-title break-all">
-                                            <?php echo $value['meet_the_team_user_name']; ?></h3>
-                                        <h5 class="list-sub-title "><?php echo $value['meet_the_team_positions']; ?></h5>
+                                            <?php //echo $value['meet_the_team_user_name']; 
+                                            ?></h3>
+                                        <h5 class="list-sub-title "><?php //echo $value['meet_the_team_positions']; 
+                                                                    ?></h5>
                                     </div>
                                 </div>
                                 <div class="lightbox-bottom-detail">
                                     <div class="profile-details">
-                                        <h5 class="strong"><?php echo Label::getLabel('LBL_About_The_Speaker', $adminLangId); ?></h5>
+                                        <h5 class="strong" style="padding-bottom:0px;"><?php echo $value['meet_the_team_user_name']; ?></h5>
+                                        <h5 class="list-sub-title "><?php echo $value['meet_the_team_positions']; ?></h5>
                                         <div class="profile-description">
                                             <?php echo $value['meet_the_team_description']; ?>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>

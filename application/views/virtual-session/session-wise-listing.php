@@ -30,6 +30,10 @@ defined('SYSTEM_INIT') or exit('Invalid Usage.');
                         <section class="health-deatil">
                             <div class="container-width">
                                 <?php
+                                $empty = "";
+                                if (empty($records)) {
+                                    $empty = "No Sessions are available for now";
+                                }
                                 foreach ($records as $value) {
                                     if (!empty($value['speaker_image'])) {
                                         foreach ($value['speaker_image'] as $testimonialImg) {
@@ -84,6 +88,9 @@ defined('SYSTEM_INIT') or exit('Invalid Usage.');
                                         </div>
                                     </div>
                                 <?php } ?>
+                                <div>
+                                    <p class="not-available-session"><?php echo $empty; ?></p>
+                                </div>
                             </div>
                         </section>
                     </main>

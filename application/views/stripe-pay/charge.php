@@ -137,6 +137,13 @@
     padding: 10px !important;
     max-width: 100%;
   }
+
+  @media (max-width: 991px) {
+    .message-display form {
+      width: 100% !important;
+      min-width: 100% !important;
+    }
+  }
 </style>
 <section class="section section--grey section--page -pattern" style="background-color:#fff">
   <div class="container container--fixed">

@@ -67,7 +67,7 @@
             </svg>
             <?php echo Label::getLabel('LBL_BACK'); ?>
         </a>
-        <?php if ($userId <= 0) { ?>
+        <?php //if ($userId <= 0) { ?>
             <div class="step-nav">
                 <ul>
                     <li class="step-nav_item is-completed"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_1'); ?></a><span class="step-icon"></span></li>
@@ -76,7 +76,7 @@
                     <li class="step-nav_item"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_4'); ?></a></li>
                 </ul>
             </div>
-        <?php  } ?>
+        <?php  //} ?>
     </div>
     <div class="box__body">
         <div class="selection-tabs selection--checkout selection--duration selection--onehalf sponsorship-tabs">

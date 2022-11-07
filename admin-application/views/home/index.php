@@ -14,7 +14,7 @@
         <div class="container container-fluid">
             <div class="gap"></div>
             <div class="row">
-                <div class="col-lg-4 col-md-4 col-sm-4">
+                <div class="col-lg-3 col-md-3 col-sm-3">
                     <div class="box box--white box--stats">
                         <div class="box__body">
                             <img src="<?php echo CONF_WEBROOT_URL ?>images/stats_icon_1.svg" alt="" class="stats__icon">
@@ -31,7 +31,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-4 col-sm-4">
+                <div class="col-lg-3 col-md-3 col-sm-3">
                     <div class="box box--white box--stats">
                         <div class="box__body">
                             <img src="<?php echo CONF_WEBROOT_URL ?>images/stats_icon_2.svg" alt="" class="stats__icon">
@@ -48,7 +48,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-4 col-sm-4">
+                <div class="col-lg-3 col-md-3 col-sm-3">
                     <div class="box box--white box--stats">
                         <div class="box__body">
                             <img src="<?php echo CONF_WEBROOT_URL ?>images/stats_icon_3.svg" alt="" class="stats__icon">
@@ -61,6 +61,40 @@
                                     <?php echo $dashboardInfo["stats"]["totalUsers"]['30']; ?></strong></p>
                             <?php if ($objPrivilege->canViewUsers(AdminAuthentication::getLoggedAdminId(), true)) { ?>
                                 <a href="<?php echo CommonHelper::generateUrl('users'); ?>" class="stats__link"></a>
+                            <?php } ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3">
+                    <div class="box box--white box--stats">
+                        <div class="box__body">
+                            <img src="<?php echo CONF_WEBROOT_URL ?>images/stats_icon_3.svg" alt="" class="stats__icon">
+                            <h6 class="-txt-uppercase">
+                                <?php echo Label::getLabel('LBL_Total_Events_Visitors', $adminLangId); ?>
+                            </h6>
+                            <?php
+                            $count = array();
+                            $monthly_count = 0;
+                            foreach ($EventUserListing as $value) {
+                                $countUser = $value['user_added_on'];
+                                $UserListing = array_push($count, $countUser);
+                                $TotalEventUser = sizeof($count);
+                                $date = date('Y-m-d H:i:s');
+                                $currentUserMonth = date('m', strtotime($value['user_added_on']));
+                                $currentUserYear = date('Y', strtotime($value['user_added_on']));   
+                                $currentMonth = date('m');
+                                $currentYear = date('Y');
+                                if ($currentMonth == $currentUserMonth && $currentUserYear == $currentYear) {
+                                    $monthly_count++;
+                                }
+                            }
+                            ?>
+                            <h3 class="counter" data-currency="0" data-count="<?php echo $TotalEventUser; ?>">0</h3>
+                            <p>
+                                <?php echo Label::getLabel('LBL_This_Month', $adminLangId); ?> <strong>
+                                    <?php echo $monthly_count; ?></strong></p>
+                            <?php if ($objPrivilege->canViewUsers(AdminAuthentication::getLoggedAdminId(), true)) { ?>
+                                <a href="<?php echo CommonHelper::generateUrl('EventUsers'); ?>" class="stats__link"></a>
                             <?php } ?>
                         </div>
                     </div>
@@ -211,11 +245,11 @@
                                             if ($count > 11) {
                                                 break;
                                             }
-                                            ?>
+                                    ?>
                                             <li>
                                                 <?php echo ($row['languageName'] == '') ? Label::getLabel('LBL_Blank_Search', $adminLangId) : $row['languageName']; ?> <span>
                                                     <?php echo $row['lessonsSold']; ?></span></li>
-                                            <?php
+                                    <?php
                                             $count++;
                                         }
                                     } else {
@@ -285,7 +319,7 @@
                             </ul>
                         </div>
                         <div class="box__body space">
-                                <!--<div class="graph-container"><img src="images/traffic_graph.jpg" style="margin:auto;" alt=""></div>-->
+                            <!--<div class="graph-container"><img src="images/traffic_graph.jpg" style="margin:auto;" alt=""></div>-->
                             <div class="graph-container">
                                 <div id="piechart" class="ct-chart ct-perfect-fourth graph--traffic"></div>
                             </div>

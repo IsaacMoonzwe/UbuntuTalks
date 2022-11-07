@@ -2,11 +2,18 @@
 ?>
 <div class="box box--checkout">
     <div class="box__head">
+        <a href="javascript:void(0);" onclick="GetSelectEventBecomeSponserPlan();" class="btn btn--bordered color-black btn--back">
+            <svg class="icon icon--back">
+                <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
+            </svg>
+            <?php echo Label::getLabel('LBL_BACK'); ?>
+        </a>
         <div class="step-nav">
             <ul>
-                <li class="step-nav_item is-process"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_1'); ?></a><span class="step-icon"></span></li>
-                <li class="step-nav_item "><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_2'); ?></a></li>
+                <li class="step-nav_item is-completed"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_1'); ?></a><span class="step-icon"></span></li>
+                <li class="step-nav_item is-process"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_2'); ?></a><span class="step-icon"></span></li>
                 <li class="step-nav_item "><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_3'); ?></a></li>
+                <li class="step-nav_item "><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_4'); ?></a></li>
             </ul>
         </div>
     </div>
@@ -45,7 +52,7 @@
         <div class="box-foot__right">
             <!-- <a href="javascript:void(0);" class="btn btn--primary color-white" onclick="GetEventBecomeSponserPaymentSummary(eventCart.props.becomesponserPlan,eventCart.props.becomeSponserPlanQty);"><?php echo Label::getLabel('LBL_NEXT'); ?></a> -->
 
-            
+
             <a href="javascript:void(0);" class="btn btn--primary color-white" onclick="RegisterEventUser(eventCart.props.becomesponserPlan,eventCart.props.becomeSponserPlanQty);"><?php echo Label::getLabel('LBL_NEXT'); ?></a>
         </div>
     </div>

@@ -413,16 +413,16 @@ $(document).ready(function () {
     });
 
 
-   RegisterPlanEventUser = function (fromEvent='',fromBack=0) {
+  RegisterPlanEventUser = function (fromEvent = '', fromBack = 0) {
     $.loader.show();
-   
-    var checkLogged=1;
-    if(isEventUserLogged() == 0){
-      checkLogged=0;
+
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
     }
     // var data="method="+eventCart.props.sponsershipPlan;
     fcom.ajax(
-      fcom.makeUrl("EventUser", "RegisterPlanEventUserData",[fromEvent,fromBack,checkLogged]),
+      fcom.makeUrl("EventUser", "RegisterPlanEventUserData", [fromEvent, fromBack, checkLogged]),
       "",
       function (res) {
         try {
@@ -438,16 +438,23 @@ $(document).ready(function () {
     $.loader.hide();
   };
 
-   RegisterEventUser = function (fromEvent='',fromBack=0) {
+  RegisterEventUser = function (fromEvent = '', fromBack = 0) {
     $.loader.show();
-   
-    var checkLogged=1;
-    if(isEventUserLogged() == 0){
-      checkLogged=0;
+    var method = eventCart.props.becomesponserPlan;
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
     }
+
+    if (Object.keys(method).length <= 0) {
+      $.loader.hide();
+      $.mbsmessage("Please Select Plan", true, "alert alert--danger");
+      return false;
+    }
+
     // var data="method="+eventCart.props.sponsershipPlan;
     fcom.ajax(
-      fcom.makeUrl("EventUser", "RegisterEventUserData",[fromEvent,fromBack,checkLogged]),
+      fcom.makeUrl("EventUser", "RegisterEventUserData", [fromEvent, fromBack, checkLogged]),
       "",
       function (res) {
         try {
@@ -462,17 +469,17 @@ $(document).ready(function () {
     );
     $.loader.hide();
   };
-  RegisterDonationEventUser = function (fromEvent='',fromBack=0) {
+  RegisterDonationEventUser = function (fromEvent = '', fromBack = 0) {
     $.loader.show();
-   
-    var checkLogged=1;
-    if(isEventUserLogged() == 0){
-      checkLogged=0;
+
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
     }
-    console.log("check--",checkLogged);
+    console.log("check--", checkLogged);
     // var data="method="+eventCart.props.sponsershipPlan;
     fcom.ajax(
-      fcom.makeUrl("EventUser", "RegisterDonationEventUserData",[fromEvent,fromBack,checkLogged]),
+      fcom.makeUrl("EventUser", "RegisterDonationEventUserData", [fromEvent, fromBack, checkLogged]),
       "",
       function (res) {
         try {
@@ -637,9 +644,9 @@ $(document).ready(function () {
     $.loader.hide();
   };
 
-  EventLogInFormPopUp = function (callBack='') {
+  EventLogInFormPopUp = function (callBack = '') {
     $.loader.show();
-    
+
     fcom.ajax(
       fcom.makeUrl("EventUser", "EventLogInFormPopUp", [callBack]),
       "",
@@ -657,7 +664,344 @@ $(document).ready(function () {
     $.loader.hide();
   };
 
-  GetEventPlan = function (fromBack=0) {
+  //symposium Payment Flow
+
+  GetSymposiumPlan = function (fromBack = 0) {
+    $.loader.show();
+    // if (isEventUserLogged() == 0) {
+    //   $.loader.hide();
+    //   EventLogInFormPopUp('purchasePlan');
+    //   return false;
+    // }
+    var data = fcom.frmData(document.plan);
+    console.log("data", data);
+    fcom.ajax(
+      fcom.makeUrl("EventUser", "GetSymposiumPlan", [fromBack]),
+      data,
+      function (res) {
+        try {
+          let data = JSON.parse(res);
+          !data.status
+            ? $.mbsmessage(data.msg, true, "alert alert--danger")
+            : GetEventPaymentSummary();
+        } catch (exc) {
+          $.facebox(res, "");
+        }
+      }
+    );
+    $.loader.hide();
+  };
+
+  GetSymposiumTickets = function (method, fromPlan = 0, ticketCount = 1) {
+    $.loader.show();
+
+    if (method == "") {
+      $.loader.hide();
+      $.mbsmessage("Please Select Plan", true, "alert alert--danger");
+      return false;
+    }
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
+    }
+    var data = fcom.frmData(document.plan);
+    ticketCount = eventCart.props.symposiumTicket;
+    console.log("plan", method);
+    fcom.ajax(
+      fcom.makeUrl("EventUser", "GetSymposiumTickets", [method, checkLogged, fromPlan, ticketCount]),
+      data,
+      function (res) {
+        try {
+          let data = JSON.parse(res);
+          !data.status
+            ? $.mbsmessage(data.msg, true, "alert alert--danger")
+            : GetEventPaymentSummary();
+        } catch (exc) {
+          $.facebox(res, "");
+        }
+      }
+    );
+    $.loader.hide();
+  };
+  GetSymposiumTicketsPaymentSummary = function (plan, ticketCount, userStatus = '') {
+    $.loader.show();
+    if (plan == "" || ticketCount <= 0) {
+      $.loader.hide();
+      $.mbsmessage("Please Select Plan", true, "alert alert--danger");
+      return false;
+    }
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
+    }
+    var data = fcom.frmData(document.registerForm);
+    if (userStatus == '') {
+      userStatus = eventCart.props.eventUserSelectedStaus;
+    }
+    if (userStatus == 'Registration') {
+      data = fcom.frmData(document.registerForm);
+    }
+    else {
+      data = fcom.frmData(document.loginForm);
+    }
+    fcom.updateWithAjax(fcom.makeUrl('EventUser', 'RegisterForEvents', [plan, checkLogged, userStatus]), data, function (t) {
+      $.loader.hide();
+      console.log(t);
+      try {
+        if (t.userId > 0) {
+          eventCart.props.eventUserSelectedStaus = 'Registration';
+          GetEventSymposiumTicketsPaymentSummary(plan, ticketCount);
+          return;
+        }
+      } catch (exc) {
+        console.log("error", exc);
+        if (t.msg != '') {
+          $.mbsmessage(t.msg, true, "alert alert--danger")
+        }
+
+      }
+    }
+    );
+    $.loader.hide();
+  }
+  RegisterSymposiumUser = function (fromEvent = '', fromBack = 0) {
+    $.loader.show();
+
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
+    }
+    // var data="method="+eventCart.props.sponsershipPlan;
+    fcom.ajax(
+      fcom.makeUrl("EventUser", "RegisterSymposiumUserData", [fromEvent, fromBack, checkLogged]),
+      "",
+      function (res) {
+        try {
+          let data = JSON.parse(res);
+          !data.status
+            ? $.mbsmessage(data.msg, true, "alert alert--danger")
+            : void 0;
+        } catch (exc) {
+          $.facebox(res, "");
+        }
+      }
+    );
+    $.loader.hide();
+  };
+  GetEventSymposiumTicketsPaymentSummary = function (plan, ticketCount) {
+    $.loader.show();
+    console.log(plan);
+    console.log("ticketCount", ticketCount);
+    if (plan == "" || ticketCount <= 0) {
+      $.loader.hide();
+      $.mbsmessage("Please Select Plan", true, "alert alert--danger");
+      return false;
+    }
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
+    }
+    fcom.ajax(
+      fcom.makeUrl("EventUser", "GetSymposiumTicketsPaymentSummary", [
+        plan,
+        ticketCount,
+        checkLogged
+      ]),
+      '',
+      function (res) {
+        try {
+          let data = JSON.parse(res);
+          !data.status
+            ? $.mbsmessage(data.msg, true, "alert alert--danger")
+            : void 0;
+        } catch (exc) {
+          $.facebox(res, "");
+        }
+      }
+    );
+    $.loader.hide();
+  };
+  eventSymposiumApplyPromoCode = function (code) {
+    console.log("code", code);
+    eventCart.couponCode = code.toString();
+    if (eventCart.couponCode == "") {
+      return;
+    }
+    data = "coupon_code=" + eventCart.couponCode;
+    fcom.updateWithAjax(
+      fcom.makeUrl("EventUser", "eventApplyPromoCode"),
+      data,
+      function (res) {
+        // eventCart.checkoutStep("getPaymentSummary", "");
+        GetEventSymposiumTicketsPaymentSummary(eventCart.props.symposiumPlan, eventCart.props.symposiumTicket);
+
+      }
+    );
+  };
+
+
+
+
+  //concert payment flow
+  GetConcertPlan = function (fromBack = 0) {
+    $.loader.show();
+    // if (isEventUserLogged() == 0) {
+    //   $.loader.hide();
+    //   EventLogInFormPopUp('purchasePlan');
+    //   return false;
+    // }
+    var data = fcom.frmData(document.plan);
+
+    fcom.ajax(
+      fcom.makeUrl("EventUser", "GetConcertPlan", [fromBack]),
+      data,
+      function (res) {
+        try {
+          let data = JSON.parse(res);
+          !data.status
+            ? $.mbsmessage(data.msg, true, "alert alert--danger")
+            : GetEventPaymentSummary();
+        } catch (exc) {
+          $.facebox(res, "");
+        }
+      }
+    );
+    $.loader.hide();
+  };
+
+  GetConcertTickets = function (method, fromPlan = 0, ticketCount = 1) {
+    $.loader.show();
+
+    if (method == "") {
+      $.loader.hide();
+      $.mbsmessage("Please Select Plan", true, "alert alert--danger");
+      return false;
+    }
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
+    }
+    var data = fcom.frmData(document.plan);
+    ticketCount = eventCart.props.concertTicket;
+    console.log("plan", method);
+    fcom.ajax(
+      fcom.makeUrl("EventUser", "GetConcertTickets", [method, checkLogged, fromPlan, ticketCount]),
+      data,
+      function (res) {
+        try {
+          let data = JSON.parse(res);
+          !data.status
+            ? $.mbsmessage(data.msg, true, "alert alert--danger")
+            : GetEventPaymentSummary();
+        } catch (exc) {
+          $.facebox(res, "");
+        }
+      }
+    );
+    $.loader.hide();
+  };
+  GetConcertTicketsPaymentSummary = function (plan, ticketCount, userStatus = '') {
+    $.loader.show();
+    if (plan == "" || ticketCount <= 0) {
+      $.loader.hide();
+      $.mbsmessage("Please Select Plan", true, "alert alert--danger");
+      return false;
+    }
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
+    }
+    var data = fcom.frmData(document.registerForm);
+    if (userStatus == '') {
+      userStatus = eventCart.props.eventUserSelectedStaus;
+    }
+    if (userStatus == 'Registration') {
+      data = fcom.frmData(document.registerForm);
+    }
+    else {
+      data = fcom.frmData(document.loginForm);
+    }
+    fcom.updateWithAjax(fcom.makeUrl('EventUser', 'RegisterForEvents', [plan, checkLogged, userStatus]), data, function (t) {
+      $.loader.hide();
+      console.log(t);
+      try {
+        if (t.userId > 0) {
+          eventCart.props.eventUserSelectedStaus = 'Registration';
+          GetEventConcertTicketsPaymentSummary(plan, ticketCount);
+          return;
+        }
+      } catch (exc) {
+        console.log("error", exc);
+        if (t.msg != '') {
+          $.mbsmessage(t.msg, true, "alert alert--danger")
+        }
+
+      }
+    }
+    );
+    $.loader.hide();
+  }
+  RegisterConcertUser = function (fromEvent = '', fromBack = 0) {
+    $.loader.show();
+
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
+    }
+    // var data="method="+eventCart.props.sponsershipPlan;
+    fcom.ajax(
+      fcom.makeUrl("EventUser", "RegisterConcertUserData", [fromEvent, fromBack, checkLogged]),
+      "",
+      function (res) {
+        try {
+          let data = JSON.parse(res);
+          !data.status
+            ? $.mbsmessage(data.msg, true, "alert alert--danger")
+            : void 0;
+        } catch (exc) {
+          $.facebox(res, "");
+        }
+      }
+    );
+    $.loader.hide();
+  };
+  GetEventConcertTicketsPaymentSummary = function (plan, ticketCount) {
+    $.loader.show();
+    console.log(plan);
+    console.log("ticketCount", ticketCount);
+    if (plan == "" || ticketCount <= 0) {
+      $.loader.hide();
+      $.mbsmessage("Please Select Plan", true, "alert alert--danger");
+      return false;
+    }
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
+    }
+    fcom.ajax(
+      fcom.makeUrl("EventUser", "GetConcertTicketsPaymentSummary", [
+        plan,
+        ticketCount,
+        checkLogged
+      ]),
+      '',
+      function (res) {
+        try {
+          let data = JSON.parse(res);
+          !data.status
+            ? $.mbsmessage(data.msg, true, "alert alert--danger")
+            : void 0;
+        } catch (exc) {
+          $.facebox(res, "");
+        }
+      }
+    );
+    $.loader.hide();
+  };
+
+
+
+  GetEventPlan = function (fromBack = 0) {
     $.loader.show();
     // if (isEventUserLogged() == 0) {
     //   $.loader.hide();
@@ -682,23 +1026,23 @@ $(document).ready(function () {
     );
     $.loader.hide();
   };
-  GetEventTickets = function (method,fromPlan=0,ticketCount=1) {
+  GetEventTickets = function (method, fromPlan = 0, ticketCount = 1) {
     $.loader.show();
-   
+
     if (method == "") {
       $.loader.hide();
       $.mbsmessage("Please Select Plan", true, "alert alert--danger");
       return false;
     }
-    var checkLogged=1;
-    if(isEventUserLogged() == 0){
-      checkLogged=0;
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
     }
     var data = fcom.frmData(document.plan);
-    ticketCount= eventCart.props.countOfTickets;
+    ticketCount = eventCart.props.countOfTickets;
     console.log("plan", method);
     fcom.ajax(
-      fcom.makeUrl("EventUser", "GetEventTickets", [method,checkLogged,fromPlan,ticketCount]),
+      fcom.makeUrl("EventUser", "GetEventTickets", [method, checkLogged, fromPlan, ticketCount]),
       data,
       function (res) {
         try {
@@ -715,44 +1059,44 @@ $(document).ready(function () {
   };
 
 
-  GetEventTicketsPaymentSummary=function(plan,ticketCount,userStatus=''){
+  GetEventTicketsPaymentSummary = function (plan, ticketCount, userStatus = '') {
     $.loader.show();
     if (plan == "" || ticketCount <= 0) {
       $.loader.hide();
       $.mbsmessage("Please Select Plan", true, "alert alert--danger");
       return false;
     }
-    var checkLogged=1;
-    if(isEventUserLogged() == 0){
-      checkLogged=0;
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
     }
-    var data=fcom.frmData(document.registerForm);
-    if(userStatus==''){
-      userStatus= eventCart.props.eventUserSelectedStaus;
+    var data = fcom.frmData(document.registerForm);
+    if (userStatus == '') {
+      userStatus = eventCart.props.eventUserSelectedStaus;
     }
-    if(userStatus=='Registration'){
-   data = fcom.frmData(document.registerForm);
+    if (userStatus == 'Registration') {
+      data = fcom.frmData(document.registerForm);
     }
-    else{
+    else {
       data = fcom.frmData(document.loginForm);
     }
-    fcom.updateWithAjax(fcom.makeUrl('EventUser', 'RegisterForEvents',[plan,checkLogged,userStatus]), data, function (t) {
+    fcom.updateWithAjax(fcom.makeUrl('EventUser', 'RegisterForEvents', [plan, checkLogged, userStatus]), data, function (t) {
       $.loader.hide();
       console.log(t);
-       try {
-          if(t.userId>0){
-            eventCart.props.eventUserSelectedStaus='Registration';
-            GetPlanTicketsPaymentSummary(plan,ticketCount) ;
-            return;
-          }
-        } catch (exc) {
-          console.log("error",exc);
-          if(t.msg!=''){
-          $.mbsmessage(t.msg, true, "alert alert--danger")
-          }
-          
+      try {
+        if (t.userId > 0) {
+          eventCart.props.eventUserSelectedStaus = 'Registration';
+          GetPlanTicketsPaymentSummary(plan, ticketCount);
+          return;
         }
+      } catch (exc) {
+        console.log("error", exc);
+        if (t.msg != '') {
+          $.mbsmessage(t.msg, true, "alert alert--danger")
+        }
+
       }
+    }
     );
     $.loader.hide();
   }
@@ -763,13 +1107,45 @@ $(document).ready(function () {
       $.mbsmessage("Please Select Plan", true, "alert alert--danger");
       return false;
     }
-    var checkLogged=1;
-    if(isEventUserLogged() == 0){
-      checkLogged=0;
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
     }
     fcom.ajax(
       fcom.makeUrl("EventUser", "GetEventTicketsPaymentSummary", [
         plan,
+        ticketCount,
+        checkLogged
+      ]),
+      '',
+      function (res) {
+        try {
+          let data = JSON.parse(res);
+          !data.status
+            ? $.mbsmessage(data.msg, true, "alert alert--danger")
+            : void 0;
+        } catch (exc) {
+          $.facebox(res, "");
+        }
+      }
+    );
+    $.loader.hide();
+  };
+
+
+  GetBenefitConcertPlanTicketsPaymentSummary = function (ticketCount) {
+    $.loader.show();
+    if (ticketCount <= 0) {
+      $.loader.hide();
+      $.mbsmessage("Please Select Plan", true, "alert alert--danger");
+      return false;
+    }
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
+    }
+    fcom.ajax(
+      fcom.makeUrl("EventUser", "GetConcertTicketsPaymentSummary", [
         ticketCount,
         checkLogged
       ]),
@@ -816,22 +1192,22 @@ $(document).ready(function () {
   };
 
   //donation
-  GetEventDonation = function (fromPayment = 0,donationAmount=1) {
+  GetEventDonation = function (fromPayment = 0, donationAmount = 1) {
     $.loader.show();
     // if (isEventUserLogged() == 0) {
     //   $.loader.hide();
     //   EventLogInFormPopUp();
     //   return false;
     // }
-    console.log("donationAmount",donationAmount);
-    var checkLogged=1;
-    if(isEventUserLogged() == 0){
-      checkLogged=0;
+    console.log("donationAmount", donationAmount);
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
     }
     var data = fcom.frmData(document.plan);
     console.log("plan", data);
     fcom.ajax(
-      fcom.makeUrl("EventUser", "GetEventDonation", [fromPayment,checkLogged,donationAmount]),
+      fcom.makeUrl("EventUser", "GetEventDonation", [fromPayment, checkLogged, donationAmount]),
       data,
       function (res) {
         try {
@@ -846,7 +1222,7 @@ $(document).ready(function () {
     );
     $.loader.hide();
   };
-  GetEventDonationPaymentSummary = function (donation=1) {
+  GetEventDonationPaymentSummary = function (donation = 1) {
     $.loader.show();
     if (donation < 1) {
       $.loader.hide();
@@ -857,42 +1233,42 @@ $(document).ready(function () {
       );
       return false;
     }
-    eventCart.props.donationAmount=donation;
-    var checkLogged=1;
-    if(isEventUserLogged() == 0){
-      checkLogged=0;
+    eventCart.props.donationAmount = donation;
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
     }
-    var data=fcom.frmData(document.registerForm);
-    var userStatus='';
-    if(eventCart.props.eventUserSelectedStaus==undefined){
-      eventCart.props.eventUserSelectedStaus="Login";
+    var data = fcom.frmData(document.registerForm);
+    var userStatus = '';
+    if (eventCart.props.eventUserSelectedStaus == undefined) {
+      eventCart.props.eventUserSelectedStaus = "Login";
     }
-    if(userStatus==''){
-      userStatus= eventCart.props.eventUserSelectedStaus;
+    if (userStatus == '') {
+      userStatus = eventCart.props.eventUserSelectedStaus;
     }
 
-    if(userStatus=='Registration'){
-   data = fcom.frmData(document.registerForm);
+    if (userStatus == 'Registration') {
+      data = fcom.frmData(document.registerForm);
     }
-    else{
+    else {
       data = fcom.frmData(document.loginForm);
     }
-    fcom.updateWithAjax(fcom.makeUrl('EventUser', 'RegisterForEvents',[donation,checkLogged,userStatus]), data, function (t) {
+    fcom.updateWithAjax(fcom.makeUrl('EventUser', 'RegisterForEvents', [donation, checkLogged, userStatus]), data, function (t) {
       $.loader.hide();
       console.log(t);
-       try {
-          if(t.userId>0){
-            eventCart.props.eventUserSelectedStaus="Login";
-            GetDonationPaymentSummary(donation,checkLogged) ;
-            return;
-          }
-        } catch (exc) {
-          console.log("error",exc);
-          if(t.msg!=''){
-            $.mbsmessage(t.msg, true, "alert alert--danger")
-            }
+      try {
+        if (t.userId > 0) {
+          eventCart.props.eventUserSelectedStaus = "Login";
+          GetDonationPaymentSummary(donation, checkLogged);
+          return;
+        }
+      } catch (exc) {
+        console.log("error", exc);
+        if (t.msg != '') {
+          $.mbsmessage(t.msg, true, "alert alert--danger")
         }
       }
+    }
     );
     $.loader.hide();
   };
@@ -907,24 +1283,24 @@ $(document).ready(function () {
       );
       return false;
     }
-    var checkLogged=1;
-    if(isEventUserLogged() == 0){
-      checkLogged=0;
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
     }
-    fcom.ajax(fcom.makeUrl('EventUser', 'GetEventDonationPaymentSummary',[donation,checkLogged]), '', function (t) {
+    fcom.ajax(fcom.makeUrl('EventUser', 'GetEventDonationPaymentSummary', [donation, checkLogged]), '', function (t) {
       $.loader.hide();
       console.log(t);
-       try {
-          console.log("success",t);
-          let data = JSON.parse(t);
-          !data.status
-            ? $.mbsmessage(data.msg, true, "alert alert--danger")
-            : void 0;
-        } catch (exc) {
-          console.log("error",exc);
-          $.facebox(t, "");
-        }
+      try {
+        console.log("success", t);
+        let data = JSON.parse(t);
+        !data.status
+          ? $.mbsmessage(data.msg, true, "alert alert--danger")
+          : void 0;
+      } catch (exc) {
+        console.log("error", exc);
+        $.facebox(t, "");
       }
+    }
     );
     $.loader.hide();
   };
@@ -932,6 +1308,12 @@ $(document).ready(function () {
 
   GetEventBecomeSponserPlan = function (fromback = 0) {
     $.loader.show();
+    var plan = eventCart.props.becomeSponserSelectedPlan;
+    if (plan == null) {
+      $.loader.hide();
+      $.mbsmessage("Please Select Event", true, "alert alert--danger");
+      return false;
+    }
     // if (isEventUserLogged() == 0) {
     //   $.loader.hide();
     //   EventLogInFormPopUp();
@@ -942,12 +1324,12 @@ $(document).ready(function () {
       eventCart.props.becomesponserPlan = {};
     }
     var data = fcom.frmData(document.plan);
-    var checkLogged=1;
-    if(isEventUserLogged() == 0){
-      checkLogged=0;
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
     }
     fcom.ajax(
-      fcom.makeUrl("EventUser", "GetEventBecomeSponserPlan", [checkLogged]),
+      fcom.makeUrl("EventUser", "GetEventBecomeSponserPlan", [eventCart.props.selectSponserEventPlan,checkLogged]),
       data,
       function (res) {
         try {
@@ -962,7 +1344,41 @@ $(document).ready(function () {
     );
     $.loader.hide();
   };
-  GetEventBecomeSponserPaymentSummary=function(method,qty){
+
+
+  GetSelectEventBecomeSponserPlan = function (fromback = 0) {
+    $.loader.show();
+    // if (isEventUserLogged() == 0) {
+    //   $.loader.hide();
+    //   EventLogInFormPopUp();
+    //   return false;
+    // }
+    if (fromback == 0) {
+      eventCart.props.becomeSponserPlanQty = {};
+      eventCart.props.becomesponserPlan = {};
+    }
+    var data = fcom.frmData(document.plan);
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
+    }
+    fcom.ajax(
+      fcom.makeUrl("EventUser", "GetSelectEventBecomeSponserPlan", [checkLogged]),
+      data,
+      function (res) {
+        try {
+          let data = JSON.parse(res);
+          !data.status
+            ? $.mbsmessage(data.msg, true, "alert alert--danger")
+            : GetEventPaymentSummary();
+        } catch (exc) {
+          $.facebox(res, "");
+        }
+      }
+    );
+    $.loader.hide();
+  };
+  GetEventBecomeSponserPaymentSummary = function (method, qty) {
 
     $.loader.show();
     if (Object.keys(method).length <= 0) {
@@ -970,46 +1386,47 @@ $(document).ready(function () {
       $.mbsmessage("Please Select Plan", true, "alert alert--danger");
       return false;
     }
-    var checkLogged=1;
-    if(isEventUserLogged() == 0){
-      checkLogged=0;
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
     }
 
-    
-    var data=fcom.frmData(document.registerForm);
-    var userStatus='';
-    if(userStatus==''){
-      userStatus= eventCart.props.eventUserSelectedStaus;
+
+    var data = fcom.frmData(document.registerForm);
+    var userStatus = '';
+    if (userStatus == '') {
+      userStatus = eventCart.props.eventUserSelectedStaus;
     }
-    if(userStatus=='Registration'){
-   data = fcom.frmData(document.registerForm);
+    if (userStatus == 'Registration') {
+      data = fcom.frmData(document.registerForm);
     }
-    else{
+    else {
       data = fcom.frmData(document.loginForm);
     }
-    fcom.updateWithAjax(fcom.makeUrl('EventUser', 'RegisterForEvents',[method,checkLogged,userStatus]), data, function (t) {
+    fcom.updateWithAjax(fcom.makeUrl('EventUser', 'RegisterForEvents', [method, checkLogged, userStatus]), data, function (t) {
       $.loader.hide();
       console.log(t);
-       try {
-          if(t.userId>0){
-         var qty=eventCart.props.becomeSponserPlanQty;
-      var  method=eventCart.props.becomesponserPlan;
-            GetBecomeSponserPaymentSummary(method,qty);
-            return;
-          }
-        } catch (exc) {
-          console.log("error",exc);
-          if(t.msg!=''){
-            $.mbsmessage(t.msg, true, "alert alert--danger")
-            }
-
+      try {
+        if (t.userId > 0) {
+          var qty = eventCart.props.becomeSponserPlanQty;
+          var method = eventCart.props.becomesponserPlan;
+          GetBecomeSponserPaymentSummary(method, qty);
+          return;
         }
+      } catch (exc) {
+        console.log("error", exc);
+        if (t.msg != '') {
+          $.mbsmessage(t.msg, true, "alert alert--danger")
+        }
+
       }
+    }
     );
     $.loader.hide();
   };
-  eventDonationApplyPromoCode=function (code) {
-    console.log("code",code);
+
+  eventDonationApplyPromoCode = function (code) {
+    console.log("code", code);
     eventCart.couponCode = code.toString();
     if (eventCart.couponCode == "") {
       return;
@@ -1020,90 +1437,105 @@ $(document).ready(function () {
       data,
       function (res) {
         // eventCart.checkoutStep("getPaymentSummary", "");
-        GetBecomeSponserPaymentSummary(eventCart.props.becomesponserPlan,eventCart.props.becomeSponserPlanQty);
+        GetBecomeSponserPaymentSummary(eventCart.props.becomesponserPlan, eventCart.props.becomeSponserPlanQty);
       }
     );
   };
 
- 
 
 
-  eventApplyPromoCode=function (code,fromSelector='') {
-    console.log("code",code);
+
+  eventApplyPromoCode = function (code, fromSelector = '') {
+    console.log("code", code);
     eventCart.couponCode = code.toString();
     if (eventCart.couponCode == "") {
       return;
     }
-    console.log('fromSelector',fromSelector);
-    data = "coupon_code=" + eventCart.couponCode+"&fromSelector="+fromSelector;
+    console.log('fromSelector', fromSelector);
+    data = "coupon_code=" + eventCart.couponCode + "&fromSelector=" + fromSelector;
     fcom.updateWithAjax(
       fcom.makeUrl("EventUser", "eventApplyPromoCode"),
       data,
       function (res) {
         // eventCart.checkoutStep("getPaymentSummary", "");
-        if(fromSelector=='fromSponser'){
-        GetBecomeSponserPaymentSummary(eventCart.props.becomesponserPlan,eventCart.props.becomeSponserPlanQty);
+        if (fromSelector == 'fromSponser') {
+          GetBecomeSponserPaymentSummary(eventCart.props.becomesponserPlan, eventCart.props.becomeSponserPlanQty);
         }
-        else if(fromSelector=='donation'){
+        else if (fromSelector == 'donation') {
           GetDonationPaymentSummary(eventCart.props.donationAmount);
         }
-        else if(fromSelector=='registrationPlan'){
-            GetPlanTicketsPaymentSummary(eventCart.props.sponsershipPlan,eventCart.props.countOfTickets);
+        else if (fromSelector == 'registrationPlan') {
+          GetPlanTicketsPaymentSummary(eventCart.props.sponsershipPlan, eventCart.props.countOfTickets);
+        }
+        else if (fromSelector == 'benefitConcertPlan') {
+          GetConcertTicketsPaymentSummary(eventCart.props.concertPlan, eventCart.props.concertTicket);
+        }
+        else if (fromSelector == 'SymposiumDinnerPlan') {
+          GetEventSymposiumTicketsPaymentSummary(eventCart.props.symposiumPlan, eventCart.props.symposiumTicket);
         }
       }
     );
   };
-  eventRemovePromoCode= function (fromSelector='') {
+  eventRemovePromoCode = function (fromSelector = '') {
     fcom.updateWithAjax(
       fcom.makeUrl("EventUser", "eventremovePromoCode"),
       "",
       function (res) {
-        if(fromSelector=='fromSponser'){
-        GetBecomeSponserPaymentSummary(eventCart.props.becomesponserPlan,eventCart.props.becomeSponserPlanQty);
+        if (fromSelector == 'fromSponser') {
+          GetBecomeSponserPaymentSummary(eventCart.props.becomesponserPlan, eventCart.props.becomeSponserPlanQty);
         }
-        else if(fromSelector=='donation'){
+        else if (fromSelector == 'donation') {
           GetDonationPaymentSummary(eventCart.props.donationAmount);
         }
-        else if(fromSelector=='registrationPlan'){
-            GetPlanTicketsPaymentSummary(eventCart.props.sponsershipPlan,eventCart.props.countOfTickets);
+        else if (fromSelector == 'registrationPlan') {
+          GetPlanTicketsPaymentSummary(eventCart.props.sponsershipPlan, eventCart.props.countOfTickets);
+        }
+        else if (fromSelector == 'benefitConcertPlan') {
+          GetConcertTicketsPaymentSummary(eventCart.props.concertPlan, eventCart.props.concertTicket);
+        }
+        else if (fromSelector == 'SymposiumDinnerPlan') {
+          GetEventSymposiumTicketsPaymentSummary(eventCart.props.symposiumPlan, eventCart.props.symposiumTicket);
         }
       }
     );
   },
 
-  GetBecomeSponserPaymentSummary = function (method, qty) {
-    $.loader.show();
-    if (Object.keys(method).length <= 0) {
-      $.loader.hide();
-      $.mbsmessage("Please Select Plan", true, "alert alert--danger");
-      return false;
-    }
-    var checkLogged=1;
-    if(isEventUserLogged() == 0){
-      checkLogged=0;
-    }
-  
-    // var data="method="+eventCart.props.sponsershipPlan;
-    fcom.ajax(
-      fcom.makeUrl("EventUser", "GetEventBecomeSponserPaymentSummary", [
-        JSON.stringify(method),
-        JSON.stringify(qty),
-        checkLogged
-      ]),
-      '',
-      function (res) {
-        try {
-          let data = JSON.parse(res);
-          !data.status
-            ? $.mbsmessage(data.msg, true, "alert alert--danger")
-            : void 0;
-        } catch (exc) {
-           $.facebox(res, "");
-        }
+    GetBecomeSponserPaymentSummary = function (method, qty) {
+      $.loader.show();
+      if (Object.keys(method).length <= 0) {
+        $.loader.hide();
+        $.mbsmessage("Please Select Plan", true, "alert alert--danger");
+        return false;
       }
-    );
-    $.loader.hide();
-  };
+      var checkLogged = 1;
+      if (isEventUserLogged() == 0) {
+        checkLogged = 0;
+      }
+
+      // var sponser_event_plan=eventCart.props.becomeSponserSelectedPlan;
+      var sponser_event_plan = eventCart.props.selectSponserEventPlan;
+      // var data="method="+eventCart.props.sponsershipPlan;
+      fcom.ajax(
+        fcom.makeUrl("EventUser", "GetEventBecomeSponserPaymentSummary", [
+          JSON.stringify(method),
+          JSON.stringify(qty),
+          sponser_event_plan,
+          checkLogged
+        ]),
+        '',
+        function (res) {
+          try {
+            let data = JSON.parse(res);
+            !data.status
+              ? $.mbsmessage(data.msg, true, "alert alert--danger")
+              : void 0;
+          } catch (exc) {
+            $.facebox(res, "");
+          }
+        }
+      );
+      $.loader.hide();
+    };
 
   logInEventFormPopUp = function () {
     $.loader.show();
@@ -1128,14 +1560,14 @@ $(document).ready(function () {
     if (!$(frm).validate()) {
       return;
     }
-    console.log("cart==",cart.props.isPrivateClass);
-    var checkAdmin=cart.props.isPrivateClass;
+    console.log("cart==", cart.props.isPrivateClass);
+    var checkAdmin = cart.props.isPrivateClass;
     $.loader.show();
     fcom.ajax(
-      fcom.makeUrl("GuestUser", "setUpLogin",[checkAdmin]),
+      fcom.makeUrl("GuestUser", "setUpLogin", [checkAdmin]),
       fcom.frmData(frm),
       function (res) {
-        console.log("err",res);
+        console.log("err", res);
         if (res.status == 1 && res.redirectUrl) {
           window.location.href = res.redirectUrl;
           return;

@@ -211,9 +211,9 @@ defined('SYSTEM_INIT') or exit('Invalid Usage.');
           <div class="events-tickets-description">
             <span class="ticket-title"><b>Donation Amount : </b> <?php echo "$" . $tickets; ?> </span>
           </div>
-          <div class="disclaimer">
+          <!-- <div class="disclaimer">
             <span class="disclaimer-section">The ticket(s) is good only for the selected date(s) and event(s). There are NO REFUNDS and EXCHANGES. All Sales are FINAL! Ticket required for entry. For questions email utevents@ubuntutalks.com.</span>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

@@ -1,16 +1,22 @@
 /* Event Profile Form CSS */
+body .section {
+	padding: 4rem 0 2rem !important;
+}
 
-div#sponsorship_info {
+div#sponsorship_info,
+div#benefit-concert_info {
 	margin-top: 10px !important;
 	text-align: initial;
 }
 
-div#sponsorship_paginate {
+div#sponsorship_paginate,
+div#benefit-concert_paginate {
 	margin-top: 10px !important;
 	text-align: end;
 }
 
-div#sponsorship_length {
+div#sponsorship_length,
+div#benefit-concert_length {
 	margin-bottom: 15px !important;
 	text-align: initial;
 }
@@ -22,6 +28,10 @@ div#sponsorship_filter {
 div#plan_info {
 	text-align: initial;
 	margin-top: 15px;
+}
+
+div#benefit-concert_filter {
+	display: none;
 }
 
 div#plan_paginate {
@@ -54,6 +64,23 @@ div#plan_filter {
 
 /* Handle on hover */
 .dataTables_scrollBody::-webkit-scrollbar-thumb:hover {
+	background: #555;
+}
+
+
+.table::-webkit-scrollbar-track {
+	background: #f1f1f1;
+}
+
+.dataTables_scrollBody {
+	height: auto !important;
+}
+
+.table::-webkit-scrollbar-thumb {
+	background: #888;
+}
+
+.table::-webkit-scrollbar-thumb:hover {
 	background: #555;
 }
 
@@ -663,6 +690,10 @@ button.btn.btn-primary.help-desk-button:hover {
 	box-shadow: var(--boxShadow-all);
 }
 
+#listItemsLessons .row.events-tickets-section {
+	box-shadow: rgb(0 0 0 / 24%) 0px 3px 8px !important;
+}
+
 .form.events-tickets-section {
 	width: 100%;
 }
@@ -709,6 +740,7 @@ button.btn.btn-primary.help-desk-button:hover {
 
 .events-dashboard-page .avtar {
 	background-color: #ce4400 !important;
+	margin-right: 15px !important;
 }
 
 .events-dashboard-page .menu ul .menu__item a:hover {
@@ -983,11 +1015,24 @@ span.select2-selection.select2-selection--single {
 }
 
 table.event-listing tr td {
+	width: 20% !important;
 	text-align: initial;
 	font-family: 'Nunito' !important;
 	font-size: 15px;
 	font-weight: 500 !important;
 	color: #000;
+}
+
+.page-item.active .page-link {
+	background-color: #dd3d14 !important;
+	border-color: #dd3d14 !important;
+}
+
+td.expiry,
+span.expiry {
+	color: red !important;
+	font-weight: 700 !important;
+	font-size: 17px !important;
 }
 
 table.event-listing tr th {
@@ -8547,16 +8592,22 @@ textarea[disabled] {
 	.donation-section .modal-content {
 		width: 100% !important;
 	}
-	div#example_info, div#example_paginate{
-		text-align: center !important;
-	}
-	div#plan_paginate,
-	div#sponsorship_info {
+
+	div#example_info,
+	div#example_paginate {
 		text-align: center !important;
 	}
 
+	div#plan_paginate,
+	div#sponsorship_info,
+	div#benefit-concert_info {
+		text-align: center !important;
+	}
+
+
 	div#plan_info,
-	div#sponsorship_paginate {
+	div#sponsorship_paginate,
+	div#benefit-concert_paginate {
 		text-align: center !important;
 	}
 

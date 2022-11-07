@@ -41,9 +41,9 @@ $jsonUserRow = FatUtility::convertToJson($userRow);
     var chat_api_key = '<?php echo FatApp::getConfig('CONF_COMET_CHAT_API_KEY'); ?>';
     var userSeoBaseUrl = '<?php echo CommonHelper::generateFullUrl('teachers', 'profile') . '/'; ?>';
     var userImage = '<?php echo CommonHelper::generateFullUrl('Image', 'user', array($userRow['user_id'])); ?>';
-    var selectedTimeZone='<?php echo $userRow['user_timezone']; ?>';
-    var selectedCountry='<?php echo $userRow['user_country_id']; ?>';
-console.log(selectedTimeZone);    
+    var selectedTimeZone = '<?php echo $userRow['user_timezone']; ?>';
+    var selectedCountry = '<?php echo $userRow['user_country_id']; ?>';
+    console.log(selectedTimeZone);
 </script>
 
 <div class="content-panel__head">
@@ -177,6 +177,7 @@ console.log(selectedTimeZone);
                                         <div class="caption-wraper">
                                             <label class="field_label">
                                                 <?php echo $phoneField->getCaption(); ?>
+                                                <span class="spn_must_field">*</span>
                                                 <?php if ($phoneField->requirement->isRequired()) { ?>
                                                     <span class="spn_must_field">*</span>
                                                 <?php } ?>
@@ -369,50 +370,51 @@ console.log(selectedTimeZone);
             let status = ($(this).is(':checked')) ? statusActive : statusInActive;
             $('.free-trial-status-js').text(status);
         });
-        function coun_timezone(){
-            var product_code = $("[name='user_country_id'] option:selected").val();
-            $.ajax(
-                    {
-                        type:"post",
-                        url: fcom.makeUrl('Account', 'country'),
-                        data:{ product_code:product_code},
-                        dataType: 'json',
-                        success:function(data)
-                        {
-                                var len = data.length;
-                                $("[name='user_timezone']").empty();
-                                    $.each(data, function(k, v) {
-                                        var id = k;
-                                        var name =v;
-                                        // console.log(id);
-                                        if(id==selectedTimeZone){
-                                            $("[name='user_timezone']").append("<option value='"+id+"' selected>"+name+"</option>");    
-                                        }
-                                        else
-                                        $("[name='user_timezone']").append("<option value='"+id+"'>"+name+"</option>");
-                                        // $("[name='user_timezone']").select2("val","Pacific/Honolulu HST");
-                                    })
-                                  
 
-                        }
-                    });
-        }
-        function country_timezone(){
-            $("[name='user_country_id']").select2().on('select2:select', function (e) {
-                coun_timezone();
-               
+        function coun_timezone() {
+            var product_code = $("[name='user_country_id'] option:selected").val();
+            $.ajax({
+                type: "post",
+                url: fcom.makeUrl('Account', 'country'),
+                data: {
+                    product_code: product_code
+                },
+                dataType: 'json',
+                success: function(data) {
+                    var len = data.length;
+                    $("[name='user_timezone']").empty();
+                    $.each(data, function(k, v) {
+                        var id = k;
+                        var name = v;
+                        // console.log(id);
+                        if (id == selectedTimeZone) {
+                            $("[name='user_timezone']").append("<option value='" + id + "' selected>" + name + "</option>");
+                        } else
+                            $("[name='user_timezone']").append("<option value='" + id + "'>" + name + "</option>");
+                        // $("[name='user_timezone']").select2("val","Pacific/Honolulu HST");
+                    })
+
+
+                }
             });
         }
-        $(document).ready(function(){
+
+        function country_timezone() {
+            $("[name='user_country_id']").select2().on('select2:select', function(e) {
+                coun_timezone();
+
+            });
+        }
+        $(document).ready(function() {
             $("[name='user_country_id']").val(selectedCountry);
-$("[name='user_country_id']").trigger('change.select2');
-   
+            $("[name='user_country_id']").trigger('change.select2');
+
             country_timezone();
             coun_timezone();
-         
-            
-// $("[name='user_timezone']").trigger('change.select2');
-   
+
+
+            // $("[name='user_timezone']").trigger('change.select2');
+
         });
     });
 </script>

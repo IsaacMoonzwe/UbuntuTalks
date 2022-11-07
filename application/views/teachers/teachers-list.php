@@ -445,25 +445,28 @@ if (!isset($langname)) {
 ?>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
-    $(window).scroll(function () {
-  //set scroll position in session storage
-    sessionStorage.scrollPosTeachers = $(window).scrollTop();
-    });
-    $(document).ready(function(){          
-    if($('.teacher__name').text()!==''){
-        $('html, body').animate({
-            scrollTop:sessionStorage.scrollPosTeachers
-            }, 1000);
-    }else{
-        sessionStorage.scrollPosTeachers=0
-    }
+    $(window).scroll(function() {
+        //set scroll position in session storage
+        sessionStorage.scrollPosTeachers = $(window).scrollTop();
     });
     $(document).ready(function() {
-        if($(location).attr('hash')!==''){
-          setTimeout(()=> { document
-    .querySelector($(location).attr('hash'))
-    .scrollIntoView({ behavior: "smooth" });
-        },100);
+        if ($('.teacher__name').text() !== '') {
+            $('html, body').animate({
+                scrollTop: sessionStorage.scrollPosTeachers
+            }, 1000);
+        } else {
+            sessionStorage.scrollPosTeachers = 0
+        }
+    });
+    $(document).ready(function() {
+        if ($(location).attr('hash') !== '') {
+            setTimeout(() => {
+                document
+                    .querySelector($(location).attr('hash'))
+                    .scrollIntoView({
+                        behavior: "smooth"
+                    });
+            }, 100);
         }
         const element = document.getElementsByClassName("tutor-info__inner");
         for (let j = 0; j < element.length; j++) {

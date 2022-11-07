@@ -4,6 +4,7 @@
 $arr_flds = array(
     'listserial' => Label::getLabel('LBL_Sr_no.', $adminLangId),
     'sponsorshipcategories_name' => Label::getLabel('LBL_Sponsorship_Categories', $adminLangId),
+    'sponsorshipcategories_type' => Label::getLabel('LBL_Sponsorship_Categories_Type', $adminLangId),
     'sponsorshipcategories_active' => Label::getLabel('LBL_Status', $adminLangId),
     'action' => Label::getLabel('LBL_Action', $adminLangId),
         );

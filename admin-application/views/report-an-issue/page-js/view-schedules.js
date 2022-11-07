@@ -54,6 +54,22 @@
 	};
 
 
+    ChangeStatus = function(value){
+		
+		fcom.ajax(fcom.makeUrl('ReportAnIssue','changeStatus',[value]),"",function(json){
+			res = $.parseJSON(json);
+            $(div).html(fcom.getLoader());
+			if(res.status == "1"){
+				  $.mbsmessage( res.msg,true, 'alert alert--success');
+                  window.location.href=window.location.href;
+
+			}else{
+					$(obj).val(oldValue);
+				  $.mbsmessage( res.msg,true, 'alert alert--danger');
+			}
+		});
+	};
+
 
 
 

@@ -1,5 +1,5 @@
 <style>
-    .table tr:nth-child(odd) td , able tr:nth-child(even) td {
+    table tr:nth-child(odd) td , table tr:nth-child(even) td {
         background-color: transparent !important;
     }
 
@@ -9,6 +9,10 @@
     }
 
     tr.completed-class td {
+        color: #000 !important;
+        background-color: #00800033 !important;
+    }
+    tr.completed-class {
         color: #000 !important;
         background-color: #00800033 !important;
     }
@@ -197,9 +201,9 @@ $this->includeTemplate('_partial/pagination.php', $pagingArr, false);
             }
         });
 
-        $(".pending-status h1").each(function() {
+        $(".pending-status h3").each(function() {
             var $this = $(this);
-            if ($this.text() == '0') {
+            if ($this.text() == 'Pending (0)') {
                 $this.parent('.pending-status').removeClass('pending-status-animation');
             }
 

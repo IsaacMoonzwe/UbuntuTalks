@@ -225,8 +225,52 @@ class VirtualSessionController extends MyAppController
         foreach ($ExploreSessionWiseListing as $key => $value) {
             $testimonialImages = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_VIRTUAL_SESSION_WISE_IMAGE, $value['virtual_session_id'], 0, -1);
             $value['speaker_image'] = $testimonialImages;
+
             $records[$key] = $value;
         }
+        $testimonialId = FatUtility::int($testimonialId);
+        $agendafrm = $this->getAgendaForm($testimonialId, $SessionWiseListing['virtual_session_id']);
+        if (0 < $testimonialId) {
+            $data = VirtualSessionsComments::getAttributesById($testimonialId, [
+                'virtual_session_comments_id',
+                'user_id',
+                'virtual_session_comments_information'
+            ]);
+            if ($data === false) {
+                FatUtility::dieWithError($this->str_invalid_request);
+            }
+            $agendafrm->fill($data);
+            $this->set('records', $data);
+        }
+
+        /* Comment-Section */
+        $CommentSections = new SearchBase('tbl_virtual_session_comments');
+        $CommentSections->addCondition('virtual_session_id', '=', $SessionWiseListing['virtual_session_id']);
+        $CommentSectionsListing = $CommentSections->getResultSet();
+        $CommentSectionWiseListing = FatApp::getDb()->fetchAll($CommentSectionsListing);
+        foreach ($CommentSectionWiseListing as $key => $value) {
+            $UserCommentsSession = new SearchBase('tbl_event_users');
+            $UserCommentsSession->addCondition('user_id', '=', $value['user_id']);
+            $UserCommentSessionListing = $UserCommentsSession->getResultSet();
+            $UserCommentSessionWiseListing = FatApp::getDb()->fetch($UserCommentSessionListing);
+            $value['user_info'] = $UserCommentSessionWiseListing;
+            $value['main_session_time'] = $VirtualSessionList['virtual_main_session_end_time'];
+            $CommentSectionWiseListing[$key] = $value;
+        }
+        $CommentCountSections = new SearchBase('tbl_virtual_session_comments');
+        $CommentCountSections->addCondition('virtual_session_id', '=', $SessionWiseListing['virtual_session_id']);
+        $CommentCountSections->addMultipleFields([
+            'COUNT(user_id) as counting',
+        ]);
+        $CommentSectionsCountListing = $CommentCountSections->getResultSet();
+        $CommentSectionWiseCountListing = FatApp::getDb()->fetch($CommentSectionsCountListing);
+        $this->set('VirtualSessionList', $VirtualSessionList);
+        $this->set('CommentSectionWiseCountListing', $CommentSectionWiseCountListing);
+        $this->set('CommentSectionWiseListing', $CommentSectionWiseListing);
+        $this->set('languages', Language::getAllNames());
+        $this->set('virtual_session_comments_id', $testimonialId);
+        $this->set('testimonial_id', $testimonialId);
+        $this->set('agendafrm', $agendafrm);
         $this->set('ExploreSessionWiseListing', $records);
         $this->set('virtual_session_slug', $virtual_session_slug);
         $this->set('SessionWiseListing', $SessionWiseListing);
@@ -234,6 +278,65 @@ class VirtualSessionController extends MyAppController
         $this->set('VirtualSessionList', $VirtualSessionList);
         $this->_template->addCss('css/virtual-session.css');
         $this->_template->render();
+    }
+
+    private function getAgendaForm($testimonialId, $session_id)
+    {
+      //  $userId = EventUserAuthentication::getLoggedUserId();
+        $testimonialId = FatUtility::int($testimonialId);
+        $agendafrm = new Form('frmAgendaTestimonials');
+        $agendafrm->addHiddenField(Label::getLabel('LBl_Id'), 'virtual_session_id', $session_id);
+        $agendafrm->addHiddenField(Label::getLabel('LBl_Id'), 'virtual_session_comments_id', $testimonialId);
+        $agendafrm->addHiddenField('', 'user_id', $userId);
+        $agendafrm->addTextarea(Label::getLabel('LBL_Event_Location', $this->adminLangId), 'virtual_session_comments_information');
+        $agendafrm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Post_Comment', $this->adminLangId));
+        return $agendafrm;
+    }
+
+    public function form($testimonialId)
+    {
+        $testimonialId = FatUtility::int($testimonialId);
+        $frm = $this->getForm($testimonialId);
+        if (0 < $testimonialId) {
+            $data = VirtualSessionsComments::getAttributesById($testimonialId, [
+                'user_id',
+                'virtual_session_comments_information'
+            ]);
+            if ($data === false) {
+                FatUtility::dieWithError($this->str_invalid_request);
+            }
+            $frm->fill($data);
+        }
+        $this->set('languages', Language::getAllNames());
+        $this->set('virtual_session_comments_id', $testimonialId);
+        $this->set('testimonial_id', $testimonialId);
+        $this->set('frm', $frm);
+        $this->_template->render(false, false);
+    }
+
+    public function agendasetup()
+    {
+        $post = FatApp::getPostedData();
+        $testimonialId = $post['virtual_session_comments_id'];
+        unset($post['virtual_session_comments_id']);
+        if ($testimonialId == 0) {
+            $post['virtual_session_comments_added_on'] = date('Y-m-d H:i:s');
+        }
+        $userId = EventUserAuthentication::getLoggedUserId();
+        $post['user_id']=$userId;
+        $record = new VirtualSessionsComments($testimonialId);
+
+        $record->assignValues($post);
+        if (!$record->save()) {
+            Message::addErrorMessage($record->getError());
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+        // $res = EmailHandler::sendSmtpEmail('admin@ubuntutalks.com', 'Report Issue', $post['virtual_session_comments_information'], '', '', $this->siteLangId, '', '');
+        $this->set('msg', 'Comment successfully sent');
+        $this->set('testimonialId', $testimonialId);
+        $this->set('testimonial_id', $testimonialId);
+        $this->set('langId', $newTabLangId);
+        $this->_template->render(false, false, 'json-success.php');
     }
 
     public function previousYears($years)
@@ -282,6 +385,12 @@ class VirtualSessionController extends MyAppController
         $Navigation_virtual_session_all->addCondition('virtual_main_session_year', '<', $Currentyear);
         $Navigation_virtual_session_all_listing = $Navigation_virtual_session_all->getResultSet();
         $NavigationVirtualSessionAllList = FatApp::getDb()->fetchAll($Navigation_virtual_session_all_listing);
+        if (EventUserAuthentication::isUserLogged()) {
+            $userId = EventUserAuthentication::getLoggedUserId();
+            $userObj = new EventUser($userId);
+            $userDetails = $userObj->getDashboardData(CommonHelper::getLangId());
+            $this->set('userDetails', $userDetails);
+        }
         $this->set('NavigationVirtualSessionAllList', $NavigationVirtualSessionAllList);
         $this->set('NavigationVirtualSessionYearList', $NavigationVirtualSessionYearList);
         $this->set('NavigationVirtualSessionList', $NavigationVirtualSessionList);

@@ -703,6 +703,27 @@ class ReportAnIssueController extends AdminBaseController
         $this->_template->render(false, false, 'json-success.php');
     }
 
+
+    public function ChangeStatus($report=0)
+    {
+        $post = FatApp::getPostedData();
+        $testimonialId = $report;
+        $post['report_comments_status'] = 1;
+        unset($post['report_comments_id']);
+        $record = new ReportComments($testimonialId);
+        $record->assignValues($post);
+        if (!$record->save()) {
+            Message::addErrorMessage($record->getError());
+            FatUtility::dieJsonError(Message::getHtml());
+        }
+        $this->set('msg', 'Report Issue Sent');
+        $this->set('testimonialId', $report);
+        $this->set('testimonial_id', $testimonialId);
+        $this->set('langId', $newTabLangId);
+        $this->_template->render(false, false, 'json-success.php');
+    }
+
+
     public function viewDetail($slesson_id)
     {
         $slesson_id = FatUtility::int($slesson_id);
