@@ -1,0 +1,96 @@
+
+.cms-container ol,
+.cms-container ul {
+    margin: 10px 0 30px;
+    color: inherit;
+    line-height: 1.9;
+    font-size: 1.1rem
+}
+
+.cms-container ul li {
+    position: relative;
+    padding: 0 0 10px 20px;
+    color: inherit
+}
+
+.cms-container ul li:before {
+    position: absolute;
+    left: 0;
+    top: 10px;
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: var(--color-secondary);
+    border-radius: 100%
+}
+
+.cms-container ol {
+    list-style: decimal
+}
+
+.cms-container ol li {
+    position: relative;
+    padding: 0 0 15px 0;
+    color: inherit;
+    margin: 0 0 0 15px
+}
+
+.cms-container ol li a {
+    color: inherit
+}
+
+
+
+
+.container--cms ul,
+.container--cms ol {
+    margin: 30px 0;
+    font-size: 1.1rem;
+}
+
+.container--cms ul li {
+    position: relative;
+    padding: 0 0 10px 30px;
+    color: inherit;
+}
+
+.container--cms ul li:before {
+    position: absolute;
+    left: 8px;
+    top: 4px;
+    content: "";
+    width: 3px;
+    height: 12px;
+    background: #B7B7B7;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+}
+
+.container--cms ul li:after {
+    position: absolute;
+    left: 2px;
+    top: 8px;
+    content: "";
+    width: 3px;
+    height: 6px;
+    background: #B7B7B7;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+}
+
+.container--cms ol {
+    list-style: decimal;
+}
+
+.container--cms ol li {
+    position: relative;
+    padding: 0 0 15px 0;
+    color: inherit;
+    margin: 0 0 0 15px;
+}
+
+.container--cms ol li a {
+    color: inherit;
+}

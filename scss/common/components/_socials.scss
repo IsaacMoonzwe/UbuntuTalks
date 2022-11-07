@@ -1,0 +1,288 @@
+$social-button: "social-button";
+.#{$social-button} {
+    border: 1px solid theme('color.white');
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    background-color: theme('color.white');
+    color: theme('color.black');
+    @media (max-width: theme('breakpoints.md', 'value')) {
+        & {
+            border-color: theme('color.gray.200');
+        }
+    }
+    &__label {
+        padding: 0 theme('padding.6');
+        width: 100%;
+        text-align: center;
+    }
+    &__media {
+        padding: theme('padding.3');
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: theme('color.white');
+        width: 50px;
+        height: 2.6rem;
+        & img {
+            width: 18px;
+            height: 18px;
+        }
+    }
+    &--google {
+        background-color: #4285F4;
+        border-color: #4285F4;
+        color: theme('color.white');
+    }
+    &--fb {
+        background-color: #28589c;
+        border-color: #28589c;
+        color: theme('color.white');
+    }
+    &--google-white {
+        background-color: theme('color.white');
+        border-color: theme('color.white');
+        color: theme('color.black');
+        @media (max-width: theme('breakpoints.md', 'value')) {
+            & {
+                border-color: theme('color.gray.200');
+            }
+        }
+        &:hover {
+            background-color: #4285F4;
+            border-color: #4285F4;
+            color: theme('color.white');
+        }
+    }
+    &--fb-white {
+        background-color: theme('color.white');
+        border-color: theme('color.white');
+        color: theme('color.black');
+        @media (max-width: theme('breakpoints.md', 'value')) {
+            & {
+                border-color: theme('color.gray.200');
+            }
+        }
+        &:hover {
+            background-color: #28589c;
+            border-color: #28589c;
+            color: theme('color.white');
+        }
+    }
+    &--center {
+        justify-content: center;
+        height: 50px;
+        line-height: 50px;
+        padding: 0 theme('padding.8');
+        >* {
+            padding: 0;
+        }
+        .#{$social-button} {
+            &__media {
+                width: 40px;
+                margin-#{theme('direction.right','value')}: theme('margin.2');
+            }
+            &__label {
+                width: auto;
+            }
+        }
+    }
+}
+
+.group--social a span,
+.group--social a {
+    font-size: 13px; color: #fff;
+}
+
+.group.group--social .-gap {
+    height: 15px;
+    font-weight: 500;
+}
+
+.group.group--social p {
+    margin: 10px 0;
+}
+
+.group.group--social .btn {
+    /* margin: 0 0; */
+    float: #{theme('direction.left','value')};
+    width: 48%;
+}
+
+.group.group--social .btn.btn--social-gp {
+    float: #{theme('direction.right','value')};
+}
+
+.group.group--social .btn .svg-icon {
+    position: absolute;
+    #{theme('direction.left','value')}: 15px;
+    top: 8px;
+}
+
+.group--social a {
+    margin-#{theme('direction.right','value')}: 5px;
+}
+
+.group--social a:last-child {
+    margin-#{theme('direction.right','value')}: 0;
+}
+
+.group--social {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.social--share li {
+    display: inline-block;
+    vertical-align: top;
+    margin: 10px 0 0 0;
+    margin-#{theme('direction.right','value')}: 3px;
+}
+
+.social--share li a,
+.social--share li span {
+    width: 35px;
+    height: 35px;
+    border-radius: 100%;
+    display: block;
+    padding: 5px;
+    overflow: hidden;
+    position: relative;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.social--share li a img,
+.social--share li span img {
+    width: 16px;
+    display: block;
+    margin: 5px auto 0;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.social--share li a:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.social--share li .stButton {
+    position: absolute;
+    opacity: 0;
+    z-index: 1;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.google-btn {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    background: #4285f4;
+    color: #ffff;
+    font-size: 14px;
+    font-weight: 600;
+    height: 46px;
+    max-width: 191px;
+    margin: auto;
+    padding-#{theme('direction.right','value')}: 10px;
+}
+
+.google-btn span {
+    display: inline-flex;
+    padding-#{theme('direction.left','value')}: 5px;
+}
+
+.group.group--social a .google-btn img {
+    width: auto;
+}
+
+.group.group--social a {
+    display: inline-block;
+}
+
+.group.group--social .btn--social-fb.btn {
+    width: 184px;
+    display: inline-block;
+    height: 46px;
+    vertical-align: top;
+    margin-top: 0;
+    margin-#{theme('direction.right','value')}: 15px;
+    float: none;
+}
+
+@media screen and (max-width:1199px) {
+    .group.group--social .btn--social-fb.btn {
+        margin-#{theme('direction.right','value')}: 5px;
+    }
+    .group.group--social .btn--social-fb.btn,
+    .group.group--social a {
+        display: block;
+    }
+    .group.group--social .btn--social-fb.btn {
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width:767px) {
+    .social-links {
+        margin: 0;
+    }
+}
+
+
+.group.group--social a{
+    width: 50%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    border-radius: 2px;
+    font-weight: bold;
+}
+.group--social a svg {
+    height: 18px;
+    width: 18px;
+    margin-#{theme('direction.right','value')}: 24px;
+}
+
+.group.group--social .google-login {
+    background: #4285F4;
+    padding: 0 2px;
+}
+.group--social .facebook-login {
+    background-color: #28589c;
+    color: #fff;
+}
+.group--social .facebook-login svg {
+    fill: #fff;
+    height: 25px;
+    width: 25px;
+    margin-#{theme('direction.right','value')}: 24px;
+}
+.group--social a.google-login svg {
+    height: 36px;
+    width: 36px;
+    margin-#{theme('direction.right','value')}: 15px;
+    padding: 9px 9px;
+    background: #fff;
+    border-radius: 2px;
+}
+
+@media (max-width:theme('breakpoints.sm','value')){
+.group--social {
+    flex-direction: column;
+}
+.group.group--social a {
+    margin-bottom: 10px;
+    width: 100%;
+}
+.group--social a {
+    margin-#{theme('direction.right','value')}: theme('margin.0');
+}
+.box--narrow {
+    min-width: auto;
+}
+
+}

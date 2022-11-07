@@ -1,0 +1,37 @@
+
+.block__head {
+    position: relative;
+    padding: 15px 20px;
+    border-bottom: 1px solid theme('color.gray.300');
+}
+
+.block__body {
+    position: relative;
+    padding: 20px;
+    border-bottom: 1px solid theme('color.gray.300');
+}
+
+.block__head h6 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.block__head-trigger {
+    padding-#{theme('direction.right','value')}: 40px;
+    cursor: pointer;
+    position: relative;
+}
+
+.block__head-trigger:after {
+    position: absolute;
+    #{theme('direction.right','value')}: 20px;
+    top: 15px;
+    content: "+";
+    font-size: 1.6rem;
+    line-height: 1;
+}
+
+.block__head-trigger.is-active:after {
+    content: "-";
+}

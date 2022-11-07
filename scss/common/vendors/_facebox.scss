@@ -1,0 +1,249 @@
+#facebox{
+    position: fixed;
+    z-index: 999;
+    .content {
+        border-radius: 0;
+    }
+    @media  (max-width: theme('breakpoints.md','value')) {
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+    }
+}
+
+#facebox .popup {
+    position: relative;
+    @media  (max-width: theme('breakpoints.md','value')) {
+        height: 100%;
+    }
+}
+// #facebox .field_label:empty{display: none;}
+
+.popup__head{padding: theme('padding.10'); padding-bottom: 0;  border-bottom: 1px solid theme('color.gray.300');}
+.popup__body{padding: theme('padding.10');}
+
+
+#facebox .content {
+    display: block;
+    min-width:500px;
+    background: #fff;
+    @media  (max-width: theme('breakpoints.md','value')) {
+        max-height: 100% !important;
+        height: 100%; 
+        overflow: auto;
+    }
+}
+
+
+#facebox {
+    .content.facebox-large{
+        @media(min-width: theme('breakpoints.xl','value')) {
+            min-width: 920px;
+        }
+    }
+}
+
+#frmLoginPopUp .caption-wraper .field_label:empty, #frmLoginPopUp .caption-wraper:empty, #frmRegisterPopUp .caption-wraper .field_label:empty, #frmRegisterPopUp .caption-wraper:empty{display: none;}
+
+@media  (min-width: 767px) {
+	
+	#facebox .content {
+	/*max-height: 60vh!important;*/
+    overflow-y: auto;
+    overflow-x: hidden;
+	}
+}
+
+@media  (min-width: 1024px) {
+	
+	#facebox .content {
+	/*max-height: 74vh!important;*/
+    overflow-y: auto;
+    overflow-x: hidden;
+	}
+}
+
+@media  (min-width: 1300px) {
+	
+	#facebox .content {
+	/*max-height: 70vh!important;*/
+    overflow-y: auto;
+    overflow-x: hidden;
+	}
+}
+
+
+@media  (min-width: 1500px) {
+	
+	#facebox .content {
+	/*max-height: 80vh!important;*/
+    overflow-y: auto;
+    overflow-x: hidden;
+	}
+}
+
+
+
+#facebox .close {
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    top: -35px;
+    #{theme('direction.right','value')}: 0;
+    transform: none;
+    &::before{
+        @media(min-width:theme('breakpoints.md','value')){ 
+            color: #fff;
+        }
+    }
+}
+
+#facebox .close img {
+    display: none;
+}
+
+#facebox .loading {
+    text-align: center;
+}
+
+#facebox .image {
+    text-align: center;
+}
+
+#facebox_overlay {
+    position: fixed;
+    top: 0px;
+    #{theme('direction.left','value')}: 0px;
+    height: 100%;
+    width: 100%;
+}
+
+#facebox .scrollbar {
+    max-height: 700px;
+}
+
+.facebox_hide {
+    z-index: -100;
+}
+
+.facebox_overlayBG {
+    background-color: #000;
+    z-index: 99;
+    opacity: 0.7;
+}
+
+
+
+@media (min-width:1199px) {
+    #facebox .content.facebox-medium {
+        min-width: 800px;
+        max-width: 800px;
+    }
+}
+
+@media (max-width:767px) {
+    #facebox .scrollbar {
+        overflow: auto;
+    }
+
+}
+
+
+
+@media (max-width:767px) {
+    #facebox .content {
+        min-width: 1%;
+        width: 100%;
+    }
+
+
+    #facebox .close {
+        top: 0;
+    }
+
+    #facebox .close:after {
+        color: #000;
+    }
+}
+
+#facebox .calendar-view{
+    @media(min-width:theme('breakpoints.md','value')){
+        padding: var(--padding-6);
+    }
+}
+
+@media(max-width:theme('breakpoints.md','value')){
+    .show-facebox{
+        position: fixed;
+        width: 100%;
+    }
+}
+
+#facebox{
+    .img-container {
+        max-height: 500px;
+        overflow: auto;
+    }
+    .img-description{
+        text-align: center;
+        padding: theme('padding.6') theme('padding.6') 0;
+        .rotator-info{
+            margin-bottom: theme('margin.4');
+        }
+    }
+    .calendar-view{
+        @media(min-width:theme('breakpoints.md','value')){
+            padding: theme('padding.6');
+        }
+
+        .fc-header-toolbar{
+            @media(max-width:theme('breakpoints.md','value')){
+                border:none;
+                padding: 0;
+                flex-direction: column;
+            }
+        }
+    }
+}
+
+.cookies-popup{
+    .content-panel__head{
+        padding: theme('padding.4');
+    }
+    .form__actions{
+        padding: theme('padding.4');
+    }
+}
+
+@media(max-width:theme('breakpoints.xl','value')){
+    .calendar-facebox{
+        &{
+            position: fixed; left: 0;right: 0; top: 0; bottom: 0; overflow: hidden;
+        }
+        #facebox{
+            left: 5%!important; right:5%!important; top: 5%!important; bottom: 5%!important;
+            & .popup, .content, .calendar-view, #calendar-container{height: 100%;}
+            & .content{max-height: 100%!important;}
+            & #calendar-container{height:calc(100% - 65px);
+                & > div{height: 100%;}
+            }
+        }
+
+        & .tooltipevent{left: 50%!important; top: 50%!important; transform: translate(-50%,-50%)!important;}
+
+    }
+}
+
+@media(max-width:theme('breakpoints.md','value')){
+    .calendar-facebox{
+        #facebox{
+            left:0%!important; right:0%!important; top:0%!important; bottom:0%!important;
+            & .calendar-view__head > .row{margin: 0;}
+        }
+
+        
+
+    }
+}
+

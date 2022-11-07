@@ -1,0 +1,242 @@
+
+
+.filter--group{
+    .filter--search{
+        
+        @media(min-width: theme('breakpoints.xl','value')){
+            width: calc(100% - 200px);
+        }
+
+        @media(min-width: theme('breakpoints.md','value')) and (max-width: theme('breakpoints.xl','value')){
+            width: calc(100% - 21%);
+        }
+
+        @media(min-width: theme('breakpoints.xl','value')) and (max-width: theme('breakpoints.xxxl','value')){
+            width: calc(100% - 20%);
+        }
+        .filter__head{
+            max-width: unset;
+            min-width: unset;
+        }
+    }
+}
+
+.group__list{
+    .card{
+        background-color: theme('color.white');
+        margin-bottom: theme('margin.18');
+        &:hover{
+            box-shadow: 0px 7px 10px rgba(0,0,0,0.10);
+            .card__row--action{
+                box-shadow: 0 7px 10px rgba(0,0,0,0.10);
+                z-index: 1;
+                &::before{
+                    opacity: 1;
+                }
+            }
+        }
+        .card__head{
+            h3{
+                color: theme('color.dark');
+            }
+        }
+    }
+}
+
+.group-cover{
+    .sorting__head{
+        flex-direction: row;
+        .sorting__title{
+            b{
+                border-bottom: none;
+            }
+        }
+        .sorting__box{
+            width: auto;
+            select{
+                width: 200px;
+            }
+        }
+    }
+}
+
+
+.breadcrumb-list{
+    padding: theme('padding.8') 0;
+    margin-bottom: theme('margin.6');
+    @media(max-width: theme('breakpoints.md','value')){
+        margin-bottom: 0;
+    }
+    ul{
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        li{
+            margin-#{theme('direction.right','value')}: theme('margin.3');
+            padding-#{theme('direction.right','value')}: theme('padding.3');
+            @media(max-width: theme('breakpoints.lg','value')){
+                margin-bottom: theme('margin.3');
+            }
+            a{
+                color: theme('color.gray.700');
+                position: relative;
+                &::after{
+                    content: "/";
+                    pointer-events: none;
+                    position: absolute;
+                    #{theme('direction.right','value')}: -12px;
+                    top: 2px;
+                }
+            }
+        }
+    }
+}
+
+
+.group-primary{
+    color: theme('color.dark');
+    margin-bottom: theme('margin.24');
+    @media(max-width: theme('breakpoints.md','value')){
+        margin-bottom: theme('margin.16');
+    }
+    .group-primary__head{
+        margin-bottom: theme('margin.12');
+        h3{
+            font-weight: bold;
+            color: inherit;
+            font-size: theme('font.size.h3');
+            margin-bottom: theme('margin.2');
+            line-height: 32px;
+            @media(max-width: theme('breakpoints.md','value')){
+                font-size: theme('font.size.h4');
+                line-height: 28px;
+            }
+        }
+        .date{
+            font-weight: 600;
+            color: theme('color.primary');
+        }
+    }
+}
+
+.group-listing{
+    color: theme('color.dark');
+    margin-bottom: theme('margin.16');
+    ul{
+        li{
+            display: flex;
+            align-items: center;
+            margin-bottom: theme('margin.6');
+            p{
+                margin-bottom: 0;
+                text-transform: uppercase;
+                color: inherit;
+            }
+            .icon{
+                margin-#{theme('direction.right','value')}: theme('margin.3');
+                width: 18px;
+                height: 18px;
+            }
+        }
+    }
+}
+
+.group-actions{
+    .btn{
+        text-transform: uppercase;
+        margin-#{theme('direction.right','value')}: theme('margin.14');
+    }
+    .seat-left{
+        color: theme('color.secondary');
+        font-size: 16px;
+        font-weight: 600;
+        padding: theme('padding.3') 0;
+    }
+}
+
+.course-details{
+    @media(max-width: theme('breakpoints.md','value')){
+        margin-bottom: theme('margin.12');
+    }
+    h3{
+        font-size: theme('font.size.h4');
+        color: theme('color.dark');
+        margin-bottom: theme('margin.5');
+    }
+    p{
+        margin-bottom: theme('margin.10');
+        line-height: 28px;
+        @media(max-width: theme('breakpoints.md','value')){
+            margin-bottom: theme('margin.6');
+        }
+        &:last-child{
+            margin-bottom: 0;
+        }
+    }
+}
+
+.group-secondary{
+    text-align: center;
+    border: 1px solid theme('color.gray.300');
+    position: sticky;
+    top: 144px;
+    .box__body{
+        @media(min-width: theme('breakpoints.xxl','value')){
+            padding: theme('padding.12') theme('padding.26');
+        }
+        @media(max-width: theme('breakpoints.xxl','value')){
+            padding: theme('padding.8') theme('padding.12');
+        }
+        h3{
+            font-size: theme('font.size.h4');
+            color: theme('color.dark');
+            margin-bottom: theme('margin.10');
+        }
+    }
+}
+
+.box-profile{
+    .tile{
+        margin-bottom: 0;
+        @media(max-width: theme('breakpoints.xl','value')){
+            box-shadow: none;
+        }
+        &:hover{
+            box-shadow: none;
+        }
+        .tile__body{
+            padding-bottom: 0;
+        }
+    }
+}
+
+.box-actions{
+    display: flex;
+    align-items: center;
+    border-top: 1px solid theme('color.gray.300');
+    .btn{
+        background-color: transparent;
+        flex: 0 0 50%;
+        max-width: 50%;
+        border-#{theme('direction.right','value')}: 1px solid theme('color.gray.300');
+        height: 80px;
+        font-size: theme('font.size.medium');
+        text-transform: uppercase;
+        font-weight: 600;
+        @media(max-width: theme('breakpoints.xl','value')){
+            height: 50px;
+        }
+        &:last-child{
+            border-#{theme('direction.right','value')}: none;
+        }
+         svg{
+            fill: theme('color.primary');
+            width: 18px;
+            margin-right: theme('margin.2');
+        }
+        .icon--email_1 {
+            width: 28px;
+            height: 28px;
+        }
+    }
+}

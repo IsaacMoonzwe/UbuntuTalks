@@ -1,0 +1,6 @@
+.table td{vertical-align:top; line-height:1.6;}
+.table td .btn{margin:5px 5px 5px 0;}
+
+/* Chintan - 02-05-2022 */
+#groupClassesFrm ul li {display: contents;padding-left: 13px !important;}
+#groupClassesFrm ul li label {padding-left: 15px !important;}

@@ -1,0 +1,15 @@
+<svg id="languages" xmlns="http://www.w3.org/2000/svg" width="105" height="105" viewBox="0 0 105 105">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill-rule: evenodd;
+      }
+
+      .cls-2 {
+        fill: #8337e6;
+      }
+    </style>
+  </defs>
+  <path id="Forma_1" data-name="Forma 1" class="cls-1" d="M55.717,63.223h0L44.865,52.43l0.128-.129C52.427,43.959,58.881,31.148,62,21H73V16H40V7H35v9H5v5H56c-0.933,9.112-10.847,22.12-17,29A96.4,96.4,0,0,1,27,33H21A78.65,78.65,0,0,0,34,53L11.772,74.015,17,78,39,56,52,70Z" transform="translate(0.5 2.5)"/>
+  <path class="cls-2" d="M80,42H71L52,93h8l5-14H86l5,14h8ZM68,73l7.5-20.141L83,73H68Z" transform="translate(0.5 2.5)"/>
+</svg>
