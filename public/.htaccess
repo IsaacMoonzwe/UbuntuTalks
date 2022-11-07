@@ -1,0 +1,21 @@
+<IfModule mod_rewrite.c>
+Options +FollowSymlinks
+RewriteEngine on
+#RewriteBase /
+
+RewriteRule ^admin$ admin.php [PT,L,QSA]
+RewriteRule ^admin/(.*)$ admin.php?url=$1 [PT,L,QSA]
+
+RewriteRule ^dashboard$ dashboard.php [PT,L,QSA]
+RewriteRule ^dashboard/(.*)$ dashboard.php?url=$1 [PT,L,QSA]
+RewriteRule ^/?([a-zA-Z]+)/dashboard/(.*)$ dashboard.php?url=$1/$2 [PT,L,QSA]
+RewriteRule ^/?([a-zA-Z]+)/dashboard$ dashboard.php?url=$1/$2 [PT,L,QSA]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteRule ^(.*)$ index.php?url=$1 [PT,L,QSA]
+Redirect 301 https://www.ubuntutalks.com/teachers/profile/dagmawia  https://www.ubuntutalks.com/teachers
+Redirect 301 https://www.ubuntutalks.com/teachers/profile/Gitonga   https://www.ubuntutalks.com/teachers
+
+</IfModule>
