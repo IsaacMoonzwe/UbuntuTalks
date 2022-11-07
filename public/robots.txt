@@ -1,3 +1,0 @@
-Noindex: /blog
-
-sitemap: https://www.ubuntutalks.com/sitemap.xml
