@@ -4,22 +4,6 @@
 $remainingWalletBalance = 0;
 $walletCreditLabel = '';
 $walletDeduction = 0;
-
-if(isset($_SESSION['walletSummary'])){
-    $cartData=$_SESSION['walletSummary'];
-   
-}
-if ($userWalletBalance >= 0) {
-    $walletCreditLabel = sprintf(Label::getLabel('LBL_Wallet_Credits_(%s)'), CommonHelper::displayMoneyFormat($userWalletBalance));
-    $remainingWalletBalance = ($userWalletBalance - $cartData['orderNetAmount']);
-    $remainingWalletBalance = ($remainingWalletBalance < 0) ? 0 : $remainingWalletBalance;
-    if ($cartData['cartWalletSelected'] > 0) {
-        $walletDeduction = $userWalletBalance;
-        if ($cartData["cartWalletSelected"] && $cartData['orderNetAmount'] < $userWalletBalance) {
-            $walletDeduction = $cartData['orderNetAmount'];
-        }
-    }
-}
 // if(isset($_SESSION['summary'])){
 // // echo "<pre>" ;
 // // print_r($cartData);
@@ -68,9 +52,9 @@ if ($userWalletBalance >= 0) {
                             <p><?php echo Label::getLabel('LBL_SELECT_A_PAYMENT_METHOD'); ?></p>
                         </div>
                         <div class="payment-wrapper">
-                            <?php if ($userWalletBalance >= 0) { ?>
+                            <?php if ($userWalletBalance > 0) { ?>
                                 <label class="selection-tabs__label selection--wallet">
-                                    <input type="checkbox" class="selection-tabs__input" onChange="eventWalletSelection(this,<?php echo $userWalletBalance;?>,'donation');" <?php echo ($cartData["cartWalletSelected"]) ? 'checked="checked"' : ''; ?> name="pay_from_wallet">
+                                    <input type="checkbox" class="selection-tabs__input" onChange="cart.walletSelection(this);" <?php echo ($cartData["cartWalletSelected"]) ? 'checked="checked"' : ''; ?> name="pay_from_wallet">
                                     <div class="selection-tabs__title">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
                                             <g>
@@ -126,9 +110,6 @@ if ($userWalletBalance >= 0) {
                                             <img style="display: inline-block;max-width:70px;" src="../../../public/images/PayPal-Logo.png" alt="Paypal" />
                                         <?php } else if ($value['pmethod_name'] == "Stripe") { ?>
                                             <img style="display: inline-block;max-width:140px;" src="../../../public/images/stripe.svg" alt="Paypal" />
-                                        <?php } else if ($value['pmethod_name'] == "Google Pay") { ?>
-                                            <img style="display: inline-block;max-width:120px;height:
-                                            39.38px" src="../../../public/images/GooglePay.jpg" alt="GooglePay" />
                                         <?php } else {
                                             echo $value['pmethod_name'];
                                         }
@@ -146,11 +127,11 @@ if ($userWalletBalance >= 0) {
                     </div>
                 <?php } ?>
                 <div class="col-md-6  <?php echo ($cartData['orderNetAmount'] > 0) ? ' col-xl-5 offset-xl-1' : 'col-xl-12'; ?>">
-                    <!--  <div class="selection-title">
+                   <!--  <div class="selection-title">
                         <p><?php echo Label::getLabel('LBL_Have_a_Coupon?'); ?></p>
                         <a href="javascript:void(0);" class="color-primary btn--link slide-toggle-coupon-js"><?php echo Label::getLabel('LBL_View_Coupons'); ?></a>
                     </div> -->
-                    <!--  <div class="apply-coupon">
+                   <!--  <div class="apply-coupon">
                         <svg class="icon icon--price-tag">
                             <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#price-tag'; ?>"></use>
                         </svg>

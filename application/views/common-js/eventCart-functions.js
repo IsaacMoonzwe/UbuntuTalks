@@ -66,7 +66,7 @@ var eventCart = {
       "payFromWallet=" + eventCart.isWalletSelect + "&fromKids=" + fromKids;
     $.loader.show();
     fcom.ajax(
-      fcom.makeUrl("EventUser", "walletSelection"),
+      fcom.makeUrl("EventCheckout", "walletSelection"),
       data,
       function (ans) {
         $.loader.hide();
@@ -232,17 +232,11 @@ var eventCart = {
       EventLogInFormPopUp('purchasePlan');
       return false;
     }
-    // if(eventCart.isWalletSelect>0){
-    //   eventCart.paymentMethodId=0;
-    // }
-    // else{
     eventCart.paymentMethodId = parseInt(
       $('[name="payment_method"]:checked').val()
     );
-  // }
     orderType = parseInt(orderType);
     var fromKids = localStorage.getItem("fromKids");
-    console.log(' eventCart.paymentMethodId', eventCart.paymentMethodId);
     localStorage.setItem("teacherId", eventCart.props.teacherId);
     data =
       "fromKids=" +

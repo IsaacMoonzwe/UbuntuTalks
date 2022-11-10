@@ -524,20 +524,6 @@ class EventUserController extends MyEventAppController
     {
         $_SESSION['event'] = 'start';
         $user_id = $_SESSION['Event_userId'];
-        $cartData = $_SESSION['cart'];
-        if (isset($_SESSION['summary'])) {
-            // echo "<pre>" ;
-            // print_r($cartData);
-            $cartData = $_SESSION['summary'];
-            $_SESSION['cart'] = $cartData;
-            // print_r($cartData);
-        }
-        if($_SESSION['walletSummary']){
-            $cartData = $_SESSION['walletSummary'];
-            $_SESSION['cart'] = $cartData;
-            
-        }
-        
         $order_type = FatApp::getPostedData('order_type', FatUtility::VAR_INT, 0);
         $pmethodId = FatApp::getPostedData('pmethod_id', FatUtility::VAR_INT, 0);
         $order_id = FatApp::getPostedData('order_id', FatUtility::VAR_STRING, '');
@@ -559,8 +545,7 @@ class EventUserController extends MyEventAppController
         // ]
         // Loading Money to wallet[
         if (Order::TYPE_WALLET_RECHARGE == $order_type || Order::TYPE_GIFTCARD == $order_type) {
-
-            $criteria = ['isEventUserLogged' => true];
+            $criteria = ['isUserLogged' => true];
             if (!$this->isEligibleForNextStep($criteria)) {
                 if (Message::getErrorCount()) {
                     $errMsg = Message::getHtml();
@@ -571,10 +556,10 @@ class EventUserController extends MyEventAppController
                 FatUtility::dieWithError($errMsg);
             }
             $user_id = $_SESSION['Event_userId'];
-            // if ('' == $order_id) {
-            //     Message::addErrorMessage(Label::getLabel('MSG_INVALID_Request'));
-            //     FatUtility::dieWithError(Message::getHtml());
-            // }
+            if ('' == $order_id) {
+                Message::addErrorMessage(Label::getLabel('MSG_INVALID_Request'));
+                FatUtility::dieWithError(Message::getHtml());
+            }
             $orderObj = new Order();
             $srch = Order::getSearchObject();
             $srch->doNotCalculateRecords();
@@ -584,19 +569,15 @@ class EventUserController extends MyEventAppController
             $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PENDING);
             $rs = $srch->getResultSet();
             $orderInfo = FatApp::getDb()->fetch($rs);
-            echo "<pre>";
-            print_r($orderInfo);
-            die;
             if (!$orderInfo) {
                 Message::addErrorMessage(Label::getLabel('MSG_INVALID_ORDER_PAID_CANCELLED'));
                 FatUtility::dieWithError(Message::getHtml());
             }
             $orderObj->updateOrderInfo($order_id, ['order_pmethod_id' => $pmethodId]);
-            // $controller = $paymentMethod['pmethod_code'] . 'Pay';
-            $controller='EventWalletPay';
+            $controller = $paymentMethod['pmethod_code'] . 'Pay';
             $redirectUrl = CommonHelper::generateUrl($controller, 'charge', [$order_id, 1]);
             $this->set('msg', Label::getLabel('LBL_Processing...'));
-            // $this->set('redirectUrl', $redirectUrl);
+            $this->set('redirectUrl', $redirectUrl);
             $this->_template->render(false, false, 'json-success.php');
         }
         $fromKids = FatApp::getPostedData('fromKids', FatUtility::VAR_INT, 0);
@@ -609,7 +590,7 @@ class EventUserController extends MyEventAppController
             $_SESSION['cart'] = $cartData;
             // print_r($cartData);
         }
-        $criteria = ['isEventUserLogged' => true, 'hasItems' => true];
+        $criteria = ['isUserLogged' => true, 'hasItems' => true];
         if (0 == $cartData['orderPaymentGatewayCharges'] && $pmethodId) {
             Message::addErrorMessage(Label::getLabel('MSG_Amount_for_payment_gateway_must_be_greater_than_zero.'));
             FatUtility::dieWithError(Message::getHtml());
@@ -626,8 +607,8 @@ class EventUserController extends MyEventAppController
             'order_user_id' => $_SESSION['Event_userId'],
             'order_is_paid' => Order::ORDER_IS_PENDING,
             'order_net_amount' => $orderNetAmount,
-            'order_is_wallet_selected' => $cartData['cartWalletSelected'],
-            'order_wallet_amount_charge' => $walletAmountCharge,
+            'order_is_wallet_selected' => 0,
+            'order_wallet_amount_charge' => 0,
             'order_currency_id' => CommonHelper::getCurrencyId(),
             'order_currency_code' => CommonHelper::getCurrencyCode(),
             'order_currency_value' => CommonHelper::getCurrencyValue(),
@@ -668,19 +649,17 @@ class EventUserController extends MyEventAppController
             'op_unit_price' => $cartData['itemPrice'],
             'op_tlanguage_id' => $cartData['languageId'],
         ];
-        if (isset($_SESSION)) {
+        if (isset($_SESSION) && $_SESSION['fromKids'] > 0) {
             $products['op_qty'] = $cartData['lessonQty'];
         }
         $productsLangData = [];
         $products['productsLangData'] = $productsLangData;
         $orderData['products'][] = $products;
         $order = new Order();
-       
         if (!$order->addUpdate($orderData)) {
             Message::addErrorMessage($order->getError());
             FatUtility::dieWithError(Message::getHtml());
         }
-        
         // ]
         $redirectUrl = '';
         $_SESSION['fromKids'] = $fromKids;
@@ -692,10 +671,11 @@ class EventUserController extends MyEventAppController
             FatUtility::dieJsonSuccess(['redirectUrl' => $redirectUrl, 'msg' => $msg]);
         }
         $userId = $_SESSION['Event_userId'];
+        $teacherId = FatApp::getPostedData('teacherId', FatUtility::VAR_INT, 0);
         $userData = EventUser::getAttributesById($userId);
         $userWalletBalance = EventUser::getUserBalance($userId);
         if ($orderNetAmount > 0 && $cartData['cartWalletSelected'] && ($userWalletBalance >= $orderNetAmount) && !$pmethodId) {
-            $redirectUrl = CommonHelper::generateUrl('EventWalletPay', 'Charge', [$order->getOrderId()], CONF_WEBROOT_FRONTEND);
+            $redirectUrl = CommonHelper::generateUrl('WalletPay', 'Charge', [$order->getOrderId()], CONF_WEBROOT_FRONTEND);
             FatUtility::dieJsonSuccess(['redirectUrl' => $redirectUrl, 'msg' => $msg]);
         }
         if ($pmethodId > 0) {
@@ -940,7 +920,6 @@ class EventUserController extends MyEventAppController
         $cartData['cartTotal'] = $cartTotal;
         $cartData['orderPaymentGatewayCharges'] = 10;
         $cartData['orderNetAmount'] = $cartTotal;
-        $cartData['total'] = $cartTotal;
         $_SESSION['cart'] = $cartData;
         $userWalletBalance = EventUser::getUserBalance($userId);
         $paymentMethods = [];
@@ -962,8 +941,6 @@ class EventUserController extends MyEventAppController
         $this->set('cartData', $cartData);
         $this->set('userType', EventUser::USER_TYPE_LEANER);
         $this->set('userId', $userId);
-        $this->set('userWalletBalance', $userWalletBalance);
-    
         $this->_template->render(false, false);
         // $this->_template->render(false, false);
     }
@@ -987,7 +964,6 @@ class EventUserController extends MyEventAppController
         $planData = new SearchBase('tbl_three_reasons');
         $planData->addCondition('registration_plan_title', '=', $method);
         $planResult = FatApp::getDb()->fetch($planData->getResultSet());
-
         //  foreach ($sponsorshipList as $key => $value) {
         $testimonialImages = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_EVENT_PLAN_IMAGE, $planResult['three_reasons_id'], 0, -1);
         $planResult['plan_image'] = $testimonialImages;
@@ -1069,8 +1045,6 @@ class EventUserController extends MyEventAppController
         $this->set('planSelected', $method);
         $this->set('paymentMethods', $paymentMethods);
         $this->set('cartData', $cartData);
-        $this->set('userWalletBalance', $userWalletBalance);
-        
         $this->set('userType', EventUser::USER_TYPE_LEANER);
         $this->set('userId', $userId);
         $this->_template->render(false, false);
@@ -1255,7 +1229,7 @@ class EventUserController extends MyEventAppController
         $pmRs = $pmSrch->getResultSet();
         $paymentMethods = FatApp::getDb()->fetchAll($pmRs);
         $orderId = isset($_SESSION['order_id']) ? $_SESSION['order_id'] : '';
-  $WalletPaymentForm = $this->getWalletPaymentForm();
+
         $SponsorshipCouponCodeListing = new SearchBase('tbl_coupons');
         $SponsorshipCouponCodeListing->addCondition('coupon_identifier', '=', 'EventSponserShip');
         $SponsorshipCCListing = $SponsorshipCouponCodeListing->getResultSet();
@@ -1268,9 +1242,6 @@ class EventUserController extends MyEventAppController
         $this->set('userType', EventUser::USER_TYPE_LEANER);
         $this->set('userId', $userId);
         $this->set('userData', $userRow);
-        $this->set('userWalletBalance', $userWalletBalance);
-        $this->set('WalletPaymentForm', $WalletPaymentForm);
-        
         $this->_template->render(false, false);
     }
     //registration plan paymentsummary
@@ -1903,7 +1874,7 @@ class EventUserController extends MyEventAppController
         }
         unset($_SESSION['symposiumPlan']);
         unset($_SESSION['symposium_ticket']);
-        unset($_SESSION['walletSummary']);
+
         unset($_SESSION['become_sponser']);
         unset($_SESSION['sponsor']);
         unset($_SESSION['ticketDownloadUrl']);
@@ -1986,51 +1957,9 @@ class EventUserController extends MyEventAppController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
-     public function walletSelection()
-    {
-        $payFromWallet = FatApp::getPostedData('payFromWallet', FatUtility::VAR_INT, 0);
-        // $this->cartObj->updateCartWalletOption($payFromWallet, $fromKids);
-         $cart=$_SESSION['cart'];
-        if(isset($_SESSION['summary'])){
-            $cart=$_SESSION['summary'];
-        }
-         $cart['Pay_from_wallet']=$payFromWallet;
-         $userWalletBalance = EventUser::getUserBalance($cart['user_id']);
-        if($payFromWallet>0 && $userWalletBalance>0){
-          
-          $cartTotal = $cart['total'];
-            $cartTaxTotal = 0;
-            $totalSiteCommission = 0;
-            $cartDiscounts =$cart['cartDiscounts'] ??[];
-        $totalDiscountAmount = $cartDiscounts['coupon_discount_total'] ?? 0;
-            $orderNetAmount = ($cartTotal + $cartTaxTotal) - $totalDiscountAmount;
-            $walletAmountCharge = min($orderNetAmount, $userWalletBalance);
-            $orderPaymentGatewayCharges = $orderNetAmount - $walletAmountCharge;
-            $summaryArr = [
-                'cartTotal' => $cartTotal,
-                'cartTaxTotal' => $cartTaxTotal,
-                'cartWalletSelected' => $payFromWallet,
-                'siteCommission' => $totalSiteCommission,
-                'orderNetAmount' => $orderNetAmount,
-                'walletAmountCharge' => $walletAmountCharge,
-                'orderPaymentGatewayCharges' => $orderPaymentGatewayCharges,
-            ];
-               $newData = array_merge($cart, $summaryArr);
-
-         $_SESSION['walletSummary']=$newData;
-         $_SESSION['cart']=$cart;
-          }
-          else{
-         unset($_SESSION['walletSummary']);
-         $_SESSION['cart']=$cart;   
-          }
-         
-        FatUtility::dieJsonSuccess('');
-    }
     public function eventApplyPromoCode()
     {
         unset($_SESSION['summary']);
-
         $couponCode = FatApp::getPostedData('coupon_code', FatUtility::VAR_STRING, '');
         $fromSelector = FatApp::getPostedData('fromSelector', FatUtility::VAR_STRING, '');
         $loggedUserId = EventUserAuthentication::getLoggedUserId();
@@ -2059,9 +1988,6 @@ class EventUserController extends MyEventAppController
             FatUtility::dieJsonError(Label::getLabel('LBL_Invalid_Coupon_Code', $this->siteLangId));
         }
         $cartData = $_SESSION['cart'];
-         if(isset($_SESSION['walletSummary'])){
-            $cartData=$_SESSION['walletSummary'];
-        }
         $holdCouponData = [
             'couponhold_coupon_id' => $couponInfo['coupon_id'],
             'couponhold_user_id' => EventUserAuthentication::getLoggedUserId(),
@@ -2512,7 +2438,6 @@ class EventUserController extends MyEventAppController
         $this->set('planSelected', $method);
         $this->set('paymentMethods', $paymentMethods);
         $this->set('cartData', $cartData);
-        $this->set('userWalletBalance', $userWalletBalance);
         $this->set('userType', EventUser::USER_TYPE_LEANER);
         $this->set('userId', $userId);
         $this->_template->render(false, false);
@@ -2529,7 +2454,7 @@ class EventUserController extends MyEventAppController
     {
         unset($_SESSION['symposiumPlan']);
         unset($_SESSION['symposium_ticket']);
-        unset($_SESSION['walletSummary']);
+
         unset($_SESSION['donation']);
         unset($_SESSION['cart']);
         unset($_SESSION['reg_sponser']);
@@ -2765,7 +2690,7 @@ class EventUserController extends MyEventAppController
         $pmRs = $pmSrch->getResultSet();
         $paymentMethods = FatApp::getDb()->fetchAll($pmRs);
         $orderId = isset($_SESSION['order_id']) ? $_SESSION['order_id'] : '';
-        $WalletPaymentForm = $this->getWalletPaymentForm();
+
         $BenefitConcertCouponCodeListing = new SearchBase('tbl_coupons');
         $BenefitConcertCouponCodeListing->addCondition('coupon_identifier', '=', 'BenefitConcert');
         $BenefirConcertCCListing = $BenefitConcertCouponCodeListing->getResultSet();
@@ -2776,20 +2701,13 @@ class EventUserController extends MyEventAppController
         $this->set('planSelected', $method);
         $this->set('paymentMethods', $paymentMethods);
         $this->set('cartData', $cartData);
-        $this->set('userWalletBalance', $userWalletBalance);
-        $this->set('WalletPaymentForm', $WalletPaymentForm);
         $this->set('userType', EventUser::USER_TYPE_LEANER);
         $this->set('userId', $userId);
         $this->_template->render(false, false);
     }
-    private function getWalletPaymentForm()
-    {
-        return new Form('frmWalletPayment');
-    }
     //REgistration sponser sponsership list
     public function GetEventPlan($fromBack = 0)
     {
-        unset($_SESSION['walletSummary']);
         unset($_SESSION['symposiumPlan']);
         unset($_SESSION['symposium_ticket']);
         unset($_SESSION['donation']);

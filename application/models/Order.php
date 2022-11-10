@@ -166,8 +166,7 @@ class Order extends MyAppModel
         }
         else{
         $userBalance = User::getUserBalance($orderInfo["order_user_id"]);
-        }
-        $orderCreditsCharge = $orderInfo["order_wallet_amount_charge"] ? min($orderInfo["order_wallet_amount_charge"], $userBalance) : 0;
+        }$orderCreditsCharge = $orderInfo["order_wallet_amount_charge"] ? min($orderInfo["order_wallet_amount_charge"], $userBalance) : 0;
         $orderPaymentGatewayCharge = $orderInfo["order_net_amount"] - $orderInfo["order_wallet_amount_charge"];
         $orderPaymentSummary = [
             "net_payable" => $orderInfo["order_net_amount"],

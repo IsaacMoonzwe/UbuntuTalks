@@ -4,22 +4,6 @@
 $remainingWalletBalance = 0;
 $walletCreditLabel = '';
 $walletDeduction = 0;
-
-if(isset($_SESSION['walletSummary'])){
-    $cartData=$_SESSION['walletSummary'];
-
-}
-if ($userWalletBalance >= 0) {
-    $walletCreditLabel = sprintf(Label::getLabel('LBL_Wallet_Credits_(%s)'), CommonHelper::displayMoneyFormat($userWalletBalance));
-    $remainingWalletBalance = ($userWalletBalance - $cartData['orderNetAmount']);
-    $remainingWalletBalance = ($remainingWalletBalance < 0) ? 0 : $remainingWalletBalance;
-    if ($cartData['cartWalletSelected'] > 0) {
-        $walletDeduction = $userWalletBalance;
-        if ($cartData["cartWalletSelected"] && $cartData['orderNetAmount'] < $userWalletBalance) {
-            $walletDeduction = $cartData['orderNetAmount'];
-        }
-    }
-}
 if (isset($_SESSION['summary'])) {
     $cartData = $_SESSION['summary'];
 } elseif (isset($_SESSION['removeCoupon'])) {
@@ -72,9 +56,9 @@ if (!empty($planResult['plan_image'])) {
                             <p><?php echo Label::getLabel('LBL_SELECT_A_PAYMENT_METHOD'); ?></p>
                         </div>
                         <div class="payment-wrapper">
-                            <?php if ($userWalletBalance >= 0) { ?>
+                            <?php if ($userWalletBalance > 0) { ?>
                                 <label class="selection-tabs__label selection--wallet">
-                                    <input type="checkbox" class="selection-tabs__input" onChange="eventWalletSelection(this,<?php echo $userWalletBalance;?>,'registrationPlan');" <?php echo ($cartData["cartWalletSelected"]) ? 'checked="checked"' : ''; ?> name="pay_from_wallet">
+                                    <input type="checkbox" class="selection-tabs__input" onChange="cart.walletSelection(this);" <?php echo ($cartData["cartWalletSelected"]) ? 'checked="checked"' : ''; ?> name="pay_from_wallet">
                                     <div class="selection-tabs__title">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
                                             <g>

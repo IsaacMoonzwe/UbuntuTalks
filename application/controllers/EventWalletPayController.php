@@ -1,31 +1,27 @@
 <?php
 
-class EventWalletPayController extends MyEventAppController
+class EventWalletPayController extends EventLoggedUserController
 {
 
     public function charge($orderId = '')
     {
         $isAjaxCall = FatUtility::isAjaxCall();
-
-            if (!$orderId || ((isset($_SESSION['shopping_cart']["order_id"]) && $orderId != $_SESSION['shopping_cart']["order_id"]))) {
+        if (!$orderId || ((isset($_SESSION['shopping_cart']["order_id"]) && $orderId != $_SESSION['shopping_cart']["order_id"]))) {
             Message::addErrorMessage(Label::getLabel('MSG_Invalid_Access', $this->siteLangId));
             if ($isAjaxCall) {
                 FatUtility::dieWithError(Message::getHtml());
             }
             CommonHelper::redirectUserReferer();
         }
-    
         $userId = EventUserAuthentication::getLoggedUserId();
         $srch = new OrderSearch();
         $srch->joinOrderProduct();
-        $srch->joinEventUser();
-        $srch->addCondition('order_id', '=', O1667991275);
+        $srch->addCondition('order_id', '=', $orderId);
         $srch->addCondition('order_user_id', '=', $userId);
         $srch->addCondition('order_is_paid', '=', Order::ORDER_IS_PENDING);
         $srch->addMultipleFields(['order_id', 'order_user_id', 'order_net_amount', 'order_wallet_amount_charge']);
         $rs = $srch->getResultSet();
         $orderInfo = FatApp::getDb()->fetch($rs);
-        
         if (!$orderInfo) {
             Message::addErrorMessage(Label::getLabel('MSG_Invalid_Access', $this->siteLangId));
             if ($isAjaxCall) {
@@ -39,20 +35,13 @@ class EventWalletPayController extends MyEventAppController
             $orderPaymentObj = new OrderPayment($orderId);
             $orderPaymentObj->chargeUserWallet($orderPaymentFinancials["order_credits_charge"]);
         }
-      
-      
-                unset($_SESSION['walletSummary']);
-                unset($_SESSION['cartData']);
-    
-        // $cartObj = new Cart();
-        // $cartObj->clear();
-        // $fromKids=$_SESSION['fromKids'];
-        // if($fromKids==0){
-        // $cartObj->updateUserCart();
-        // }
-        // else{
-        //     $cartObj->updateUserKidsCart();
-        // }
+        $cartObj = new EventCart();
+        $cartObj->clear();
+        $fromKids=$_SESSION['fromKids'];
+        if($fromKids==0){
+        $cartObj->updateEventUserCart();
+        }
+       
         // $learnerId = UserAuthentication::getLoggedUserId();
         // $userData=User::getAttributesById($userId);
         // $srch = new SearchBase('tbl_scheduled_lessons');
@@ -65,11 +54,11 @@ class EventWalletPayController extends MyEventAppController
         // $userNotification->createLessonNotification($lastRecord['slesson_id'], $teacherId,$user_first.$user_last, USER::USER_TYPE_TEACHER, 'Testing');
     
         if ($isAjaxCall) {
-            $this->set('redirectUrl', CommonHelper::generateUrl('EventUser', 'paymentSuccess', [$orderId]));
+            $this->set('redirectUrl', CommonHelper::generateUrl('Custom', 'paymentSuccess', [$orderId]));
             $this->set('msg', Label::getLabel("MSG_Payment_from_wallet_made_successfully", $this->siteLangId));
             $this->_template->render(false, false, 'json-success.php');
         }
-        FatApp::redirectUser(CommonHelper::generateUrl('EventUser', 'paymentSuccess', [$orderId]));
+        FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentSuccess', [$orderId]));
     }
 
     public function recharge($orderId)
@@ -78,7 +67,7 @@ class EventWalletPayController extends MyEventAppController
             Message::addErrorMessage(Label::getLabel('MSG_Invalid_Access', $this->siteLangId));
             CommonHelper::redirectUserReferer();
         }
-        $loggedUserId = $_SESSION['Event_userId'];
+        $loggedUserId = EventUserAuthentication::getLoggedUserId();
         $srch = Order::getSearchObject();
         $srch->doNotCalculateRecords();
         $srch->doNotLimitRecords();

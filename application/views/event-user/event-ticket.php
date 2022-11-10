@@ -196,7 +196,7 @@ defined('SYSTEM_INIT') or exit('Invalid Usage.');
   <div id="imgItem" class="">
     <div class="card event-image-ticket">
       <div class="card-header bg-info">
-        <img src="<?php echo $protocol . $_SERVER['SERVER_NAME'] .'/image/editor-image/1660102886-img1.jpg'; ?>" height='100' width='100'>
+        <img src="https://ubuntutalks.com/image/editor-image/1660102886-img1.jpg" height='100' width='100'>
         <div class="card-details">
           <div class="events-tickets-description">
             <span class="ticket-title"><b>Event Id : </b><?php echo $orderId; ?> </span>
