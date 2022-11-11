@@ -4,6 +4,7 @@ class AboutUsController extends MyAppController
 {
     public function index()
     {
+        echo "Hello";
         $AboutUsContent = AboutusContentBlock::getBlockContent(AboutusContentBlock::BLOCK_UT_ABOUTUS_CONTENT_BLOCK, $this->siteLangId);
         $HistoryPhilosophyContent = AboutusContentBlock::getBlockContent(AboutusContentBlock::BLOCK_UT_HISTORY_PHILOSOPHY_CONTENT_BLOCK, $this->siteLangId);
         $SupportPhilanthropy = AboutusContentBlock::getBlockContent(AboutusContentBlock::BLOCK_UT_SUPPORT_PHILANTHROPY_CONTENT_BLOCK, $this->siteLangId);
