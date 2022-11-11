@@ -1,3 +1,4 @@
+console.log("Welcome To Github");
 var isRuningTeacherFavoriteAjax = false;
 var newsletterAjaxRuning = false;
 function getCountryStates(countryId, stateId, dv) {
@@ -5,7 +6,6 @@ function getCountryStates(countryId, stateId, dv) {
     fcom.makeUrl("GuestUser", "getStates", [countryId, stateId]),
     "",
     function (res) {
-console.log("Hello");
       $(dv).empty();
       $(dv).append(res);
     }
