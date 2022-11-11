@@ -4,6 +4,28 @@
 $remainingWalletBalance = 0;
 $walletCreditLabel = '';
 $walletDeduction = 0;
+if(isset($_SESSION['walletSummary'])){
+    $cartData=$_SESSION['walletSummary'];
+    
+}
+if ($userWalletBalance > 0) {
+    $walletCreditLabel = sprintf(Label::getLabel('LBL_Wallet_Credits_(%s)'), CommonHelper::displayMoneyFormat($userWalletBalance));
+    $remainingWalletBalance = ($userWalletBalance - $cartData['orderNetAmount']);
+    $remainingWalletBalance = ($remainingWalletBalance < 0) ? 0 : $remainingWalletBalance;
+    if ($cartData['cartWalletSelected'] > 0) {
+        $walletDeduction = $userWalletBalance;
+        if ($cartData["cartWalletSelected"] && $cartData['orderNetAmount'] < $userWalletBalance) {
+            $walletDeduction = $cartData['orderNetAmount'];
+        }
+        if(isset($_SESSION['walletSummary'])){
+    if($remainingWalletBalance>0){
+        $paymentMethods=[];
+        }
+    
+    }
+    }
+    
+}
 
 ?>
 <div class="box box--checkout">

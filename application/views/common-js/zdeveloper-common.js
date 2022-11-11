@@ -838,8 +838,41 @@ $(document).ready(function () {
       }
     );
   };
+eventWalletSelection=function (el,walletBalance,fromSelector='') {
+if(walletBalance<=0){
+    $.loader.hide();
+      $.mbsmessage("InSufficient wallet balance", true, "alert alert--danger");
+       $(el).prop('checked', false);
+      return false;
+}
 
-
+    eventCart.isWalletSelect = $(el).is(":checked") ? 1 : 0;
+     var data =
+      "payFromWallet=" + eventCart.isWalletSelect;
+    $.loader.show();
+    fcom.ajax(
+      fcom.makeUrl("EventUser", "walletSelection"),
+      data,
+      function (ans) {
+        $.loader.hide();
+        if (fromSelector == 'fromSponser') {
+          GetBecomeSponserPaymentSummary(eventCart.props.becomesponserPlan, eventCart.props.becomeSponserPlanQty);
+        }
+        else if (fromSelector == 'donation') {
+          GetDonationPaymentSummary(eventCart.props.donationAmount);
+        }
+        else if (fromSelector == 'registrationPlan') {
+          GetPlanTicketsPaymentSummary(eventCart.props.sponsershipPlan, eventCart.props.countOfTickets);
+        }
+        else if (fromSelector == 'benefitConcertPlan') {
+          GetConcertTicketsPaymentSummary(eventCart.props.concertPlan, eventCart.props.concertTicket);
+        }
+        else if (fromSelector == 'SymposiumDinnerPlan') {
+          GetEventSymposiumTicketsPaymentSummary(eventCart.props.symposiumPlan, eventCart.props.symposiumTicket);
+        }
+      }
+    );
+  },
 
 
   //concert payment flow

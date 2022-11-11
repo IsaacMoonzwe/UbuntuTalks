@@ -137,7 +137,7 @@ $currencySymbolRight = CommonHelper::getCurrencySymbolRight();
                         <?php } ?>
                     </a>
                 </div>
-                <p><?php //echo Label::getLabel('LBL_Footer_Section_Label'); ?>
+                <p><?php echo Label::getLabel('LBL_Footer_Section_Label'); ?>
                     <?php
                     if (CommonHelper::demoUrl()) {
                         echo CommonHelper::replaceStringData(Label::getLabel('LBL_COPYRIGHT_TEXT', CommonHelper::getLangId()), ['{YEAR}' => '&copy; ' . date("Y"), '{PRODUCT}' => '<a target="_blank"  href="https://yo-coach.com">Yo!Coach</a>', '{OWNER}' => '<a target="_blank"  class="underline color-primary" href="https://www.fatbit.com/">FATbit Technologies</a>']);

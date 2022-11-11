@@ -344,17 +344,17 @@ class EventUsersController extends AdminBaseController
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieJsonError(Message::getHtml());
         }
-        $tObj = new Transaction($userId);
+        $tObj = new EventTransaction($userId);
         $data = [
             'utxn_user_id' => $userId,
             'utxn_date' => date('Y-m-d H:i:s'),
             'utxn_comments' => $post['description'],
-            'utxn_status' => Transaction::STATUS_COMPLETED
+            'utxn_status' => EventTransaction::STATUS_COMPLETED
         ];
-        if ($post['type'] == Transaction::CREDIT_TYPE) {
+        if ($post['type'] == EventTransaction::CREDIT_TYPE) {
             $data['utxn_credit'] = $post['amount'];
         }
-        if ($post['type'] == Transaction::DEBIT_TYPE) {
+        if ($post['type'] == EventTransaction::DEBIT_TYPE) {
             $data['utxn_debit'] = $post['amount'];
         }
         if (!$tObj->addTransaction($data)) {
@@ -365,8 +365,8 @@ class EventUsersController extends AdminBaseController
         $emailNotificationObj = new EmailHandler();
         $emailNotificationObj->sendTxnNotification($tObj->getMainTableRecordId(), $this->adminLangId);
         /* ] */
-        $userNotification = new UserNotifications($userId);
-        $userNotification->sendWalletCreditNotification();
+        // $userNotification = new EventUserNotifications($userId);
+        // $userNotification->sendWalletCreditNotification();
         $this->set('userId', $userId);
         $this->set('msg', $this->str_setup_successful);
         $this->_template->render(false, false, 'json-success.php');
@@ -772,7 +772,7 @@ class EventUsersController extends AdminBaseController
     {
         $frm = new Form('frmUserTransaction');
         $frm->addHiddenField('', 'user_id');
-        $typeArr = Transaction::getCreditDebitTypeArr($langId);
+        $typeArr = EventTransaction::getCreditDebitTypeArr($langId);
         $frm->addSelectBox(Label::getLabel('LBL_Type', $this->adminLangId), 'type', $typeArr)->requirements()->setRequired(true);
         $fld = $frm->addFloatField(Label::getLabel('LBL_Amount', $this->adminLangId), 'amount');
         $fld->requirements()->setRange(1, 99999);
