@@ -5,7 +5,6 @@ function getCountryStates(countryId, stateId, dv) {
     fcom.makeUrl("GuestUser", "getStates", [countryId, stateId]),
     "",
     function (res) {
-console.log("Hello");
       $(dv).empty();
       $(dv).append(res);
     }
