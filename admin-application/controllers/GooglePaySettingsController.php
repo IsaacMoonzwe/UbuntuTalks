@@ -3,7 +3,7 @@
 class GooglePaySettingsController extends PaymentSettingsController
 {
 
-    private $keyName = "Stripe";
+    private $keyName = "GooglePay";
 
     public function index()
     {
@@ -24,8 +24,8 @@ class GooglePaySettingsController extends PaymentSettingsController
     private function getSettingsForm()
     {
         $frm = new Form('frmPaymentMethods');
-        $frm->addRequiredField(Label::getLabel('LBL_Secret_Key', $this->adminLangId), 'privateKey');
-        $frm->addRequiredField(Label::getLabel('LBL_Publishable_Key', $this->adminLangId), 'publishableKey');
+        $frm->addRequiredField(Label::getLabel('LBL_Merchant_Id', $this->adminLangId), 'merchant_Id');
+        $frm->addRequiredField(Label::getLabel('LBL_Merchant_Name', $this->adminLangId), 'merchant_Name');
         $frm->addSubmitButton('&nbsp;', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }

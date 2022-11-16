@@ -1,4 +1,3 @@
-console.log("PHP");
 var isRuningTeacherFavoriteAjax = false;
 var newsletterAjaxRuning = false;
 function getCountryStates(countryId, stateId, dv) {

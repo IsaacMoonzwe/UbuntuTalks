@@ -191,117 +191,117 @@ defined('SYSTEM_INIT') or exit('Invalid Usage.');
 </style>
 <div style="background-color:#FFEBCD !important ;height: 100% !important">
   <p>Generating Tickets...
-</div>
-<div class="container" style="z-index: 0">
-  <div id="imgItem" class="">
-    <div class="card event-image-ticket">
-      <div class="card-header bg-info">
-        <img src="<?php echo $protocol . $_SERVER['SERVER_NAME'] .'/image/editor-image/1660102886-img1.jpg'; ?>" height='100' width='100'>
-        <div class="card-details">
-          <div class="events-tickets-description">
-            <span class="ticket-title"><b>Event Id : </b><?php echo $orderId; ?> </span>
-          </div>
-          <?php
-          $newStrting = $_SESSION['concertPlan'];
-          ?>
-          <div class="events-tickets-description">
-            <span class="ticket-title"><b>Event Title : </b><?php echo $newStrting; ?></span>
-          </div>
+  </div>
+  <div class="container" style="z-index: 0">
+    <div id="imgItem" class="">
+      <div class="card event-image-ticket">
+        <div class="card-header bg-info">
+          <img src="<?php echo $protocol . $_SERVER['SERVER_NAME'] .'/image/editor-image/1660102886-img1.jpg'; ?>" height='100' width='100'>
+          <div class="card-details">
+            <div class="events-tickets-description">
+              <span class="ticket-title"><b>Event Id : </b><?php echo $orderId; ?> </span>
+            </div>
+            <?php
+            $newStrting = $_SESSION['concertPlan'];
+            ?>
+            <div class="events-tickets-description">
+              <span class="ticket-title"><b>Event Title : </b><?php echo $newStrting; ?></span>
+            </div>
 
-          <div class="events-tickets-description">
-            <span class="ticket-title"><b>Total Tickets : </b><?php echo $_SESSION['concert_ticket']; ?> </span>
-          </div>
+            <div class="events-tickets-description">
+              <span class="ticket-title"><b>Total Tickets : </b><?php echo $_SESSION['concert_ticket']; ?> </span>
+            </div>
 
-          <div class="disclaimer">
-            <span class="disclaimer-section">The ticket(s) is good only for the selected date(s) and benefit concert event(s). There are NO REFUNDS and EXCHANGES. All Sales are FINAL! Ticket required for entry. For questions email utevents@ubuntutalks.com.</span>
+            <div class="disclaimer">
+              <span class="disclaimer-section">The ticket(s) is good only for the selected date(s) and benefit concert event(s). There are NO REFUNDS and EXCHANGES. All Sales are FINAL! Ticket required for entry. For questions email utevents@ubuntutalks.com.</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- <button onclick="changeToImg()" class="btn btn-warning text-white">To image</button> -->
-  </div>
-</div>
-<div class="container">
-  <div class="card">
-    <div id="sreenshot" class="card-body sreenshot">
+      <!-- <button onclick="changeToImg()" class="btn btn-warning text-white">To image</button> -->
     </div>
   </div>
-</div>
-<script type="text/javascript">
-  jQuery("body").prepend('<div class="ticket-title" style="z-index:9999;background-color: #FFEBCD !important;height: 100vh !important;display: flex;align-items: center;justify-content: center;"><div class="ticket-box"><p>Generating Tickets</p><div class="stage"><div class="dot-flashing"></div></div></div></div>');
+  <div class="container">
+    <div class="card">
+      <div id="sreenshot" class="card-body sreenshot">
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    jQuery("body").prepend('<div class="ticket-title" style="z-index:9999;background-color: #FFEBCD !important;height: 100vh !important;display: flex;align-items: center;justify-content: center;"><div class="ticket-box"><p>Generating Tickets</p><div class="stage"><div class="dot-flashing"></div></div></div></div>');
 
-  $(document).ready(function() {
+    $(document).ready(function() {
 
-    changeToImg();
+      changeToImg();
     // EventTicket();
-  });
-
-  function EventTicket() {
-    var ticketUrl = localStorage.getItem('ticket');
-    var download_ticketUrl = localStorage.getItem('ticket_download');
-    var data = "ticketUrl=hiii";
-    var jsonData = {
-      ticketUrl: ticketUrl,
-      download_ticketUrl: download_ticketUrl
-    };
-    $.ajax({
-      type: "post",
-      url: '/event-user/event-ticket-success/<?php echo $orderId; ?>',
-      data: JSON.stringify(jsonData),
-      dataType: "json",
-      success: function(data) {}
-    }, {
-      fOutMode: 'json'
     });
-  }
 
-  function changeToImg() {
-    const toImgArea = document.getElementById('imgItem');
-
-    // To avoid the image will be cut by scroll, we need to scroll top before html2canvas.
-    window.pageYOffset = 0;
-    document.documentElement.scrollTop = 0
-    document.body.scrollTop = 0
-
-    // transform to canvas
-    html2canvas(toImgArea, {
-      allowTaint: true,
-      taintTest: false,
-      type: "view",
-    }).then(function(canvas) {
-      const sreenshot = document.getElementById('sreenshot');
-      const downloadIcon = document.getElementById('download');
-      localStorage.setItem('ticket', canvas.toDataURL("image/jpeg", "10.0"));
-      localStorage.setItem('ticket_download', canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream"));
-
-      // setting the canvas width  
-      canvas.style.width = "800px";
-      var ticketUrl = canvas.toDataURL("image/jpeg", "10.0");
-      var download_ticketUrl = canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream");
-
-      // append the canvas in the place that you want to show this image.  
-      sreenshot.appendChild(canvas);
+    function EventTicket() {
+      var ticketUrl = localStorage.getItem('ticket');
+      var download_ticketUrl = localStorage.getItem('ticket_download');
+      var data = "ticketUrl=hiii";
       var jsonData = {
         ticketUrl: ticketUrl,
         download_ticketUrl: download_ticketUrl
       };
       $.ajax({
         type: "post",
-        url: '/event-user/concert-ticket-success/<?php echo $orderId; ?>',
+        url: '/event-user/event-ticket-success/<?php echo $orderId; ?>',
         data: JSON.stringify(jsonData),
         dataType: "json",
-
-        success: function(data) {
-          window.location.href = data.redirectUrl;
-        }
+        success: function(data) {}
       }, {
         fOutMode: 'json'
       });
-    });
-  }
+    }
+
+    function changeToImg() {
+      const toImgArea = document.getElementById('imgItem');
+
+    // To avoid the image will be cut by scroll, we need to scroll top before html2canvas.
+      window.pageYOffset = 0;
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+
+    // transform to canvas
+      html2canvas(toImgArea, {
+        allowTaint: true,
+        taintTest: false,
+        type: "view",
+      }).then(function(canvas) {
+        const sreenshot = document.getElementById('sreenshot');
+        const downloadIcon = document.getElementById('download');
+        localStorage.setItem('ticket', canvas.toDataURL("image/jpeg", "10.0"));
+        localStorage.setItem('ticket_download', canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream"));
+
+      // setting the canvas width  
+        canvas.style.width = "800px";
+        var ticketUrl = canvas.toDataURL("image/jpeg", "10.0");
+        var download_ticketUrl = canvas.toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream");
+
+      // append the canvas in the place that you want to show this image.  
+        sreenshot.appendChild(canvas);
+        var jsonData = {
+          ticketUrl: ticketUrl,
+          download_ticketUrl: download_ticketUrl
+        };
+        $.ajax({
+          type: "post",
+          url: '/event-user/concert-ticket-success/<?php echo $orderId; ?>',
+          data: JSON.stringify(jsonData),
+          dataType: "json",
+
+          success: function(data) {
+            window.location.href = data.redirectUrl;
+          }
+        }, {
+          fOutMode: 'json'
+        });
+      });
+    }
 
   // clean the showing area
-  function resetTheImageArea() {
-    document.getElementById('sreenshot').innerHTML = "";
-  }
-</script>
+    function resetTheImageArea() {
+      document.getElementById('sreenshot').innerHTML = "";
+    }
+  </script>

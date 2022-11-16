@@ -23,7 +23,7 @@ if ((($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') != 'https') && (FatApp::getConfi
 {
     // if ((($_SERVER['HTTPS'] ?? '') != 'on') && (FatApp::getConfig('CONF_USE_SSL') == 1)) {
     $redirect = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-    FatApp::redirectUser($redirect);
+    //FatApp::redirectUser($redirect);
 }
 /* --- Redirect SSL --- */
 /* We must set it before initiating db connection. So that connection timezone is in sync with php */

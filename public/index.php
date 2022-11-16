@@ -1,4 +1,5 @@
 <?php
+
 require_once dirname(__DIR__) . '/conf/conf.php';
 
 require_once dirname(__FILE__) . '/application-top.php';
