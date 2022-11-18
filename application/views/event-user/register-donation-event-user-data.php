@@ -3,6 +3,19 @@
 
 ?>
 <style>
+    input[type="text"] {
+        width: 100%;
+        padding: 1px 10px;
+        height: 48px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-shadow: 0px 2px 0px #d2d2d2;
+    }
+    .field_label {
+        font-size: 15px;
+    }
+
     span.registratio-title {
         font-size: 15px;
         font-weight: 500;
@@ -60,24 +73,22 @@
         border-top: none;
     }
 </style>
+
 <div class="box box--checkout">
     <div class="box__head">
-
         <a href="javascript:void(0);" onclick="GetEventDonation(1,eventCart.props.donationAmount);" class="btn btn--bordered color-black btn--back">
             <svg class="icon icon--back">
                 <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
             </svg>
             <?php echo Label::getLabel('LBL_BACK'); ?>
         </a>
-        <?php //if ($userId <= 0) { ?>
-            <div class="step-nav">
-                <ul>
-                    <li class="step-nav_item is-completed"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_1'); ?></a><span class="step-icon"></span></li>
-                    <li class="step-nav_item is-process"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_2'); ?></a></li>
-                    <li class="step-nav_item"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_3'); ?></a></li>
-                </ul>
-            </div>
-        <?php  //} ?>
+        <div class="step-nav">
+            <ul>
+                <li class="step-nav_item is-completed"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_1'); ?></a><span class="step-icon"></span></li>
+                <li class="step-nav_item is-process"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_2'); ?></a></li>
+                <li class="step-nav_item"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_3'); ?></a></li>
+            </ul>
+        </div>
     </div>
     <div class="box__body">
         <div class="selection-tabs selection--checkout selection--duration selection--onehalf sponsorship-tabs">
@@ -171,37 +182,54 @@
             }
             ?>
         </div>
-        <div class="box-foot">
-            <div class="box-foot__right">
-                <a href="javascript:void(0);" class="btn btn--primary color-white" onclick="GetEventDonationPaymentSummary(eventCart.props.donationAmount);"><?php echo Label::getLabel('LBL_NEXT'); ?></a>
+    </div>
+    <div class="box-foot">
+        <div class="box-foot__left" style="display: none;">
+            <div class="teacher-profile">
+                <div class="teacher__media">
+                    <div class="avtar avtar-md">
+                        <img src="<?php echo CommonHelper::generateUrl('Image', 'user', array($teacher['user_id'])) . '?' . time(); ?>" alt="<?php echo $teacher['user_first_name'] . ' ' . $teacher['user_last_name']; ?>">
+                    </div>
+                </div>
+                <div class="teacher__name"><?php echo $teacher['user_first_name'] . ' ' . $teacher['user_last_name']; ?></div>
+            </div>
+            <div class="step-breadcrumb">
+                <ul>
+                    <li><a href="javascript:void(0);"><?php echo $teachLangName; ?></a></li>
+                </ul>
             </div>
         </div>
+        <div class="box-foot__right">
+            <a href="javascript:void(0);" class="btn btn--primary color-white" onclick="GetEventDonationPaymentSummary(eventCart.props.donationAmount);"><?php echo Label::getLabel('LBL_NEXT'); ?></a>
+        </div>
+    </div>
+</div>
 
 
-        <script>
-            eventCart.props.lessonQty = parseInt('<?php echo $lessonQty; ?>');
-            var user = parseInt('<?php echo $userId; ?>');
-            console.log('eventCart.props.eventUserSelectedStaus==', eventCart.props.eventUserSelectedStaus);
-            if (user <= 0) {
-                if (eventCart.props.eventUserSelectedStaus == undefined) {
-                    eventCart.props.eventUserSelectedStaus = 'Login';
-                }
-                document.getElementById(eventCart.props.eventUserSelectedStaus).style.display = "block";
-            }
+<script>
+    eventCart.props.lessonQty = parseInt('<?php echo $lessonQty; ?>');
+    var user = parseInt('<?php echo $userId; ?>');
+    console.log('eventCart.props.eventUserSelectedStaus==', eventCart.props.eventUserSelectedStaus);
+    if (user <= 0) {
+        if (eventCart.props.eventUserSelectedStaus == undefined) {
+            eventCart.props.eventUserSelectedStaus = 'Login';
+        }
+        document.getElementById(eventCart.props.eventUserSelectedStaus).style.display = "block";
+    }
 
-            function openCity(evt, cityName) {
-                var i, tabcontent, tablinks;
-                eventCart.props.eventUserSelectedStaus = cityName;
-                tabcontent = document.getElementsByClassName("tabcontent");
+    function openCity(evt, cityName) {
+        var i, tabcontent, tablinks;
+        eventCart.props.eventUserSelectedStaus = cityName;
+        tabcontent = document.getElementsByClassName("tabcontent");
 
-                for (i = 0; i < tabcontent.length; i++) {
-                    tabcontent[i].style.display = "none";
-                }
-                tablinks = document.getElementsByClassName("tablinks");
-                for (i = 0; i < tablinks.length; i++) {
-                    tablinks[i].className = tablinks[i].className.replace(" active", "");
-                }
-                document.getElementById(cityName).style.display = "block";
-                evt.currentTarget.className += " active";
-            }
-        </script>
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(cityName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>

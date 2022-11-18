@@ -4,6 +4,8 @@
     .selection-tabs__title {
         text-align: center;
         height: 100px;
+        border-radius: 5px;
+        box-shadow: rgb(0 0 0 / 10%) 0px 0px 8px;
     }
 
     .selection-tabs__title svg {
@@ -33,7 +35,7 @@
         </div>
     </div>
     <div class="box__body events-box-section">
-        <h3 class="tickets-title"><?php echo Label::getLabel('LBL_Select_Tickets'); ?></h3>
+        <h3 class="tickets-title"><?php echo Label::getLabel('LBL_Pre-Symposium_Dinner_Select_Tickets'); ?></h3>
         <div class="selection-tabs selection--checkout selection--duration selection--onehalf">
             <?php
             $index=0;

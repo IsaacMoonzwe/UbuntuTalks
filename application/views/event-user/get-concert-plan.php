@@ -11,6 +11,8 @@
     }
 
     .events-box-section .selection--checkout .selection-tabs__label .selection-tabs__title {
+        border-radius: 5px;
+        box-shadow: rgba(0, 0, 0, 10%) 0px 0px 8px;
         padding: 35px 17px 35px 17px !important;
         display: flex;
         font-weight: 600;
@@ -33,12 +35,12 @@
         </div>
     </div>
     <div class="box__body events-box-section">
-        <h3 class="tickets-title"><?php echo Label::getLabel('LBL_Select_Tickets'); ?></h3>
+        <h3 class="tickets-title"><?php echo Label::getLabel('LBL_Benefit_Concert_Tickets_Plan'); ?></h3>
         <div class="selection-tabs selection--checkout selection--duration selection--onehalf">
             <?php
-            $index=0;
+            $index = 0;
             foreach ($slotDurations as $duration) {
-                
+
                 $newStrting = explode("Sales", $duration['benefit_concert_plan_title']);
             ?>
                 <label class="selection-tabs__label">
@@ -58,7 +60,7 @@
                         </div>
                     </div>
                 </label>
-            <?php }?>
+            <?php } ?>
 
         </div>
     </div>
@@ -86,8 +88,9 @@
 </div>
 <script>
     eventCart.props.concertPlan = "<?php echo $planSelected; ?>"
-    function onPlanChange(plan){
-        eventCart.props.concertPlan =plan.value;
-        eventCart.props.concertTicket=1;
+
+    function onPlanChange(plan) {
+        eventCart.props.concertPlan = plan.value;
+        eventCart.props.concertTicket = 1;
     }
 </script>

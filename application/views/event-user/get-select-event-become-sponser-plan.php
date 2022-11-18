@@ -1,11 +1,17 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); #step2 
 ?>
+<style>
+    .selection-tabs__title {
+        border-radius: 5px;
+        box-shadow: rgb(0 0 0 / 10%) 0px 0px 8px;
+    }
+</style>
 <div class="box box--checkout">
     <div class="box__head">
         <div class="step-nav">
             <ul>
                 <li class="step-nav_item is-process"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_1'); ?></a><span class="step-icon"></span></li>
-            
+
                 <li class="step-nav_item"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_2'); ?></a><span class="step-icon"></span></li>
                 <li class="step-nav_item "><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_3'); ?></a></li>
                 <li class="step-nav_item "><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_4'); ?></a></li>
@@ -16,7 +22,7 @@
         <div class="selection-tabs selection--checkout selection--duration selection--onehalf sponsorship-tabs">
             <h3 class="sponsorship-title">Which event would you like to sponsor ?</h3>
 
-            <?php foreach ($slotDurations as $duration) {  
+            <?php foreach ($slotDurations as $duration) {
                 $newStrting = explode("Sales", $duration['events_sponsorship_categories_plan_title']);
             ?>
                 <label class="selection-tabs__label">
@@ -56,32 +62,32 @@
 </div>
 <script>
     var selected = eventCart.props.selectSponserEventPlan;
-    if(selected!=null){
-        console.log("selectSponserEventPlan",selected);
-        var check=parseInt(selected);
-    document.getElementById("plan" + check).checked = true;
+    if (selected != null) {
+        console.log("selectSponserEventPlan", selected);
+        var check = parseInt(selected);
+        document.getElementById("plan" + check).checked = true;
     }
-//     let entries = Object.entries(eventCart.props.becomeSponserSelectedPlan);
+    //     let entries = Object.entries(eventCart.props.becomeSponserSelectedPlan);
 
-//     if (entries.length > 0) {
+    //     if (entries.length > 0) {
 
-//         entries.map(([key, val] = entry) => {
-//             document.getElementById("plan" + val).checked = true;
-//             addBecomeSponserSelectedEvent(val);
-//         });
-//     }
+    //         entries.map(([key, val] = entry) => {
+    //             document.getElementById("plan" + val).checked = true;
+    //             addBecomeSponserSelectedEvent(val);
+    //         });
+    //     }
 
-//     function addBecomeSponserSelectedEvent(id) {
-//         const checkbox = document.getElementById("plan" + id);
-        
-//         console.log("chec==", checkbox);
-        
-//         if (checkbox.checked) {
-//             // qtyBox.parentNode.style.display = 'block';
-//             cartData = eventCart.props.becomeSponserSelectedPlan;
-//             cartData[id] = id;
-//             eventCart.props.becomeSponserSelectedPlan = cartData;
-            
-//     }
-// }
+    //     function addBecomeSponserSelectedEvent(id) {
+    //         const checkbox = document.getElementById("plan" + id);
+
+    //         console.log("chec==", checkbox);
+
+    //         if (checkbox.checked) {
+    //             // qtyBox.parentNode.style.display = 'block';
+    //             cartData = eventCart.props.becomeSponserSelectedPlan;
+    //             cartData[id] = id;
+    //             eventCart.props.becomeSponserSelectedPlan = cartData;
+
+    //     }
+    // }
 </script>

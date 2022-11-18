@@ -133,8 +133,7 @@ if ($userWalletBalance >= 0) {
                                         <?php } else if ($value['pmethod_name'] == "Stripe") { ?>
                                             <img style="display: inline-block;max-width:140px;" src="../../../public/images/stripe.svg" alt="Paypal" />
                                         <?php } else if ($value['pmethod_name'] == "Google Pay") { ?>
-                                            <img style="display: inline-block;max-width:121px;height:
-                                            64x" src="../../../public/images/GPay_Acceptance_Mark_800.png" alt="GooglePay" />
+                                            <img style="display: inline-block;max-width:70px;" src="../../../public/images/GPay_Acceptance_Mark_800.png" alt="GooglePay" />
                                         <?php } else {
                                             echo $value['pmethod_name'];
                                         }

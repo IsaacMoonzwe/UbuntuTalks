@@ -1,6 +1,55 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); #step2 
-
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); #step2  
 ?>
+<style>
+    .single_amount_wrapper {
+        display: flex;
+    }
+
+    .single_amount {
+        color: #fff;
+        background-color: #00641d;
+        width: 100px;
+        text-align: center;
+        padding: 10px 0px 10px 0px;
+        border-radius: 5px;
+        display: block;
+        margin-left: 10px;
+        cursor: pointer;
+        margin-bottom: 20px;
+        font-size: 19px;
+    }
+
+    .single_amount:hover {
+        background-color: #ce4400 !important;
+    }
+
+    .selection--onehalf .selection-tabs__label {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 50%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .amount_wrapper {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+        width: 100%;
+        padding: 1px 10px;
+        height: 48px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-shadow: 0px 2px 0px #d2d2d2;
+    }
+
+    input#donationAmount {
+        width: 50%;
+    }
+</style>
 <div class="box box--checkout">
     <div class="box__head">
         <div class="step-nav">
@@ -13,26 +62,30 @@
     </div>
     <div class="box__body">
         <div class="selection-tabs selection--checkout selection--duration selection--onehalf">
-            <h3 class="sponsorship-title"><?php echo Label::getLabel('LBL_Please_Fill_Donation_Amount'); ?></h3>
+            <h3 class="sponsorship-title"><?php echo Label::getLabel('LBL_Make_A_Donation'); ?></h3><br>
             <label class="selection-tabs__label">
-                <h5><?php echo Label::getLabel('LBL_Fill_Your_Amount_($)'); ?></h5>
-                <input type="number" class="" required="true" min="1" value=<?php echo $donationAmount; ?> id="donationAmount" name="donationAmount" placeholder="$0.00">
+                <div class="donation_wrapper">
+                    <div class="single_amount_wrapper">
+                        <div class="single_amount" value="10">10$</div>
+                        <div class="single_amount" value="20">20$</div>
+                        <div class="single_amount" value="30">30$</div>
+                        <div class="single_amount" value="40">40$</div>
+                        <div class="single_amount" value="50">50$</div>
+                    </div>
+                    <div class="single_amount_wrapper">
+                        <div class="single_amount" value="60">60$</div>
+                        <div class="single_amount" value="70">70$</div>
+                        <div class="single_amount" value="80">80$</div>
+                        <div class="single_amount" value="90">90$</div>
+                        <div class="single_amount" value="100">100$</div>
+                    </div>
+                    <div class="amount_wrapper">
+                        <input type="number" class="" required="true" min="10.00" value=<?php echo $donationAmount; ?> id="donationAmount" name="donationAmount" placeholder="$0.00">
+                    </div>
+                </div>
+
             </label>
-            <!-- <?php foreach ($slotDurations as $duration) { ?>
-                <label class="selection-tabs__label">
-                    <input type="radio" onchange="eventCart.props.becomesponserPlan = this.value;" class="selection-tabs__input" value="<?php echo $duration['sponsorshipcategories_name']; ?>" <?php echo ($lessonDuration == $duration['sponsorshipcategories_name']) ? 'checked' : ''; ?> name="lessonDuration">
-                        <div class="selection-tabs__title" >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-                                <g>
-                                    <path d="M12,22A10,10,0,1,1,22,12,10,10,0,0,1,12,22Zm-1-6,7.07-7.071L16.659,7.515,11,13.172,8.174,10.343,6.76,11.757Z" transform="translate(-2 -2)" />
-                                </g>
-                            </svg>
-                            <span>
-                                <?php echo sprintf($duration['sponsorshipcategories_name']); ?>
-                            </span>
-                        </div>
-                </label>
-            <?php } ?> -->
+
 
         </div>
     </div>
@@ -58,9 +111,24 @@
         </div>
     </div>
 </div>
+
 <script>
+    //Init link with input amount
+    setTimeout(function() {
+        $('.donation_wrapper > .amount_wrapper > input').trigger('change');
+    }, 20);
+    //Update link on change or input
+    // $(document).on('change input', '.donation_wrapper > .amount_wrapper > input', function() {
+    //     $(this).val(parseFloat($(this).val()).toFixed(2));
+    //     $(this).parent().parent().find('> a').attr('href', donate_link.replace('{amount}', parseFloat($(this).val()).toFixed(2)));
+    // });
+    //Change amount on button click
+    $(document).on('click', '.donation_wrapper > .single_amount_wrapper > .single_amount', function() {
+        $('.donation_wrapper > .amount_wrapper > input').val(parseFloat($(this).attr('value')).toFixed(2)).trigger('change');
+    });
     $('#donationAmount').change(function() {
         this.value = parseFloat(this.value).toFixed(2);
-        eventCart.props.donationAmount = this.value;
+        var test = eventCart.props.donationAmount = this.value;
+        console.log(test);
     });
 </script>

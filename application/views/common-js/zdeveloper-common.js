@@ -1341,7 +1341,8 @@ if(walletBalance<=0){
 
   GetEventBecomeSponserPlan = function (fromback = 0) {
     $.loader.show();
-    var plan = eventCart.props.becomeSponserSelectedPlan;
+    var plan = eventCart.props.selectSponserEventPlan;
+    console.log("plan",plan);
     if (plan == null) {
       $.loader.hide();
       $.mbsmessage("Please Select Event", true, "alert alert--danger");

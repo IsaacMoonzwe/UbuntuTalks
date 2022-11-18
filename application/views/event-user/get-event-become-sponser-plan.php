@@ -1,5 +1,11 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); #step2 
 ?>
+<style>
+    .selection-tabs__title {
+        border-radius: 5px;
+        box-shadow: rgb(0 0 0 / 10%) 0px 0px 8px;
+    }
+</style>
 <div class="box box--checkout">
     <div class="box__head">
         <a href="javascript:void(0);" onclick="GetSelectEventBecomeSponserPlan();" class="btn btn--bordered color-black btn--back">
