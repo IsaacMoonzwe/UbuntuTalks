@@ -199,6 +199,12 @@
     id: <?php echo $paymentAmount; ?>
   }];
 
+  //  const items = [{
+  //     id: <?php echo $currency_amount; ?>
+  //   }];
+
+  // console.log("it--",items);
+
   let elements;
 
   initialize();
@@ -212,7 +218,7 @@
   async function initialize() {
     const {
       clientSecret
-    } = await fetch("<?php echo  CommonHelper::generateFullUrl('StripePay', 'create'); ?>", {
+    } = await fetch("<?php echo  CommonHelper::generateFullUrl('StripePay', 'create', [$currency]); ?>", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

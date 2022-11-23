@@ -101,5 +101,4 @@ class PaymentSettings
         $paymentMethodSettings = $this->db->fetchAll($rs);
         return $paymentMethodSettings;
     }
-
 }

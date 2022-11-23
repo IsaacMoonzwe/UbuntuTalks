@@ -148,18 +148,22 @@
                 els.inc.on('click', increment);
 
                 function decrement() {
+                    
                     var value = el[0].value;
                     value--;
                     if (!min || value >= min) {
                         el[0].value = value;
+                        eventCart.props.countOfTickets = value;
                     }
                 }
 
                 function increment() {
+                    
                     var value = el[0].value;
                     value++;
                     if (!max || value <= max) {
-                        el[0].value = value++;
+                        el[0].value = value;
+                        eventCart.props.countOfTickets = value;
                     }
                 }
             }

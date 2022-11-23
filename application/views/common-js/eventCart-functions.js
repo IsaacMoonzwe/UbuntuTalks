@@ -24,8 +24,10 @@ var eventCart = {
     eventUserSelectedStaus: 'Login',
     concertPlan: '',
     concertTicket: 1,
-    symposiumPlan:'',
-    symposiumTicket:1,
+    symposiumPlan: '',
+    symposiumTicket: 1,
+    currency: 'USD',
+    currencyCode: '$',
   },
   couponCode: "",
   isWalletSelect: 0,
@@ -36,7 +38,6 @@ var eventCart = {
     props = eventCart.props;
     props.lessonQty = lessonQty;
     eventCart.props.planId = planId;
-    console.log("event==", eventCart.props);
     fcom.ajax(
       fcom.makeUrl("EventUser", "getSponserQtyPrice"),
       eventCart.props,
@@ -51,7 +52,6 @@ var eventCart = {
           }
           planQty[planId] = lessonQty;
           eventCart.props.becomeSponserPlanQty = planQty;
-          console.log("event==", eventCart.props.becomeSponserPlanQty);
           return;
         }
         $.mbsmessage(res.msg, true, "alert alert--danger");
@@ -98,7 +98,6 @@ var eventCart = {
     );
   },
   proceedToStep: function (cartDetails, step) {
-    console.log("hfkjhf", cartDetails, step);
     this.props = $.extend(true, eventCart.props, cartDetails);
     if (step == "getPaymentSummary") {
       if (eventCart.props.oneOnOne == 0) {
@@ -119,7 +118,6 @@ var eventCart = {
     eventCart.checkoutStep(step, this.props);
   },
   joinnow: function (data) {
-    console.log(data);
     fcom.ajax(fcom.makeUrl("Kids", "joinnow"), data, function (t) {
       window.location.href = window.location.href;
     });
@@ -151,7 +149,6 @@ var eventCart = {
     eventCart.add(data);
   },
   add: function (data) {
-    console.log("kfhkf");
     $.loader.show();
     if (isEventUserLogged() == 0) {
       $.loader.hide();
@@ -161,17 +158,16 @@ var eventCart = {
     localStorage.setItem("fromKids", data.fromKids);
     localStorage.setItem("isSkipped", data.isSkipped);
 
-    // console.log('add',data);
+
     // if(data.isSkipped){
     // data=data+"&isSkipped="+data.isSkipped
     // }
-    console.log(data);
     fcom.updateWithAjax(
       fcom.makeUrl("EventUser", "EventSignUpFormPopUp"),
       data,
       function (res) {
         $.loader.hide();
-        console.log("res", res);
+
         if (res.msg) {
           $.facebox(ans.html, "");
           if ($("#frmRegisterPopUp #termLabelWrapper").length > 0) {
@@ -239,10 +235,9 @@ var eventCart = {
     eventCart.paymentMethodId = parseInt(
       $('[name="payment_method"]:checked').val()
     );
-  // }
+    // }
     orderType = parseInt(orderType);
     var fromKids = localStorage.getItem("fromKids");
-    console.log(' eventCart.paymentMethodId', eventCart.paymentMethodId);
     localStorage.setItem("teacherId", eventCart.props.teacherId);
     data =
       "fromKids=" +
@@ -260,7 +255,12 @@ var eventCart = {
       "&lName=" +
       eventCart.props.lName +
       "&kidsCount=" +
-      eventCart.props.kidsCount;
+      eventCart.props.kidsCount +
+      "&currency=" +
+      eventCart.props.currency +
+      "&currencyCode=" +
+      eventCart.props.currencyCode;
+    console.log("data", data);
     datas = "teacherId=" + eventCart.props.teacherId;
     fcom.updateWithAjax(
       fcom.makeUrl("EventUser", "confirmOrder"),
@@ -290,13 +290,11 @@ $(document).bind("afterClose.facebox", function () {
   };
   eventCart.couponCode = "";
   eventCart.isWalletSelect = 0;
-  eventCart.paymentMethodId = 0;
-  console.log("Hello");
+  eventCart.paymentMethodId = 0
 });
 $(document).ready(function () {
-  // console.log(eventCart.props);
+
   $(".btn--back").click(function () {
-    console.log(eventCart.props);
     $("#fname").val(eventCart.props.fName);
   });
 });

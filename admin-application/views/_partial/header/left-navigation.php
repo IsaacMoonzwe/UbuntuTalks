@@ -169,6 +169,9 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                         <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('EventFaq'); ?>"><?php echo Label::getLabel('LBL_Event_Faq', $adminLangId); ?></a></li>
                         <?php } ?>
+                        <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
+                            <li><a href="<?php echo CommonHelper::generateUrl('CurrencySwitcher'); ?>"><?php echo Label::getLabel('LBL_Currency_Switcher_Management', $adminLangId); ?></a></li>
+                        <?php } ?>
                     </ul>
                 </li>
             <?php } ?>

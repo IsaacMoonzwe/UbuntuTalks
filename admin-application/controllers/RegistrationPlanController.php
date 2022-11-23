@@ -55,6 +55,7 @@ class RegistrationPlanController extends AdminBaseController
                 'three_reasons_identifier',
                 'registration_plan_title',
                 'registration_plan_price',
+                'registration_plan_zk_price',
                 'registration_plan_description',
                 'registration_starting_days',
                 'registration_starting_date',
@@ -323,7 +324,8 @@ class RegistrationPlanController extends AdminBaseController
         $frm->addRequiredField(Label::getLabel('LBL_Registration_Starting_Days_(Date)'), 'registration_starting_date', '', ['id' => 'registration_starting_date', 'autocomplete' => 'off']);
         $frm->addRequiredField(Label::getLabel('LBL_Registration_Ending_Days_(Date)'), 'registration_ending_date', '', ['id' => 'registration_ending_date', 'autocomplete' => 'off']);
         $frm->addRequiredField(Label::getLabel('LBL_Registration_Starting_Days_(Title)', $this->adminLangId), 'registration_starting_days');
-        $frm->addRequiredField(Label::getLabel('LBL_Registration_Plan_Price', $this->adminLangId), 'registration_plan_price');
+        $frm->addRequiredField(Label::getLabel('LBL_Registration_Plan_Price_USD($)', $this->adminLangId), 'registration_plan_price');
+        $frm->addRequiredField(Label::getLabel('LBL_Registration_Plan_Price_ZMW(ZK)', $this->adminLangId), 'registration_plan_zk_price');
         $frm->addTextarea(Label::getLabel('LBL_Description', $this->adminLangId), 'registration_plan_description')->requirements()->setRequired();
         $frm->addTextarea(Label::getLabel('LBL_Note', $this->adminLangId), 'registration_plan_note');
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);

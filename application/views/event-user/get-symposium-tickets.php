@@ -164,6 +164,7 @@ $remainTicket = $planResult['pre_symposium_dinner_avilable_tickets'] - $ticketMa
                     value--;
                     if (!min || value >= min) {
                         el[0].value = value;
+                        eventCart.props.symposiumTicket = value;
                     }
                 }
 
@@ -172,6 +173,7 @@ $remainTicket = $planResult['pre_symposium_dinner_avilable_tickets'] - $ticketMa
                     value++;
                     if (!max || value <= max) {
                         el[0].value = value++;
+                        eventCart.props.symposiumTicket = value;
                     }
                 }
             }

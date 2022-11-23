@@ -128,7 +128,8 @@ $remainTicket = $planResult['benefit_concert_avilable_tickets'] - $ticketManager
 <script>
     eventCart.props.concertPlan = "<?php echo $planSelected; ?>";
     var remian = "<?php echo $remainTicket; ?>"
-    $('#countOfTickets').change(function() {
+    $('input[name=countOfTickets]').change(function() {
+        console.log("hi");
         if (parseInt(remian) >= parseInt(this.value)) {
             eventCart.props.concertTicket = this.value;
             $("#next-class").removeClass("intro");
@@ -140,43 +141,45 @@ $remainTicket = $planResult['benefit_concert_avilable_tickets'] - $ticketManager
 
     (function() {
 
-        window.inputNumber = function(el) {
+window.inputNumber = function(el) {
 
-            var min = el.attr('min') || false;
-            var max = el.attr('max') || false;
+    var min = el.attr('min') || false;
+    var max = el.attr('max') || false;
 
-            var els = {};
+    var els = {};
 
-            els.dec = el.prev();
-            els.inc = el.next();
+    els.dec = el.prev();
+    els.inc = el.next();
 
-            el.each(function() {
-                init($(this));
-            });
+    el.each(function() {
+        init($(this));
+    });
 
-            function init(el) {
+    function init(el) {
 
-                els.dec.on('click', decrement);
-                els.inc.on('click', increment);
+        els.dec.on('click', decrement);
+        els.inc.on('click', increment);
 
-                function decrement() {
-                    var value = el[0].value;
-                    value--;
-                    if (!min || value >= min) {
-                        el[0].value = value;
-                    }
-                }
-
-                function increment() {
-                    var value = el[0].value;
-                    value++;
-                    if (!max || value <= max) {
-                        el[0].value = value++;
-                    }
-                }
+        function decrement() {
+            var value = el[0].value;
+            value--;
+            if (!min || value >= min) {
+                el[0].value = value;
+                eventCart.props.concertTicket = value;
             }
         }
-    })();
+
+        function increment() {
+            var value = el[0].value;
+            value++;
+            if (!max || value <= max) {
+                el[0].value = value;
+                eventCart.props.concertTicket = value;
+            }
+        }
+    }
+}
+})();
 
     inputNumber($('.input-number'));
 </script>

@@ -358,10 +358,10 @@ class EventUserController extends MyEventAppController
                     'plan' => $_SESSION['planSelected'],
                     'file_upload' => $_SESSION['ticketUrl'],
                 ];
-                $email = new EmailHandler();
-                if (true !== $email->sendRegisterplanEmail($this->siteLangId, $data)) {
-                    return false;
-                }
+                // $email = new EmailHandler();
+                // if (true !== $email->sendRegisterplanEmail($this->siteLangId, $data)) {
+                //     return false;
+                // }
                 unset($_SESSION['donation']);
                 unset($_SESSION['event']);
                 unset($_SESSION['reg_sponser']);
@@ -415,10 +415,10 @@ class EventUserController extends MyEventAppController
                     'plan' => $_SESSION['concertPlan'],
                     'file_upload' => $_SESSION['concertUrl'],
                 ];
-                $email = new EmailHandler();
-                if (true !== $email->sendConcertplanEmail($this->siteLangId, $data)) {
-                    return false;
-                }
+                // $email = new EmailHandler();
+                // if (true !== $email->sendConcertplanEmail($this->siteLangId, $data)) {
+                //     return false;
+                // }
                 unset($_SESSION['donation']);
                 unset($_SESSION['event']);
                 unset($_SESSION['reg_sponser']);
@@ -546,6 +546,8 @@ class EventUserController extends MyEventAppController
         $pmethodId = FatApp::getPostedData('pmethod_id', FatUtility::VAR_INT, 0);
         $order_id = FatApp::getPostedData('order_id', FatUtility::VAR_STRING, '');
         $referralName = FatApp::getPostedData('referralName', FatUtility::VAR_STRING, '');
+        $currency = FatApp::getPostedData('currency', FatUtility::VAR_STRING, 'USD');
+        $currencyCode = FatApp::getPostedData('currencyCode', FatUtility::VAR_STRING, '$');
         if ($pmethodId > 0) {
             $pmSrch = PaymentMethods::getSearchObject($this->siteLangId);
             $pmSrch->doNotCalculateRecords();
@@ -701,14 +703,7 @@ class EventUserController extends MyEventAppController
         }
         if ($pmethodId > 0) {
             $controller = $paymentMethod['pmethod_code'] . 'Pay';
-            $redirectUrl = CommonHelper::generateUrl($controller, 'charge', [$order->getOrderId(), 1], CONF_WEBROOT_FRONTEND);
-            // $this->cartObj->clear();
-            // if($fromKids==0){
-            // $this->cartObj->updateEventUserCart();
-            // }
-            // else{
-            //     $this->cartObj->updateUserKidsCart();
-            // }
+            $redirectUrl = CommonHelper::generateUrl($controller, 'charge', [$order->getOrderId(), 1, $currency, $currencyCode], CONF_WEBROOT_FRONTEND);
             FatUtility::dieJsonSuccess(['redirectUrl' => $redirectUrl, 'msg' => $msg]);
         }
         Message::addErrorMessage(Label::getLabel('LBL_Invalid_Request'));
@@ -970,7 +965,7 @@ class EventUserController extends MyEventAppController
     }
 
     // event ticket payment summary
-    public function GetEventTicketsPaymentSummary($method = '', $ticketCount = 1, $checkLogged = 1)
+    public function GetEventTicketsPaymentSummary($method = '', $ticketCount = 1, $checkLogged = 1, $currency = 'USD')
     {
         $_SESSION['Event_userId'] = 0;
         if ($checkLogged > 0) {
@@ -986,7 +981,7 @@ class EventUserController extends MyEventAppController
             $this->set('userData', $userRow);
         }
         $planData = new SearchBase('tbl_three_reasons');
-        $planData->addCondition('registration_plan_title', '=', $method);
+        $planData->addCondition('registration_plan_title', '=', $method . ".");
         $planResult = FatApp::getDb()->fetch($planData->getResultSet());
 
         //  foreach ($sponsorshipList as $key => $value) {
@@ -994,11 +989,16 @@ class EventUserController extends MyEventAppController
         $planResult['plan_image'] = $testimonialImages;
         //       $Sponsershiprecords[$key] = $value;
         //}
-        // echo "<pre>";
-        // print_r($planResult);
+
         $grpclsId = $_SESSION['event_ticket_id'];
         $key = $userId . '_' . $grpclsId;
+        // echo "<pre>";
+        // print_r($planResult);
         $cartTotal = $planResult['registration_plan_price'] * $ticketCount;
+        if ($currency == 'ZMW' || $currency == 'zmw') {
+            $cartTotal = $planResult['registration_plan_zk_price'] * $ticketCount;
+            $planPrice = $planResult['registration_plan_zk_price'];
+        }
         $cart['cart'][$key] = [
             'teacherId' => $userId,
             'grpclsId' => $grpclsId,
@@ -1036,12 +1036,14 @@ class EventUserController extends MyEventAppController
         $cartData['startDateTime'] = date('Y-m-d H:i:s');
         $cartData['endDateTime'] = date('Y-m-d H:i:s');
         $cartData['itemName'] = $method;
-        $cartData['itemPrice'] = $planResult['registration_plan_price'];
+        $cartData['itemId'] = $planResult['three_reasons_id'];
+        $cartData['itemPrice'] = $planPrice;
         $cartData['cartTotal'] = $cartTotal;
         $cartData['orderPaymentGatewayCharges'] = 1;
         $cartData['orderNetAmount'] = $cartTotal;
         $cartData['total'] = $cartTotal;
         $_SESSION['cart'] = $cartData;
+
         $userWalletBalance = EventUser::getUserBalance($userId);
         $paymentMethods = [];
         /* Payment Methods[ */
@@ -1058,20 +1060,22 @@ class EventUserController extends MyEventAppController
         $pmRs = $pmSrch->getResultSet();
         $paymentMethods = FatApp::getDb()->fetchAll($pmRs);
         $orderId = isset($_SESSION['order_id']) ? $_SESSION['order_id'] : '';
-
         $EventTicketsCouponCodeListing = new SearchBase('tbl_coupons');
         $EventTicketsCouponCodeListing->addCondition('coupon_identifier', '=', 'EventRegistration');
         $EventTicketsCCListing = $EventTicketsCouponCodeListing->getResultSet();
         $EventTicketsCouponCodeFinalListing = FatApp::getDb()->fetchAll($EventTicketsCCListing);
+        $currencySwitcherData = new SearchBase('tbl_currencies_switcher');
+        $currencySwitcherData->addCondition('currencies_switcher_active', '=', '1');
+        $currencySwitcherData->addOrder('currencies_switcher_display_order', 'ASC');
+        $currencySwitcherResultData = FatApp::getDb()->fetchall($currencySwitcherData->getResultSet());
+        $this->set('currencySwitcherResultData', $currencySwitcherResultData);
         $this->set('EventTicketsCouponCodeFinalListing', $EventTicketsCouponCodeFinalListing);
-
         $this->set('planResult', $planResult);
         $this->set('tickets', $_SESSION['ticket_count']);
         $this->set('planSelected', $method);
         $this->set('paymentMethods', $paymentMethods);
         $this->set('cartData', $cartData);
         $this->set('userWalletBalance', $userWalletBalance);
-
         $this->set('userType', EventUser::USER_TYPE_LEANER);
         $this->set('userId', $userId);
         $this->_template->render(false, false);
@@ -2774,8 +2778,13 @@ class EventUserController extends MyEventAppController
         $BenefitConcertCouponCodeListing->addCondition('coupon_identifier', '=', 'BenefitConcert');
         $BenefirConcertCCListing = $BenefitConcertCouponCodeListing->getResultSet();
         $BenefitConcertCouponCodeFinalListing = FatApp::getDb()->fetchAll($BenefirConcertCCListing);
+        $currencySwitcherData = new SearchBase('tbl_currencies_switcher');
+        $currencySwitcherData->addCondition('currencies_switcher_active', '=', '1');
+        $currencySwitcherData->addOrder('currencies_switcher_display_order', 'ASC');
+        $currencySwitcherResultData = FatApp::getDb()->fetchall($currencySwitcherData->getResultSet());
         $this->set('BenefitConcertCouponCodeFinalListing', $BenefitConcertCouponCodeFinalListing);
         $this->set('planResult', $planResult);
+        $this->set('currencySwitcherResultData', $currencySwitcherResultData);
         $this->set('tickets', $_SESSION['concert_ticket']);
         $this->set('planSelected', $method);
         $this->set('paymentMethods', $paymentMethods);
@@ -2786,10 +2795,60 @@ class EventUserController extends MyEventAppController
         $this->set('userId', $userId);
         $this->_template->render(false, false);
     }
+
+    // public function currencySwitchers($data, $symbol)
+    // {
+    //     $cartData = $_SESSION['cart'];
+    //     $selectedPlan = $cartData['itemId'];
+    //     $CurrencyPlanData = new SearchBase('tbl_three_reasons');
+    //     $CurrencyPlanData->addCondition('three_reasons_deleted', '=', 0);
+    //     $CurrencyPlanData->addCondition('three_reasons_active', '=', 1);
+    //     $CurrencyPlanData->addCondition('three_reasons_id', '=', $selectedPlan);
+    //     $CurrencyPlanResult = FatApp::getDb()->fetch($CurrencyPlanData->getResultSet());
+    //     $returnData = [
+    //         'msg'    => '',
+    //         'symbol' => $symbol,
+    //         'currencydata'   => $CurrencyPlanResult,
+    //     ];
+    //     FatUtility::dieJsonSuccess(['currencydata' => $CurrencyPlanResult, 'msg' => 'Success']);
+    //     //$this->_template->render(false, false);
+    // }
+
+    public function currencySwitchers($data, $symbol)
+    {
+        $cartData = $_SESSION['cart'];
+        $selectedPlan = $cartData['itemId'];
+        $CurrencyPlanData = new SearchBase('tbl_three_reasons');
+        $CurrencyPlanData->addCondition('three_reasons_deleted', '=', 0);
+        $CurrencyPlanData->addCondition('three_reasons_active', '=', 1);
+        $CurrencyPlanData->addCondition('three_reasons_id', '=', $selectedPlan);
+        $CurrencyPlanResult = FatApp::getDb()->fetch($CurrencyPlanData->getResultSet());
+        $qty = 1;
+        if ($cartData['cartTotal'] != $CurrencyPlanResult['registration_plan_price']) {
+            $qty = $cartData['cartTotal'] / $CurrencyPlanResult['registration_plan_price'];
+        }
+        $currencyCartTotal = $CurrencyPlanResult['registration_plan_zk_price'] * $qty;
+        $cartData['itemPrice'] = $CurrencyPlanResult['registration_plan_zk_price'];
+        $cartData['cartTotal'] = $currencyCartTotal;
+        $cartData['orderPaymentGatewayCharges'] = 1;
+        $cartData['orderNetAmount'] = $currencyCartTotal;
+        $cartData['total'] = $currencyCartTotal;
+        $_SESSION['cart'] = $cartData;
+        $returnData = [
+            'msg'    => '',
+            'symbol' => $symbol,
+            'currencydata'   => $CurrencyPlanResult,
+        ];
+        FatUtility::dieJsonSuccess(['currencydata' => $CurrencyPlanResult, 'msg' => 'Success']);
+
+        //$this->_template->render(false, false);
+    }
+
     private function getWalletPaymentForm()
     {
         return new Form('frmWalletPayment');
     }
+
     //REgistration sponser sponsership list
     public function GetEventPlan($fromBack = 0)
     {

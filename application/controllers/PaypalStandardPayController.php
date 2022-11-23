@@ -83,7 +83,7 @@ class PaypalStandardPayController extends PaymentController
         return $frm;
     }
 
-    public function charge($orderId,$sponsers=0)
+    public function charge($orderId, $sponsers = 0, $currency = 'USD', $currencyCode = '$')
     {
         $pmObj = new PaymentSettings($this->keyName);
         $paymentSettings = $pmObj->getPaymentSettings();
@@ -120,6 +120,7 @@ class PaypalStandardPayController extends PaymentController
             $this->set('custom', $orderId);
 
             $this->set('frm', $frm);
+            $this->set('currency', $currency);
             $this->set('paymentAmount', $paymentAmount);
         } else {
             $this->set('error', Label::getLabel('MSG_INVALID_ORDER_PAID_CANCELLED', $this->siteLangId));
@@ -127,6 +128,8 @@ class PaypalStandardPayController extends PaymentController
         $this->set('paymentSettings', $paymentSettings);
         $this->set('orderInfo', $orderInfo);
         $this->set('paymentAmount', $paymentAmount);
+        $this->set('currencyCode', $currencyCode);
+        $this->set('currency', $currency);
         $this->set('siteLangId', $this->siteLangId);
         $this->set('exculdeMainHeaderDiv', false);
         $this->_template->render(true, false);

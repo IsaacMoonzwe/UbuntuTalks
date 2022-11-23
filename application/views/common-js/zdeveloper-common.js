@@ -838,16 +838,16 @@ $(document).ready(function () {
       }
     );
   };
-eventWalletSelection=function (el,walletBalance,fromSelector='') {
-if(walletBalance<=0){
-    $.loader.hide();
+  eventWalletSelection = function (el, walletBalance, fromSelector = '') {
+    if (walletBalance <= 0) {
+      $.loader.hide();
       $.mbsmessage("InSufficient wallet balance", true, "alert alert--danger");
-       $(el).prop('checked', false);
+      $(el).prop('checked', false);
       return false;
-}
+    }
 
     eventCart.isWalletSelect = $(el).is(":checked") ? 1 : 0;
-     var data =
+    var data =
       "payFromWallet=" + eventCart.isWalletSelect;
     $.loader.show();
     fcom.ajax(
@@ -875,32 +875,32 @@ if(walletBalance<=0){
   },
 
 
-  //concert payment flow
-  GetConcertPlan = function (fromBack = 0) {
-    $.loader.show();
-    // if (isEventUserLogged() == 0) {
-    //   $.loader.hide();
-    //   EventLogInFormPopUp('purchasePlan');
-    //   return false;
-    // }
-    var data = fcom.frmData(document.plan);
+    //concert payment flow
+    GetConcertPlan = function (fromBack = 0) {
+      $.loader.show();
+      // if (isEventUserLogged() == 0) {
+      //   $.loader.hide();
+      //   EventLogInFormPopUp('purchasePlan');
+      //   return false;
+      // }
+      var data = fcom.frmData(document.plan);
 
-    fcom.ajax(
-      fcom.makeUrl("EventUser", "GetConcertPlan", [fromBack]),
-      data,
-      function (res) {
-        try {
-          let data = JSON.parse(res);
-          !data.status
-            ? $.mbsmessage(data.msg, true, "alert alert--danger")
-            : GetEventPaymentSummary();
-        } catch (exc) {
-          $.facebox(res, "");
+      fcom.ajax(
+        fcom.makeUrl("EventUser", "GetConcertPlan", [fromBack]),
+        data,
+        function (res) {
+          try {
+            let data = JSON.parse(res);
+            !data.status
+              ? $.mbsmessage(data.msg, true, "alert alert--danger")
+              : GetEventPaymentSummary();
+          } catch (exc) {
+            $.facebox(res, "");
+          }
         }
-      }
-    );
-    $.loader.hide();
-  };
+      );
+      $.loader.hide();
+    };
 
   GetConcertTickets = function (method, fromPlan = 0, ticketCount = 1) {
     $.loader.show();
@@ -1148,7 +1148,8 @@ if(walletBalance<=0){
       fcom.makeUrl("EventUser", "GetEventTicketsPaymentSummary", [
         plan,
         ticketCount,
-        checkLogged
+        checkLogged,
+        eventCart.props.currency
       ]),
       '',
       function (res) {
@@ -1342,7 +1343,7 @@ if(walletBalance<=0){
   GetEventBecomeSponserPlan = function (fromback = 0) {
     $.loader.show();
     var plan = eventCart.props.selectSponserEventPlan;
-    console.log("plan",plan);
+    console.log("plan", plan);
     if (plan == null) {
       $.loader.hide();
       $.mbsmessage("Please Select Event", true, "alert alert--danger");
@@ -1363,7 +1364,7 @@ if(walletBalance<=0){
       checkLogged = 0;
     }
     fcom.ajax(
-      fcom.makeUrl("EventUser", "GetEventBecomeSponserPlan", [eventCart.props.selectSponserEventPlan,checkLogged]),
+      fcom.makeUrl("EventUser", "GetEventBecomeSponserPlan", [eventCart.props.selectSponserEventPlan, checkLogged]),
       data,
       function (res) {
         try {

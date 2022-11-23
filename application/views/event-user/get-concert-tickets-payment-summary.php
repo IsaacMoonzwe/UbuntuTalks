@@ -35,6 +35,11 @@ if (!empty($planResult['plan_image'])) {
     }
 }
 ?>
+<style>
+    select#currencyswitchers {
+        margin-bottom: 15px;
+    }
+</style>
 <div class="box box--checkout">
     <div class="box__head">
 
@@ -69,9 +74,18 @@ if (!empty($planResult['plan_image'])) {
     <div class="box__body">
         <div class="selection-tabs selection--checkout selection--payment">
             <div class="row">
-
                 <?php if ($cartData['orderNetAmount'] > 0) {  ?>
                     <div class="col-md-6 col-xl-6">
+                        <!-- <div class="selection-title">
+                            <p><?php echo Label::getLabel('LBL_Currency_Switcher'); ?></p>
+                        </div> -->
+
+                        <!-- <select name="currencyswitchers" id="currencyswitchers">
+                            <?php foreach ($currencySwitcherResultData as $value) { ?>
+                                <option data-curr=<?php echo $value['currencies_switcher_symbol_left']; ?> value="<?php echo $value['currencies_switcher_code']; ?>"><?php echo "(" . $value['currencies_switcher_symbol_left'] . ") " . $value['currencies_switcher_code']; ?></option>
+                            <?php } ?>
+                        </select> -->
+
                         <div class="selection-title">
                             <p><?php echo Label::getLabel('LBL_SELECT_A_PAYMENT_METHOD'); ?></p>
                         </div>
@@ -209,7 +223,13 @@ if (!empty($planResult['plan_image'])) {
                                 ?>
                             </div>
                             <div>
-                                <b><?php echo CommonHelper::displayMoneyFormat($cartData['cartTotal']); ?></b>
+                                <!-- <span class="symbol">$</span>
+                                <?php
+                                // $amount = ($cartData['cartTotal']);
+                                // echo number_format((float)$amount, 2, '.', '');
+                                ?> -->
+                                <b><?php echo CommonHelper::displayMoneyFormat($cartData['cartTotal']);
+                                    ?></b>
                             </div>
                         </div>
                         <?php if (!empty($cartData['cartDiscounts'])) { ?>
@@ -314,7 +334,23 @@ if (!empty($planResult['plan_image'])) {
     });
     $("#referral").on("input", function() {
         var referral = ($(this).val());
-        console.log(referral);
         cart.referralName = referral;
     });
+
+    // $("#currencyswitchers").change(function() {
+    //     var data = $(this).val();
+    //     var symbol = $('option:selected').data('curr');
+    //     $.loader.show();
+    //     eventCart.props.currency = $(this).val();
+    //     fcom.ajax(
+    //         fcom.makeUrl("EventUser", "currencySwitchers", [data, symbol]), data,
+    //         function(response) {
+    //             $.loader.hide();
+    //             console.log("success response=-==", response);
+    //             var value = $('.symbol').text();
+    //             var oldsymbol = symbol;
+    //             $('.symbol').text(oldsymbol);
+    //         }
+    //     );
+    // });
 </script>
