@@ -16,6 +16,8 @@
 /nbproject
 /node_modules
 /.vscode
+/application/utilities/CommonHelper.php
+/application/views/stripe-pay/charge.php
 .sass-cache/
 *.css.map
 *.sass.map
