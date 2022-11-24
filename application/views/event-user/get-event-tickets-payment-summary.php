@@ -81,16 +81,23 @@ if (!empty($planResult['plan_image'])) {
 
                 <?php if ($cartData['orderNetAmount'] > 0) {  ?>
                     <div class="col-md-6 col-xl-6">
-                        <div class="selection-title">
-                            <p><?php echo Label::getLabel('LBL_Currency_Switcher'); ?></p>.
-                        </div>
                         <div>
-                            <select name="currencyswitchers" id="currencyswitchers">
-                                <?php foreach ($currencySwitcherResultData as $value) { ?>
-                                    <option data-curr=<?php echo $value['currencies_switcher_symbol_left']; ?> value="<?php echo $value['currencies_switcher_code']; ?>"><?php echo "(" . $value['currencies_switcher_symbol_left'] . ") " . $value['currencies_switcher_code']; ?></option>
-                                <?php } ?>
-                            </select>
+                            <?php
+                            $currecyPrice = $registrationPlanResultData['registration_plan_zk_price'];
+                            if ($currecyPrice) {
+                            ?>
+                                <div class="selection-title">
+                                    <p><?php echo Label::getLabel('LBL_Currency_Switcher'); ?></p>.
+                                </div>
+                                <select name="currencyswitchers" id="currencyswitchers">
+                                    <?php foreach ($currencySwitcherResultData as $value) { ?>
+                                        <option data-curr=<?php echo $value['currencies_switcher_symbol_left']; ?> value="<?php echo $value['currencies_switcher_code']; ?>"><?php echo "(" . $value['currencies_switcher_symbol_left'] . ") " . $value['currencies_switcher_code']; ?></option>
+                                    <?php } ?>
+                                </select>
+                            <?php } ?>
+
                         </div>
+
 
 
                         <div class="selection-title">

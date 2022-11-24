@@ -358,10 +358,10 @@ class EventUserController extends MyEventAppController
                     'plan' => $_SESSION['planSelected'],
                     'file_upload' => $_SESSION['ticketUrl'],
                 ];
-                // $email = new EmailHandler();
-                // if (true !== $email->sendRegisterplanEmail($this->siteLangId, $data)) {
-                //     return false;
-                // }
+                $email = new EmailHandler();
+                if (true !== $email->sendRegisterplanEmail($this->siteLangId, $data)) {
+                    return false;
+                }
                 unset($_SESSION['donation']);
                 unset($_SESSION['event']);
                 unset($_SESSION['reg_sponser']);
@@ -415,10 +415,10 @@ class EventUserController extends MyEventAppController
                     'plan' => $_SESSION['concertPlan'],
                     'file_upload' => $_SESSION['concertUrl'],
                 ];
-                // $email = new EmailHandler();
-                // if (true !== $email->sendConcertplanEmail($this->siteLangId, $data)) {
-                //     return false;
-                // }
+                $email = new EmailHandler();
+                if (true !== $email->sendConcertplanEmail($this->siteLangId, $data)) {
+                    return false;
+                }
                 unset($_SESSION['donation']);
                 unset($_SESSION['event']);
                 unset($_SESSION['reg_sponser']);
@@ -981,7 +981,7 @@ class EventUserController extends MyEventAppController
             $this->set('userData', $userRow);
         }
         $planData = new SearchBase('tbl_three_reasons');
-        $planData->addCondition('registration_plan_title', '=', $method . ".");
+        $planData->addCondition('registration_plan_title', '=', $method);
         $planResult = FatApp::getDb()->fetch($planData->getResultSet());
 
         //  foreach ($sponsorshipList as $key => $value) {
@@ -1068,6 +1068,16 @@ class EventUserController extends MyEventAppController
         $currencySwitcherData->addCondition('currencies_switcher_active', '=', '1');
         $currencySwitcherData->addOrder('currencies_switcher_display_order', 'ASC');
         $currencySwitcherResultData = FatApp::getDb()->fetchall($currencySwitcherData->getResultSet());
+
+        $selectedPlan = $cartData['itemId'];
+        $registrationPlanData = new SearchBase('tbl_three_reasons');
+        $registrationPlanData->addCondition('three_reasons_id', '=',$selectedPlan);
+        $registrationPlanData->addCondition('three_reasons_active', '=', '1');
+        $registrationPlanData->addCondition('three_reasons_deleted', '=', '0');
+        $registrationPlanResultData = FatApp::getDb()->fetch($registrationPlanData->getResultSet());
+
+        $this->set('registrationPlanResultData', $registrationPlanResultData);
+
         $this->set('currencySwitcherResultData', $currencySwitcherResultData);
         $this->set('EventTicketsCouponCodeFinalListing', $EventTicketsCouponCodeFinalListing);
         $this->set('planResult', $planResult);
@@ -2794,54 +2804,6 @@ class EventUserController extends MyEventAppController
         $this->set('userType', EventUser::USER_TYPE_LEANER);
         $this->set('userId', $userId);
         $this->_template->render(false, false);
-    }
-
-    // public function currencySwitchers($data, $symbol)
-    // {
-    //     $cartData = $_SESSION['cart'];
-    //     $selectedPlan = $cartData['itemId'];
-    //     $CurrencyPlanData = new SearchBase('tbl_three_reasons');
-    //     $CurrencyPlanData->addCondition('three_reasons_deleted', '=', 0);
-    //     $CurrencyPlanData->addCondition('three_reasons_active', '=', 1);
-    //     $CurrencyPlanData->addCondition('three_reasons_id', '=', $selectedPlan);
-    //     $CurrencyPlanResult = FatApp::getDb()->fetch($CurrencyPlanData->getResultSet());
-    //     $returnData = [
-    //         'msg'    => '',
-    //         'symbol' => $symbol,
-    //         'currencydata'   => $CurrencyPlanResult,
-    //     ];
-    //     FatUtility::dieJsonSuccess(['currencydata' => $CurrencyPlanResult, 'msg' => 'Success']);
-    //     //$this->_template->render(false, false);
-    // }
-
-    public function currencySwitchers($data, $symbol)
-    {
-        $cartData = $_SESSION['cart'];
-        $selectedPlan = $cartData['itemId'];
-        $CurrencyPlanData = new SearchBase('tbl_three_reasons');
-        $CurrencyPlanData->addCondition('three_reasons_deleted', '=', 0);
-        $CurrencyPlanData->addCondition('three_reasons_active', '=', 1);
-        $CurrencyPlanData->addCondition('three_reasons_id', '=', $selectedPlan);
-        $CurrencyPlanResult = FatApp::getDb()->fetch($CurrencyPlanData->getResultSet());
-        $qty = 1;
-        if ($cartData['cartTotal'] != $CurrencyPlanResult['registration_plan_price']) {
-            $qty = $cartData['cartTotal'] / $CurrencyPlanResult['registration_plan_price'];
-        }
-        $currencyCartTotal = $CurrencyPlanResult['registration_plan_zk_price'] * $qty;
-        $cartData['itemPrice'] = $CurrencyPlanResult['registration_plan_zk_price'];
-        $cartData['cartTotal'] = $currencyCartTotal;
-        $cartData['orderPaymentGatewayCharges'] = 1;
-        $cartData['orderNetAmount'] = $currencyCartTotal;
-        $cartData['total'] = $currencyCartTotal;
-        $_SESSION['cart'] = $cartData;
-        $returnData = [
-            'msg'    => '',
-            'symbol' => $symbol,
-            'currencydata'   => $CurrencyPlanResult,
-        ];
-        FatUtility::dieJsonSuccess(['currencydata' => $CurrencyPlanResult, 'msg' => 'Success']);
-
-        //$this->_template->render(false, false);
     }
 
     private function getWalletPaymentForm()
