@@ -48,14 +48,14 @@ class BenefitConcertController extends AdminBaseController
     public function form($testimonialId)
     {
         $testimonialId = FatUtility::int($testimonialId);
-       
+
         $frm = $this->getForm($testimonialId);
         if (0 < $testimonialId) {
             $data = BenefitConcert::getAttributesById($testimonialId);
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
             }
-        
+
             $frm->fill($data);
         }
         $this->set('languages', Language::getAllNames());
@@ -313,8 +313,10 @@ class BenefitConcertController extends AdminBaseController
         $frm->addRequiredField(Label::getLabel('LBL_benefit_concert_Plan_Title', $this->adminLangId), 'benefit_concert_plan_title');
         $frm->addRequiredField(Label::getLabel('LBL_benefit_concert_Starting_Days_(Date)'), 'benefit_concert_starting_date', '', ['id' => 'benefit_concert_starting_date', 'autocomplete' => 'off']);
         $frm->addRequiredField(Label::getLabel('LBL_benefit_concert_Ending_Days_(Date)'), 'benefit_concert_ending_date', '', ['id' => 'benefit_concert_ending_date', 'autocomplete' => 'off']);
-        
+
         $frm->addRequiredField(Label::getLabel('LBL_benefit_concert_Plan_Price', $this->adminLangId), 'benefit_concert_plan_price');
+        $fld = $frm->addRequiredField(Label::getLabel('LBL_Benefit_Concert_Plan_Price_ZMW(ZK)', $this->adminLangId), 'benefit_concert_plan_zk_price');
+        $fld->requirements()->setRequired(false);
         $frm->addTextarea(Label::getLabel('LBL_Description', $this->adminLangId), 'benefit_concert_plan_description')->requirements()->setRequired();
         $frm->addTextarea(Label::getLabel('LBL_Note', $this->adminLangId), 'benefit_concert_plan_note');
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);

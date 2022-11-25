@@ -39,6 +39,10 @@ if (!empty($planResult['plan_image'])) {
     select#currencyswitchers {
         margin-bottom: 15px;
     }
+
+    .hide-section {
+        display: none !important;
+    }
 </style>
 <div class="box box--checkout">
     <div class="box__head">
@@ -76,22 +80,29 @@ if (!empty($planResult['plan_image'])) {
             <div class="row">
                 <?php if ($cartData['orderNetAmount'] > 0) {  ?>
                     <div class="col-md-6 col-xl-6">
-                        <!-- <div class="selection-title">
-                            <p><?php echo Label::getLabel('LBL_Currency_Switcher'); ?></p>
-                        </div> -->
-
-                        <!-- <select name="currencyswitchers" id="currencyswitchers">
-                            <?php foreach ($currencySwitcherResultData as $value) { ?>
-                                <option data-curr=<?php echo $value['currencies_switcher_symbol_left']; ?> value="<?php echo $value['currencies_switcher_code']; ?>"><?php echo "(" . $value['currencies_switcher_symbol_left'] . ") " . $value['currencies_switcher_code']; ?></option>
+                        <div>
+                            <?php
+                            $currecyPrice = $registrationPlanResultData['benefit_concert_plan_zk_price'];
+                            if ($currecyPrice) {
+                            ?>
+                                <div class="selection-title">
+                                    <p><?php echo Label::getLabel('LBL_Currency_Switcher'); ?></p>.
+                                </div>
+                                <select name="currencyswitchers" id="currencyswitchers">
+                                    <?php foreach ($currencySwitcherResultData as $value) { ?>
+                                        <option data-curr=<?php echo $value['currencies_switcher_symbol_left']; ?> value="<?php echo $value['currencies_switcher_code']; ?>"><?php echo "(" . $value['currencies_switcher_symbol_left'] . ") " . $value['currencies_switcher_code']; ?></option>
+                                    <?php } ?>
+                                </select>
                             <?php } ?>
-                        </select> -->
+
+                        </div>
 
                         <div class="selection-title">
                             <p><?php echo Label::getLabel('LBL_SELECT_A_PAYMENT_METHOD'); ?></p>
                         </div>
                         <div class="payment-wrapper">
                             <?php if ($userWalletBalance >= 0) { ?>
-                                <label class="selection-tabs__label selection--wallet">
+                                <label class="selection-tabs__label selection--wallet wallet-section">
                                     <input type="checkbox" class="selection-tabs__input" onChange="eventWalletSelection(this,<?php echo $userWalletBalance; ?>,'benefitConcertPlan');" <?php echo ($cartData["cartWalletSelected"]) ? 'checked="checked"' : ''; ?> name="pay_from_wallet">
                                     <div class="selection-tabs__title">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
@@ -145,11 +156,13 @@ if (!empty($planResult['plan_image'])) {
                                         </svg>
                                         <?php
                                         if ($value['pmethod_name'] == "PayPal Payments Standard") { ?>
-                                            <img style="display: inline-block;max-width:70px;" src="../../../public/images/PayPal-Logo.png" alt="Paypal" />
+                                            <img id="paypal-payment" style="display: inline-block;max-width:70px;" src="../../../public/images/PayPal-Logo.png" alt="Paypal" />
                                         <?php } else if ($value['pmethod_name'] == "Stripe") { ?>
                                             <img style="display: inline-block;max-width:140px;" src="../../../public/images/stripe.svg" alt="Paypal" />
                                         <?php } else if ($value['pmethod_name'] == "Google Pay") { ?>
                                             <img style="display: inline-block;max-width:70px;" src="../../../public/images/GPay_Acceptance_Mark_800.png" alt="GooglePay" />
+                                        <?php } else if ($value['pmethod_name'] == "Airtel") { ?>
+                                            <img style="display: inline-block;max-width:70px;" src="../../../public/images/airtel.jpg" alt="Airtel" />
                                         <?php } else {
                                             echo $value['pmethod_name'];
                                         }
@@ -223,13 +236,14 @@ if (!empty($planResult['plan_image'])) {
                                 ?>
                             </div>
                             <div>
-                                <!-- <span class="symbol">$</span>
-                                <?php
-                                // $amount = ($cartData['cartTotal']);
-                                // echo number_format((float)$amount, 2, '.', '');
-                                ?> -->
-                                <b><?php echo CommonHelper::displayMoneyFormat($cartData['cartTotal']);
-                                    ?></b>
+                                <!-- <b><?php echo CommonHelper::displayMoneyFormat($cartData['cartTotal']); ?></b> -->
+                                <div style="text-align: end;">
+                                    <span class="symbol">$</span>
+                                    <?php
+                                    $amount = ($cartData['cartTotal']);
+                                    echo number_format((float)$amount, 2, '.', '');
+                                    ?>
+                                </div>
                             </div>
                         </div>
                         <?php if (!empty($cartData['cartDiscounts'])) { ?>
@@ -259,7 +273,14 @@ if (!empty($planResult['plan_image'])) {
                                 <b class="color-primary"><?php echo Label::getLabel('LBL_Total'); ?></b>
                             </div>
                             <div>
-                                <b class="color-primary NR"><?php echo CommonHelper::displayMoneyFormat($cartData['orderNetAmount'] - $walletDeduction); ?></b>
+                                <!-- <b class="color-primary NR"><?php echo CommonHelper::displayMoneyFormat($cartData['orderNetAmount'] - $walletDeduction); ?></b> -->
+                                <b class="color-primary NR">
+                                    <span class="symbol">$</span>
+                                    <?php
+                                    $amount = ($cartData['orderNetAmount'] - $walletDeduction);
+                                    echo number_format((float)$amount, 2, '.', '');
+                                    ?>
+                                </b>
                             </div>
                         </div>
                     </div>
@@ -337,20 +358,35 @@ if (!empty($planResult['plan_image'])) {
         cart.referralName = referral;
     });
 
-    // $("#currencyswitchers").change(function() {
-    //     var data = $(this).val();
-    //     var symbol = $('option:selected').data('curr');
-    //     $.loader.show();
-    //     eventCart.props.currency = $(this).val();
-    //     fcom.ajax(
-    //         fcom.makeUrl("EventUser", "currencySwitchers", [data, symbol]), data,
-    //         function(response) {
-    //             $.loader.hide();
-    //             console.log("success response=-==", response);
-    //             var value = $('.symbol').text();
-    //             var oldsymbol = symbol;
-    //             $('.symbol').text(oldsymbol);
-    //         }
-    //     );
-    // });
+    $(document).ready(function() {
+        $('#currencyswitchers option').each(function() {
+            var symbols = $(this).val();
+            if (symbols == eventCart.props.currency) {
+                $(this).attr("selected", "selected");
+                var value = $('.symbol').text();
+                var symbol = $('option:selected').data('curr');
+                var oldsymbol = symbol;
+                eventCart.props.currencyCode = oldsymbol;
+                $('.symbol').text(oldsymbol);
+            }
+        })
+        if (eventCart.props.currency == undefined) {
+            eventCart.props.currency = 'USD';
+            eventCart.props.currencyCode = '$';
+        }
+    });
+    $("#currencyswitchers").change(function() {
+        var data = $(this).val();
+        $.loader.show();
+        setTimeout(function() {
+            if (data == 'ZMW') {
+                $('#paypal-payment').parents('label').addClass('hide-section');
+                $('.wallet-section').addClass('hide-section');
+            }
+        }, 1000);
+        $.loader.hide();
+        eventCart.props.currency = $(this).val();
+        eventCart.props.currencyCode = $(this).data('curr');
+        GetBenefitConcertPlanTicketsPaymentSummary(eventCart.props.concertPlan, eventCart.props.concertTicket);
+    });
 </script>

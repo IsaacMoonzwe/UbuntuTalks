@@ -358,10 +358,10 @@ class EventUserController extends MyEventAppController
                     'plan' => $_SESSION['planSelected'],
                     'file_upload' => $_SESSION['ticketUrl'],
                 ];
-                $email = new EmailHandler();
-                if (true !== $email->sendRegisterplanEmail($this->siteLangId, $data)) {
-                    return false;
-                }
+                // $email = new EmailHandler();
+                // if (true !== $email->sendRegisterplanEmail($this->siteLangId, $data)) {
+                //     return false;
+                // }
                 unset($_SESSION['donation']);
                 unset($_SESSION['event']);
                 unset($_SESSION['reg_sponser']);
@@ -981,7 +981,7 @@ class EventUserController extends MyEventAppController
             $this->set('userData', $userRow);
         }
         $planData = new SearchBase('tbl_three_reasons');
-        $planData->addCondition('registration_plan_title', '=', $method);
+        $planData->addCondition('registration_plan_title', '=', $method . ".");
         $planResult = FatApp::getDb()->fetch($planData->getResultSet());
 
         //  foreach ($sponsorshipList as $key => $value) {
@@ -1068,16 +1068,13 @@ class EventUserController extends MyEventAppController
         $currencySwitcherData->addCondition('currencies_switcher_active', '=', '1');
         $currencySwitcherData->addOrder('currencies_switcher_display_order', 'ASC');
         $currencySwitcherResultData = FatApp::getDb()->fetchall($currencySwitcherData->getResultSet());
-
         $selectedPlan = $cartData['itemId'];
         $registrationPlanData = new SearchBase('tbl_three_reasons');
-        $registrationPlanData->addCondition('three_reasons_id', '=',$selectedPlan);
+        $registrationPlanData->addCondition('three_reasons_id', '=', $selectedPlan);
         $registrationPlanData->addCondition('three_reasons_active', '=', '1');
         $registrationPlanData->addCondition('three_reasons_deleted', '=', '0');
         $registrationPlanResultData = FatApp::getDb()->fetch($registrationPlanData->getResultSet());
-
         $this->set('registrationPlanResultData', $registrationPlanResultData);
-
         $this->set('currencySwitcherResultData', $currencySwitcherResultData);
         $this->set('EventTicketsCouponCodeFinalListing', $EventTicketsCouponCodeFinalListing);
         $this->set('planResult', $planResult);
@@ -2432,7 +2429,7 @@ class EventUserController extends MyEventAppController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
-    public function GetSymposiumTicketsPaymentSummary($method = '', $ticketCount = 1, $checkLogged = 1)
+    public function GetSymposiumTicketsPaymentSummary($method = '', $ticketCount = 1, $checkLogged = 1,$currency = 'USD')
     {
         $_SESSION['Event_userId'] = 0;
         if ($checkLogged > 0) {
@@ -2460,6 +2457,10 @@ class EventUserController extends MyEventAppController
         $grpclsId = $_SESSION['pre_symposium_dinner_ticket_plan_id'];
         $key = $userId . '_' . $grpclsId;
         $cartTotal = $planResult['pre_symposium_dinner_plan_price'] * $ticketCount;
+        if ($currency == 'ZMW' || $currency == 'zmw') {
+            $cartTotal = $planResult['pre_symposium_dinner_plan_zk_price'] * $ticketCount;
+            $planPrice = $planResult['pre_symposium_dinner_plan_zk_price'];
+        }
         $cart['cart'][$key] = [
             'teacherId' => $userId,
             'grpclsId' => $grpclsId,
@@ -2497,6 +2498,7 @@ class EventUserController extends MyEventAppController
         $cartData['startDateTime'] = date('Y-m-d H:i:s');
         $cartData['endDateTime'] = date('Y-m-d H:i:s');
         $cartData['itemName'] = $method;
+        $cartData['itemId'] = $planResult['pre_symposium_dinner_id'];
         $cartData['itemPrice'] = $planResult['pre_symposium_dinner_plan_price'];
         $cartData['cartTotal'] = $cartTotal;
         $cartData['orderPaymentGatewayCharges'] = 1;
@@ -2524,6 +2526,21 @@ class EventUserController extends MyEventAppController
         $BenefitConcertCouponCodeListing->addCondition('coupon_identifier', '=', 'BenefitConcert');
         $BenefirConcertCCListing = $BenefitConcertCouponCodeListing->getResultSet();
         $BenefitConcertCouponCodeFinalListing = FatApp::getDb()->fetchAll($BenefirConcertCCListing);
+
+        $currencySwitcherData = new SearchBase('tbl_currencies_switcher');
+        $currencySwitcherData->addCondition('currencies_switcher_active', '=', '1');
+        $currencySwitcherData->addOrder('currencies_switcher_display_order', 'ASC');
+        $currencySwitcherResultData = FatApp::getDb()->fetchall($currencySwitcherData->getResultSet());
+        $selectedPlan = $cartData['itemId'];
+
+        $registrationPlanData = new SearchBase('tbl_pre_symposium_dinner');
+        $registrationPlanData->addCondition('pre_symposium_dinner_id', '=', $selectedPlan);
+        $registrationPlanData->addCondition('pre_symposium_dinner_active', '=', '1');
+        $registrationPlanData->addCondition('pre_symposium_dinner_deleted', '=', '0');
+        $registrationPlanResultData = FatApp::getDb()->fetch($registrationPlanData->getResultSet());
+        $this->set('registrationPlanResultData', $registrationPlanResultData);
+        $this->set('currencySwitcherResultData', $currencySwitcherResultData);
+
         $this->set('BenefitConcertCouponCodeFinalListing', $BenefitConcertCouponCodeFinalListing);
         $this->set('planResult', $planResult);
         $this->set('tickets', $_SESSION['symposium_ticket']);
@@ -2696,7 +2713,7 @@ class EventUserController extends MyEventAppController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
-    public function GetConcertTicketsPaymentSummary($method = '', $ticketCount = 1, $checkLogged = 1)
+    public function GetConcertTicketsPaymentSummary($method = '', $ticketCount = 1, $checkLogged = 1,$currency = 'USD')
     {
         $_SESSION['Event_userId'] = 0;
         if ($checkLogged > 0) {
@@ -2724,6 +2741,10 @@ class EventUserController extends MyEventAppController
         $grpclsId = $_SESSION['event_corcert_ticket_id'];
         $key = $userId . '_' . $grpclsId;
         $cartTotal = $planResult['benefit_concert_plan_price'] * $ticketCount;
+        if ($currency == 'ZMW' || $currency == 'zmw') {
+            $cartTotal = $planResult['benefit_concert_plan_zk_price'] * $ticketCount;
+            $planPrice = $planResult['benefit_concert_plan_zk_price'];
+        }
         $cart['cart'][$key] = [
             'teacherId' => $userId,
             'grpclsId' => $grpclsId,
@@ -2761,6 +2782,7 @@ class EventUserController extends MyEventAppController
         $cartData['startDateTime'] = date('Y-m-d H:i:s');
         $cartData['endDateTime'] = date('Y-m-d H:i:s');
         $cartData['itemName'] = $method;
+        $cartData['itemId'] = $planResult['benefit_concert_id'];
         $cartData['itemPrice'] = $planResult['benefit_concert_plan_price'];
         $cartData['cartTotal'] = $cartTotal;
         $cartData['orderPaymentGatewayCharges'] = 1;
@@ -2788,10 +2810,23 @@ class EventUserController extends MyEventAppController
         $BenefitConcertCouponCodeListing->addCondition('coupon_identifier', '=', 'BenefitConcert');
         $BenefirConcertCCListing = $BenefitConcertCouponCodeListing->getResultSet();
         $BenefitConcertCouponCodeFinalListing = FatApp::getDb()->fetchAll($BenefirConcertCCListing);
+
         $currencySwitcherData = new SearchBase('tbl_currencies_switcher');
         $currencySwitcherData->addCondition('currencies_switcher_active', '=', '1');
         $currencySwitcherData->addOrder('currencies_switcher_display_order', 'ASC');
         $currencySwitcherResultData = FatApp::getDb()->fetchall($currencySwitcherData->getResultSet());
+        $selectedPlan = $cartData['itemId'];
+    
+        $registrationPlanData = new SearchBase('tbl_benefit_concert');
+        $registrationPlanData->addCondition('benefit_concert_id', '=', $selectedPlan);
+        $registrationPlanData->addCondition('benefit_concert_active', '=', '1');
+        $registrationPlanData->addCondition('benefit_concert_deleted', '=', '0');
+        $registrationPlanResultData = FatApp::getDb()->fetch($registrationPlanData->getResultSet());
+        // echo "<pre>";
+        // print_r($registrationPlanResultData);
+        $this->set('registrationPlanResultData', $registrationPlanResultData);
+
+
         $this->set('BenefitConcertCouponCodeFinalListing', $BenefitConcertCouponCodeFinalListing);
         $this->set('planResult', $planResult);
         $this->set('currencySwitcherResultData', $currencySwitcherResultData);

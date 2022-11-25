@@ -805,7 +805,8 @@ $(document).ready(function () {
       fcom.makeUrl("EventUser", "GetSymposiumTicketsPaymentSummary", [
         plan,
         ticketCount,
-        checkLogged
+        checkLogged,
+        eventCart.props.currency
       ]),
       '',
       function (res) {
@@ -1167,9 +1168,9 @@ $(document).ready(function () {
   };
 
 
-  GetBenefitConcertPlanTicketsPaymentSummary = function (ticketCount) {
+  GetBenefitConcertPlanTicketsPaymentSummary = function (plan,ticketCount) {
     $.loader.show();
-    if (ticketCount <= 0) {
+    if (plan == "" || ticketCount <= 0) {
       $.loader.hide();
       $.mbsmessage("Please Select Plan", true, "alert alert--danger");
       return false;
@@ -1180,8 +1181,10 @@ $(document).ready(function () {
     }
     fcom.ajax(
       fcom.makeUrl("EventUser", "GetConcertTicketsPaymentSummary", [
+        plan,
         ticketCount,
-        checkLogged
+        checkLogged,
+        eventCart.props.currency
       ]),
       '',
       function (res) {

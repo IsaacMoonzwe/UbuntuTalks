@@ -315,6 +315,8 @@ class PreSymposiumDinnerController extends AdminBaseController
         $frm->addRequiredField(Label::getLabel('LBL_pre_symposium_dinner_Ending_Days_(Date)'), 'pre_symposium_dinner_ending_date', '', ['id' => 'pre_symposium_dinner_ending_date', 'autocomplete' => 'off']);
         
         $frm->addRequiredField(Label::getLabel('LBL_pre_symposium_dinner_Plan_Price', $this->adminLangId), 'pre_symposium_dinner_plan_price');
+        $fld = $frm->addRequiredField(Label::getLabel('LBL_Pre_Symposium_Dinner_Plan_Price_ZMW(ZK)', $this->adminLangId), 'pre_symposium_dinner_plan_zk_price');
+        $fld->requirements()->setRequired(false);
         $frm->addTextarea(Label::getLabel('LBL_Description', $this->adminLangId), 'pre_symposium_dinner_plan_description')->requirements()->setRequired();
         $frm->addTextarea(Label::getLabel('LBL_Note', $this->adminLangId), 'pre_symposium_dinner_plan_note');
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
