@@ -9163,6 +9163,16 @@ span.card-landscape__title {
 }
 
 @media (max-width: 767px) {
+  body .events-box-section .selection--onehalf .selection-tabs__label{
+    max-width: 100% !important;
+  }
+  .selection--checkout .selection-tabs__label .selection-tabs__title span{
+    font-size: 16px !important;
+  }
+  select#currencyswitchers {
+    width: 100% !important;
+  }
+
   body #sponsorship .price_tabel h4 {
     font-size: 24px !important;
   }
