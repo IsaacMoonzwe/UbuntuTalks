@@ -342,6 +342,7 @@ class EventUserController extends MyEventAppController
             if (!isset($_SESSION['ticketUrl'])) {
                 FatApp::redirectUser(CommonHelper::generateUrl('EventUser', 'EventTicket', [$orderId, $_SESSION['planSelected']]));
             } elseif ($ticket_download != '' && $ticket_generate_url != '') {
+
                 $record = new TableRecord('tbl_event_user_ticket_plan');
                 $record->assignValues(['event_user_ticket_url' => $ticket_generate_url, 'event_user_ticket_download_url' => $ticket_download]);
                 if (!$record->update(['smt' => 'event_user_ticket_plan_id = ?', 'vals' => [$orderResult['op_grpcls_id']]])) {
@@ -415,10 +416,10 @@ class EventUserController extends MyEventAppController
                     'plan' => $_SESSION['concertPlan'],
                     'file_upload' => $_SESSION['concertUrl'],
                 ];
-                $email = new EmailHandler();
-                if (true !== $email->sendConcertplanEmail($this->siteLangId, $data)) {
-                    return false;
-                }
+                // $email = new EmailHandler();
+                // if (true !== $email->sendConcertplanEmail($this->siteLangId, $data)) {
+                //     return false;
+                // }
                 unset($_SESSION['donation']);
                 unset($_SESSION['event']);
                 unset($_SESSION['reg_sponser']);
@@ -2429,7 +2430,7 @@ class EventUserController extends MyEventAppController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
-    public function GetSymposiumTicketsPaymentSummary($method = '', $ticketCount = 1, $checkLogged = 1,$currency = 'USD')
+    public function GetSymposiumTicketsPaymentSummary($method = '', $ticketCount = 1, $checkLogged = 1, $currency = 'USD')
     {
         $_SESSION['Event_userId'] = 0;
         if ($checkLogged > 0) {
@@ -2713,7 +2714,7 @@ class EventUserController extends MyEventAppController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
-    public function GetConcertTicketsPaymentSummary($method = '', $ticketCount = 1, $checkLogged = 1,$currency = 'USD')
+    public function GetConcertTicketsPaymentSummary($method = '', $ticketCount = 1, $checkLogged = 1, $currency = 'USD')
     {
         $_SESSION['Event_userId'] = 0;
         if ($checkLogged > 0) {
@@ -2816,7 +2817,7 @@ class EventUserController extends MyEventAppController
         $currencySwitcherData->addOrder('currencies_switcher_display_order', 'ASC');
         $currencySwitcherResultData = FatApp::getDb()->fetchall($currencySwitcherData->getResultSet());
         $selectedPlan = $cartData['itemId'];
-    
+
         $registrationPlanData = new SearchBase('tbl_benefit_concert');
         $registrationPlanData->addCondition('benefit_concert_id', '=', $selectedPlan);
         $registrationPlanData->addCondition('benefit_concert_active', '=', '1');
@@ -2896,7 +2897,7 @@ class EventUserController extends MyEventAppController
         }
         $planData = new SearchBase('tbl_three_reasons');
         $planData->addCondition('three_reasons_deleted', '=', 0);
-        $planData->addCondition('registration_plan_title', '=', $planSelected);
+        $planData->addCondition('registration_plan_title', '=', $planSelected . ".");
         $planResult = FatApp::getDb()->fetch($planData->getResultSet());
         $donation_record = new TableRecord('tbl_event_user_ticket_plan');
         $donation_record->assignValues([

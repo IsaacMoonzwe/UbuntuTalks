@@ -235,6 +235,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                         <a href="javascript:void(0)" class="stat__action"></a>
                                     </div>
                                 </div>
+
                                 <div class="col-lg-3 col-md-6 col-sm-6">
                                     <div class="stat">
                                         <div class="stat__amount">
@@ -273,6 +274,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                         <a href="javascript:void(0)" class="stat__action"></a>
                                     </div>
                                 </div>
+                                
                                 <div class="col-lg-3 col-md-6 col-sm-6">
                                     <div class="stat">
                                         <div class="stat__amount">
@@ -532,6 +534,76 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                     </table>
                                                 </div>
                                             </div>
+
+                                            <!-- Pre-Symposium Dinner Tickets Listing -->
+                                            <div class="row events-tickets-section" id="benefit-concert-listing">
+                                                <div class="col-lg-12">
+                                                    <div>
+                                                        <h4 class="events-head-title"><?php echo Label::getLabel('LBL_Pre_Symposium_Dinner_Ticket_Listing'); ?></h4>
+                                                    </div>
+                                                    <table id="pre-symposium-dinner" class="table event-listing table-striped table-bordered donation-table display nowrap" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th><?php echo Label::getLabel('LBL_Concert_Tickets_Category'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Stating_Date'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Ending_Date'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Total_Tickets'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Coupon_Code'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Tickets'); ?></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php
+                                                            $sr_no = 1;
+                                                            if (!empty($PreSymposiumDinnerplanResult)) {
+                                                                foreach ($PreSymposiumDinnerplanResult as $key => $value) {
+                                          
+                                                                    $Currentdate = date('Y-m-d H:i');
+                                                            ?>
+                                                                    <tr>
+                                                                        <?php
+                                                                        if ($value['plan_end_date'] < $Currentdate) {
+                                                                        ?>
+                                                                            <td><?php echo $value['plan_name'] . '<span class="expiry"> (Expired)</span>'; ?></td>
+                                                                            <td><?php echo $value['plan_start_date']; ?></td>
+                                                                            <td><?php echo $value['plan_end_date']; ?></td>
+                                                                            <td><?php echo $value['event_user_ticket_count']; ?></td>
+                                                                            <td class="expiry">Event Is Expired</td>
+                                                                        <?php
+                                                                        } else {
+                                                                        ?>
+                                                                            <td><?php echo $value['plan_name']; ?></td>
+                                                                            <td><?php echo $value['plan_start_date']; ?></td>
+                                                                            <td><?php echo $value['plan_end_date']; ?></td>
+                                                                            <td><?php echo $value['event_user_ticket_count']; ?></td>
+                                                                            <td class="ccode">
+                                                                                <?php
+                                                                                if (!empty($value['coupon_code'])) {
+                                                                                    echo Label::getLabel('LBL_Activated');
+                                                                                } else {
+                                                                                    echo Label::getLabel('LBL_Not_Activated');
+                                                                                }
+                                                                                ?>
+                                                                            </td>
+                                                                            <td><a href="<?php echo $value['event_user_ticket_download_url']; ?>" download="<?php echo $value['plan_name'] . '.jpeg'; ?>"><i class="fa fa-ticket" style="font-size:24px;color:red"></i></a></td>
+
+                                                                        <?php
+                                                                        }
+                                                                        ?>
+
+                                                                    </tr>
+                                                            <?php
+                                                                    $sr_no++;
+                                                                }
+                                                            } else {
+                                                                echo Label::getLabel('LBL_No_Records');
+                                                            }
+                                                            ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -616,6 +688,11 @@ $contactFrm->developerTags['fld_default_col'] = 12;
             responsive: true
         });
         var table = $('#benefit-concert').DataTable({
+            pageLength: 10,
+            scrollY: 300,
+            responsive: true
+        });
+        var table = $('#pre-symposium-dinner').DataTable({
             pageLength: 10,
             scrollY: 300,
             responsive: true
