@@ -898,7 +898,7 @@ class EventUserController extends MyEventAppController
             $this->set('userData', $userRow);
         }
         $planData = new SearchBase('tbl_three_reasons');
-        $planData->addCondition('registration_plan_title', '=', $method . ".");
+        $planData->addCondition('registration_plan_title', '=', $method);
         $planResult = FatApp::getDb()->fetch($planData->getResultSet());
         $testimonialImages = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_EVENT_PLAN_IMAGE, $planResult['three_reasons_id'], 0, -1);
         $planResult['plan_image'] = $testimonialImages;
@@ -2752,7 +2752,7 @@ class EventUserController extends MyEventAppController
         }
         $planData = new SearchBase('tbl_three_reasons');
         $planData->addCondition('three_reasons_deleted', '=', 0);
-        $planData->addCondition('registration_plan_title', '=', $planSelected . ".");
+        $planData->addCondition('registration_plan_title', '=', $planSelected);
         $planResult = FatApp::getDb()->fetch($planData->getResultSet());
         $donation_record = new TableRecord('tbl_event_user_ticket_plan');
         $donation_record->assignValues([
