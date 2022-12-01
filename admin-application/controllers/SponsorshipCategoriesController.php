@@ -33,7 +33,6 @@ class SponsorshipCategoriesController extends AdminBaseController
     {
         $testimonialId = FatUtility::int($testimonialId);
         $frm = $this->getForm($testimonialId);
-
         if (0 < $testimonialId) {
             $data = SponsorshipCategories::getAttributesById($testimonialId, [
                 'sponsorshipcategories_id',
@@ -70,7 +69,6 @@ class SponsorshipCategoriesController extends AdminBaseController
             }
             $frm->fill($data);
         }
-
         $this->set('languages', Language::getAllNames());
         $this->set('sponsorshipcategories_id', $testimonialId);
         $this->set('frm', $frm);
@@ -101,20 +99,11 @@ class SponsorshipCategoriesController extends AdminBaseController
         if ($testimonialId > 0) {
             $languages = Language::getAllNames();
             foreach ($languages as $langId => $langName) {
-                // if (!$row = SponsorshipCategories::getAttributesByLangId($langId, $testimonialId)) {
-                //     $newTabLangId = $langId;
-                //     break;
-                // }
             }
         } else {
             $testimonialId = $record->getMainTableRecordId();
             $newTabLangId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
-        // if ($newTabLangId == 0 && !$this->isMediaUploaded($testimonialId)) {
-        //     $this->set('openMediaForm', true);
-        // }
-        // echo "<pre>";
-        // print_r($testimonialId);
         $this->set('msg', $this->str_setup_successful);
         $this->set('testimonialId', $testimonialId);
         $this->set('langId', $newTabLangId);
@@ -178,9 +167,6 @@ class SponsorshipCategoriesController extends AdminBaseController
                 break;
             }
         }
-        // if ($newTabLangId == 0 && !$this->isMediaUploaded($testimonialId)) {
-        //     $this->set('openMediaForm', true);
-        // }
         $this->set('msg', $this->str_setup_successful);
         $this->set('testimonialId', $testimonialId);
         $this->set('langId', $newTabLangId);
@@ -265,7 +251,6 @@ class SponsorshipCategoriesController extends AdminBaseController
         $frm->addRadioButtons(Label::getLabel('LBL_Static_Banner_Ad_To_Rotate_on_The_Conference_Website', $this->adminLangId), 'sponsorshipcategories_banner', $options, '', ['class' => 'list-inline'])->requirements()->setRequired();
         $frm->addRadioButtons(Label::getLabel('LBL_Logo_On_Onsite_Sponsor_Signage', $this->adminLangId), 'sponsorshipcategories_logo_sponsor_signage', $options, '', ['class' => 'list-inline'])->requirements()->setRequired();
         $frm->addRadioButtons(Label::getLabel('LBL_Company_Named_In_Pre-_Conf_Attendee_Email', $this->adminLangId), 'sponsorshipcategories_attendee_email', $options, '', ['class' => 'list-inline'])->requirements()->setRequired();
-        // $frm->addRequiredField(Label::getLabel('LBL_Lead_Retrieval_Scanners', $this->adminLangId), 'sponsorshipcategories_retrieval_scanners');
         $frm->addSelectBox(Label::getLabel('LBL_Full_Color_ad_In_Printed_Program_Guide', $this->adminLangId), 'sponsorshipcategories_program_guide', $program_guide, '', [], '')->requirements()->setRequired();
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
         $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'sponsorshipcategories_active', $activeInactiveArr, '', [], '');

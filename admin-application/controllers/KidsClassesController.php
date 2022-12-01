@@ -320,5 +320,4 @@ class KidsClassesController extends AdminBaseController
         $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Save'));
         return $frm;
     }
-
 }

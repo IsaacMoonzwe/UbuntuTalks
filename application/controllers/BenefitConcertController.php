@@ -8,6 +8,7 @@ class BenefitConcertController extends AdminBaseController
         $this->_template->addJs('js/jquery.datetimepicker.js');
         $this->_template->addCss('css/jquery.datetimepicker.css');
     }
+
     public function index()
     {
         $canEdit = $this->objPrivilege->canEditTestimonial($this->admin_id, true);
@@ -16,6 +17,7 @@ class BenefitConcertController extends AdminBaseController
         $this->_template->addCss('css/jquery.datetimepicker.css');
         $this->_template->render();
     }
+
     public function search()
     {
         $srch = BenefitConcert::getSearchObject($this->adminLangId, false);
@@ -33,6 +35,7 @@ class BenefitConcertController extends AdminBaseController
         $this->set('recordCount', $srch->recordCount());
         $this->_template->render(false, false);
     }
+
     public function agendaForm($testimonialId)
     {
         $srch_event_listing = new SearchBase('tbl_agenda');
@@ -45,6 +48,7 @@ class BenefitConcertController extends AdminBaseController
         $this->set('EventListingCategoriesList', $EventListingCategoriesList);
         $this->_template->render(false, false);
     }
+
     public function form($testimonialId)
     {
         $testimonialId = FatUtility::int($testimonialId);
@@ -73,9 +77,9 @@ class BenefitConcertController extends AdminBaseController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
+
     public function setup()
     {
-
         $this->objPrivilege->canEditTestimonial();
         $frm = $this->getForm();
         $post =FatApp::getPostedData();
@@ -86,12 +90,6 @@ class BenefitConcertController extends AdminBaseController
         }
         $newPost = FatApp::getPostedData();
         $user_food_department  = implode(',', $newPost['benefit_concert_plan_combo_events']);
-        // if (isset($newPost['benefit_concert_plan_combo_events']) && !empty($newPost['benefit_concert_plan_combo_events']) && $user_food_department[0] != '') {
-        //     $user_food_department  = implode(',', $newPost['benefit_concert_plan_combo_events']);
-        //     $post['benefit_concert_plan_combo_events'] = $user_food_department;
-        // } else {
-        //     $post['benefit_concert_plan_combo_events'] = "";
-        // }
         $post['benefit_concert_plan_title']='Hey';
         $newPost['benefit_concert_plan_title']='Hey';
         $testimonialId = $post['benefit_concert_id'];
@@ -109,10 +107,6 @@ class BenefitConcertController extends AdminBaseController
         if ($testimonialId > 0) {
             $languages = Language::getAllNames();
             foreach ($languages as $langId => $langName) {
-                // if (!$row = BenefitConcert::getAttributesByLangId($langId, $testimonialId)) {
-                //     $newTabLangId = $langId;
-                //     break;
-                // }
             }
         } else {
             $testimonialId = $record->getMainTableRecordId();
@@ -127,6 +121,7 @@ class BenefitConcertController extends AdminBaseController
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function langForm($testimonialId = 0, $lang_id = 0)
     {
         $testimonialId = FatUtility::int($testimonialId);
@@ -146,6 +141,7 @@ class BenefitConcertController extends AdminBaseController
         $this->set('formLayout', Language::getLayoutDirection($lang_id));
         $this->_template->render(false, false);
     }
+
     public function langSetup()
     {
         $this->objPrivilege->canEditTestimonial();
@@ -191,6 +187,7 @@ class BenefitConcertController extends AdminBaseController
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function updateOrder()
     {
         $this->objPrivilege->canEditTestimonial();
@@ -205,6 +202,7 @@ class BenefitConcertController extends AdminBaseController
             $this->_template->render(false, false, 'json-success.php');
         }
     }
+
     public function changeStatus()
     {
         $this->objPrivilege->canEditTestimonial();
@@ -228,6 +226,7 @@ class BenefitConcertController extends AdminBaseController
         $this->set('msg', $this->str_update_record);
         FatUtility::dieJsonSuccess($this->str_update_record);
     }
+
     public function deleteRecord()
     {
         $this->objPrivilege->canEditTestimonial();
@@ -248,6 +247,7 @@ class BenefitConcertController extends AdminBaseController
         }
         FatUtility::dieJsonSuccess($this->str_delete_record);
     }
+
     public function media($testimonialId = 0)
     {
         $this->objPrivilege->canEditTestimonial();
@@ -260,6 +260,7 @@ class BenefitConcertController extends AdminBaseController
         $this->set('testimonialImages', $testimonialImages);
         $this->_template->render(false, false);
     }
+
     public function getMediaForm($testimonialId)
     {
         $frm = new Form('frmTestimonialMedia');
@@ -272,6 +273,7 @@ class BenefitConcertController extends AdminBaseController
         $frm->addHtml('', 'testimonial_image_display_div', '');
         return $frm;
     }
+
     public function uploadTestimonialMedia()
     {
         $this->objPrivilege->canEditTestimonial();
@@ -301,6 +303,7 @@ class BenefitConcertController extends AdminBaseController
         $this->set('msg', $_FILES['file']['name'] . Label::getLabel('MSG_File_Uploaded_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function removeTestimonialImage($testimonialId = 0, $lang_id = 0)
     {
         $testimonialId = FatUtility::int($testimonialId);
@@ -317,6 +320,7 @@ class BenefitConcertController extends AdminBaseController
         $this->set('msg', Label::getLabel('MSG_Deleted_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
+
     private function getForm($testimonialId = 0)
     {
         $testimonialId = FatUtility::int($testimonialId);
@@ -324,8 +328,6 @@ class BenefitConcertController extends AdminBaseController
         $frm->addHiddenField('', 'benefit_concert_id', $testimonialId);
         $frm->addHtml('', 'testimonial_image_display_div', '');
         $frm->addRequiredField(Label::getLabel('LBL_benefit_concert_plan_Title', $this->adminLangId), 'benefit_concert_plan_title');
-        // $frm->addRequiredField(Label::getLabel('LBL_benefit_concert_Starting_Days_(Date)'), 'benefit_concert_starting_date', '', ['id' => 'benefit_concert_starting_date', 'autocomplete' => 'off']);
-        // $frm->addRequiredField(Label::getLabel('LBL_benefit_concert_Ending_Days_(Date)'), 'benefit_concert_ending_date', '', ['id' => 'benefit_concert_ending_date', 'autocomplete' => 'off']);
         $frm->addRequiredField(Label::getLabel('LBL_benefit_concert_Starting_Days_(Title)', $this->adminLangId), 'benefit_concert_starting_days');
         $frm->addRequiredField(Label::getLabel('LBL_benefit_concert_plan_Price', $this->adminLangId), 'benefit_concert_plan_price');
         $frm->addTextarea(Label::getLabel('LBL_Description', $this->adminLangId), 'benefit_concert_plan_description')->requirements()->setRequired();
@@ -335,33 +337,6 @@ class BenefitConcertController extends AdminBaseController
         $select_plan_listing = new SearchBase('tbl_benefit_concert');
         $select_plan_listing->addCondition('benefit_concert_deleted', '=', 0);
         $select_plan_listing->addCondition('benefit_concert_active', '=', 1);
-        // if ($testimonialId > 0) {
-        //     $select_plan_listing->addCondition('benefit_concert_id', '=', $testimonialId);
-        // }
-        // $select_events_listings = $select_plan_listing->getResultSet();
-        // $SelectEventListingsList = FatApp::getDb()->fetch($select_events_listings);
-        // $srch_plan_listing = new SearchBase('tbl_benefit_concert');
-        // $srch_plan_listing->addCondition('benefit_concert_deleted', '=', 0);
-        // $srch_plan_listing->addCondition('benefit_concert_active', '=', 1);
-        // if ($testimonialId > 0) {
-        //     $srch_plan_listing->addCondition('benefit_concert_id', '!=', $testimonialId);
-        // }
-        // $events_listings = $srch_plan_listing->getResultSet();
-        // $EventListingsList = FatApp::getDb()->fetchAll($events_listings);
-        // foreach ($EventListingsList as $key => $value) {
-        //     $week =  $value['benefit_concert_plan_title'];
-        //     $id =  $value['benefit_concert_id'];
-        //     // $speekLangField = $frm->addCheckBox($week, 'benefit_concert_plan_combo_events[' . $key . ']', $id, ['class' => 'diet-boxes'], false, 0);
-        //     $speekLangField = $frm->addCheckBox($week, 'benefit_concert_plan_combo_events[]', $id, ['class' => 'diet-boxes'], false, 0);
-        //     if ($testimonialId > 0) {
-        //         $select = explode(",", $SelectEventListingsList['benefit_concert_plan_combo_events']);
-        //         if (in_array($id, $select)) {
-        //             $speekLangField->checked = true;
-        //         }
-        //         $speekLangField->value = $id;
-        //     }
-        //     $speekLangField->value = $id;
-        // }
         $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'benefit_concert_active', $activeInactiveArr, '', [], '');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;

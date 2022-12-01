@@ -170,7 +170,7 @@ class AboutusContentBlockController extends AdminBaseController
         $epageId = FatUtility::int($epageId);
         if (1 > $epageId || -1 == $status) {
             FatUtility::dieWithError(
-                    Label::getLabel('MSG_INVALID_REQUEST', $this->adminLangId)
+                Label::getLabel('MSG_INVALID_REQUEST', $this->adminLangId)
             );
         }
         $EPageObj = new AboutusContentBlock($epageId);
@@ -204,5 +204,4 @@ class AboutusContentBlockController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Update', $this->adminLangId));
         return $frm;
     }
-
 }

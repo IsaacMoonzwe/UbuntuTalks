@@ -6,25 +6,20 @@ class EventFaqController extends AdminBaseController
     public function __construct($action)
     {
         parent::__construct($action);
-        //$this->objPrivilege->canViewFaq();
     }
 
     public function index($faq_catid = 0)
-    {   
-
+    {
         $canEdit = $this->objPrivilege->canEditFaq($this->admin_id, true);
         $this->set("canEdit", $canEdit);
         $this->set('includeEditor', true);
         $faq_catid = FatUtility::int($faq_catid);
         $this->set("faq_catid", $faq_catid);
-    
-        //$this->_template->render();
         $this->_template->render(true, true, 'event-faq/index.php');
     }
 
     public function search()
     {
-       
         $srch = EventFaq::getSearchObject($this->adminLangId, false);
         $srch->addMultipleFields(['faq_identifier', 'faq_id', 'faq_category', 'faq_active', 'faq_title']);
         $srch->addOrder('faq_active', 'desc');
@@ -33,13 +28,11 @@ class EventFaqController extends AdminBaseController
         $this->set("canEdit", $canEdit);
         $this->set("arr_listing", $records);
         $this->set('recordCount', $srch->recordCount());
-        // $this->_template->render(false, false);
         $this->_template->render(false, false, 'event-faq/search.php');
     }
 
     public function form($faqId)
     {
-        
         $faqId = FatUtility::int($faqId);
         $frm = $this->getForm($faqId);
         if (0 < $faqId) {
@@ -52,7 +45,6 @@ class EventFaqController extends AdminBaseController
         $this->set('languages', Language::getAllNames());
         $this->set('faqId', $faqId);
         $this->set('frm', $frm);
-        //$this->_template->render(false, false);
         $this->_template->render(false, false, 'event-faq/form.php');
     }
 
@@ -97,20 +89,14 @@ class EventFaqController extends AdminBaseController
 
     public function langForm($faqId = 0, $lang_id = 0)
     {
-       
+
         $faqId = FatUtility::int($faqId);
         $lang_id = FatUtility::int($lang_id);
         if ($faqId == 0 || $lang_id == 0) {
             FatUtility::dieWithError($this->str_invalid_request);
         }
-        // echo "Hello World...!!";
         $langFrm = $this->getLangForm($faqId, $lang_id);
-        
-
         $langData = EventFaq::getAttributesByLangId($lang_id, $faqId);
-        
-
-        
         if ($langData) {
             $langFrm->fill($langData);
         }
@@ -119,8 +105,6 @@ class EventFaqController extends AdminBaseController
         $this->set('lang_id', $lang_id);
         $this->set('langFrm', $langFrm);
         $this->set('formLayout', Language::getLayoutDirection($lang_id));
-        //$this->_template->render(false, false);
-        
         $this->_template->render(false, false, 'event-faq/lang-form.php');
     }
 
@@ -225,5 +209,4 @@ class EventFaqController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
-
 }

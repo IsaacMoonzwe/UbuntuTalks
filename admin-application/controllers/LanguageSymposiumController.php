@@ -187,7 +187,6 @@ class LanguageSymposiumController extends AdminBaseController
         $frm = new Form('frmBlock');
         $frm->addHiddenField('', 'epage_id', 0);
         $frm->addRequiredField(Label::getLabel('LBL_Page_Identifier', $this->adminLangId), 'language_symposium_identifier');
-
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($langId);
         $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'language_symposium_active', $activeInactiveArr, '', array(), '');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));

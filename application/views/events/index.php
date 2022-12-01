@@ -729,13 +729,15 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                            <div class="sponsorpage-button">
                               <a href="#" onclick="GetSelectEventBecomeSponserPlan();" class="button-more-info-btn"><?php echo Label::getLabel('LBL_Log_In_To_Sponsor', $adminLangId); ?></a>
                            </div>
-
-
                         </div>
                      </div>
                      <div class="sopnsorship_categories">
                         <div class="categories" id="sponsers">
-                           <h4 class="sopnsorship-heading"><?php echo Label::getLabel('LBL_Our_Sponsors', $adminLangId); ?></h4>
+                           <h4 class="sopnsorship-heading">
+                              <?php if ($Sponsershiprecords) {
+                                 echo Label::getLabel('LBL_Our_Sponsors', $adminLangId);
+                              } ?>
+                           </h4>
                            <?php
                            $sponserArray = array();
                            $newSponser = array();
@@ -1444,7 +1446,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
          if (newWindowWidth < 992) {
             $(".events-tabs #myTab a").click(function() {
                $.loader.show();
-               setTimeout(function(){
+               setTimeout(function() {
                   $.loader.hide();
                }, 3000);
                $('html, body').animate({

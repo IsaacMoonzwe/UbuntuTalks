@@ -274,7 +274,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                         <a href="javascript:void(0)" class="stat__action"></a>
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-lg-3 col-md-6 col-sm-6">
                                     <div class="stat">
                                         <div class="stat__amount">
@@ -557,7 +557,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                             $sr_no = 1;
                                                             if (!empty($PreSymposiumDinnerplanResult)) {
                                                                 foreach ($PreSymposiumDinnerplanResult as $key => $value) {
-                                          
+
                                                                     $Currentdate = date('Y-m-d H:i');
                                                             ?>
                                                                     <tr>

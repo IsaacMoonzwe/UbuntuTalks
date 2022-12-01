@@ -268,7 +268,7 @@ class ConfigurationsController extends AdminBaseController
             AttachedFile::FILETYPE_EVENT_FIFTH_SLIDER_CAMPAIGN_IMAGE,
             AttachedFile::FILETYPE_VIRTUAL_SESSION_CAMPAIGN_IMAGE,
             AttachedFile::FILETYPE_KIDS_PAGE_IMAGE,
-           // AttachedFile::FILETYPE_SERVICE_PAGE_IMAGE,
+            // AttachedFile::FILETYPE_SERVICE_PAGE_IMAGE,
             AttachedFile::FILETYPE_QUOTE_PAGE_IMAGE,
             AttachedFile::FILETYPE_CONTACT_PAGE_IMAGE,
             AttachedFile::FILETYPE_LESSON_PAGE_IMAGE,
@@ -300,8 +300,8 @@ class ConfigurationsController extends AdminBaseController
             'redirectUri' => CommonHelper::generateFullUrl('configurations', 'redirect', [], '', false),
             'googleAnalyticsID' => FatApp::getConfig("CONF_ANALYTICS_ID")
         ];
-        
-       try {
+
+        try {
             $analytics = new AnalyticsAPI($analyticArr);
             $obj = FatApplication::getInstance();
             $get = $obj->getQueryStringVar();
@@ -608,7 +608,7 @@ class ConfigurationsController extends AdminBaseController
         $this->set('msg', Label::getLabel('MSG_Deleted_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
-    
+
     public function removeKidsImage($lang_id = 0)
     {
         $lang_id = FatUtility::int($lang_id);
@@ -691,7 +691,7 @@ class ConfigurationsController extends AdminBaseController
         $this->set('msg', Label::getLabel('MSG_Deleted_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
-    
+
 
     public function removeAllowedPaymentGatewayImage(int $langId = 0)
     {
@@ -938,10 +938,9 @@ class ConfigurationsController extends AdminBaseController
                 break;
             case Configurations::FORM_VIDEO_SLIDE:
                 $fld = $frm->addRequiredField(Label::getLabel("LBL_Home_Page_Youtube_slide_link", $this->adminLangId), 'CONF_YOUTUBE_VIDEO_SLIDE');
-                $fld->htmlAfterField = "<small>" . Label::getLabel("LBL_https://www.youtube.com/watch?v=Ee0Qh_nIoHw.", $this->adminLangId) . "</small>";              
-               
-                break;        
+                $fld->htmlAfterField = "<small>" . Label::getLabel("LBL_https://www.youtube.com/watch?v=Ee0Qh_nIoHw.", $this->adminLangId) . "</small>";
 
+                break;
         }
         $frm->addHiddenField('', 'form_type', $type);
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel("LBL_Save_Changes", $this->adminLangId));

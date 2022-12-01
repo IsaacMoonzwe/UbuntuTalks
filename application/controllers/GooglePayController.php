@@ -79,7 +79,6 @@ class GooglePayController extends PaymentController
         return $frm;
     }
 
-
     public function charge($orderId, $sponsers = 0, $currency = 'USD', $currencyCode = '$')
     {
         if (empty(trim($orderId))) {
@@ -94,10 +93,6 @@ class GooglePayController extends PaymentController
             Message::addErrorMessage(Label::getLabel('STRIPE_INVALID_PAYMENT_GATEWAY_SETUP_ERROR', $this->siteLangId));
             CommonHelper::redirectUserReferer();
         }
-        // $stripe = [
-        //     'secret_key' => 'sk_test_51JwGHMEBydRe3lMmCC8oizzTfitqi9q9oi9f6QXrRN6x7cRVQKt9BkckGaTOOpUiMZT6e8OFYHvBO87mgss8aqWD00o4PT4Rd9',
-        //     'publishable_key' => 'pk_test_51JwGHMEBydRe3lMmSMnKBfxpsc6QoqlBI7vQMsj53qfdPSNNq97yVUHEpUaoeckkrFIx2aFVTH8YZdYpxQSrGcya00je6gTKLD',
-        // ];
         $stripe = ['secret_key' => $this->paymentSettings['privateKey'], 'publishable_key' => $this->paymentSettings['publishableKey']];
 
         $this->set('stripe', $stripe);
@@ -176,7 +171,6 @@ class GooglePayController extends PaymentController
         if ($this->error) {
             $this->set('error', $this->error);
         }
-        //$this->set('exculdeMainHeaderDiv', true);
         $this->_template->render();
     }
 
@@ -208,10 +202,6 @@ class GooglePayController extends PaymentController
 
     public function create()
     {
-        //  $stripe = [
-        //     'secret_key' => 'sk_test_51JwGHMEBydRe3lMmCC8oizzTfitqi9q9oi9f6QXrRN6x7cRVQKt9BkckGaTOOpUiMZT6e8OFYHvBO87mgss8aqWD00o4PT4Rd9',
-        //     'publishable_key' => 'pk_test_51JwGHMEBydRe3lMmSMnKBfxpsc6QoqlBI7vQMsj53qfdPSNNq97yVUHEpUaoeckkrFIx2aFVTH8YZdYpxQSrGcya00je6gTKLD',
-        // ];
         $this->paymentSettings = $this->getPaymentSettings();
         $stripe = ['secret_key' => $this->paymentSettings['privateKey'], 'publishable_key' => $this->paymentSettings['publishableKey']];
 
@@ -260,12 +250,6 @@ class GooglePayController extends PaymentController
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         $orderInfo = $orderPaymentObj->getOrderPrimaryinfo();
         if ($orderInfo["order_is_paid"] == Order::ORDER_IS_PAID) {
-            // if(isset($_SESSION['event'])){
-            //     FatApp::redirectUser(CommonHelper::generateUrl('EventUser', 'paymentSuccess', [$orderId]));    
-            // }
-            // else{
-            //     FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentSuccess', [$orderId]));
-            // }
             if (isset($_SESSION['event'])) {
                 FatUtility::dieJsonSuccess(['redirectUrl' => CommonHelper::generateUrl('EventUser', 'paymentSuccess', [$orderId], CONF_WEBROOT_FRONTEND), 'msg' => Label::getLabel("MSG_LOGIN_SUCCESSFULL")]);
                 // $this->set('return', CommonHelper::generateFullUrl('eventUser', 'paymentSuccess', [$orderId]));
@@ -275,11 +259,9 @@ class GooglePayController extends PaymentController
             }
         }
         $paymentGatewayCharge = $orderPaymentObj->getOrderPaymentGatewayAmount();
-
         $payableAmount = $this->formatPayableAmount($paymentGatewayCharge);
         $payment_comments = '';
         $totalPaidMatch = $session->amount_total == $payableAmount;
-
         if (strtolower($session->payment_status) != 'paid') {
             $payment_comments .= "STRIPE_PAYMENT :: Status is: " . strtolower($session->payment_status) . "\n\n";
         }
@@ -294,12 +276,6 @@ class GooglePayController extends PaymentController
             $orderPaymentObj->addOrderPaymentComments($payment_comments);
             FatApp::redirectUser($session->cancel_url);
         }
-        // if(isset($_SESSION['event'])){
-        //     FatApp::redirectUser(CommonHelper::generateUrl('EventUser', 'paymentSuccess', [$orderId]));    
-        // }
-        // else{
-        //     FatApp::redirectUser(CommonHelper::generateUrl('Custom', 'paymentSuccess', [$orderId]));
-        // }
         if (isset($_SESSION['event'])) {
             FatUtility::dieJsonSuccess(['redirectUrl' => CommonHelper::generateUrl('EventUser', 'paymentSuccess', [$orderId], CONF_WEBROOT_FRONTEND), 'msg' => Label::getLabel("MSG_LOGIN_SUCCESSFULL")]);
             // $this->set('return', CommonHelper::generateFullUrl('eventUser', 'paymentSuccess', [$orderId]));
@@ -332,7 +308,6 @@ class GooglePayController extends PaymentController
             'secret_key' => $this->paymentSettings['privateKey'],
             'publishable_key' => $this->paymentSettings['publishableKey']
         ];
-
         \Stripe\Stripe::setApiKey($stripe['secret_key']);
         $session = \Stripe\Checkout\Session::retrieve($sessionId);
         $orderId = $session->metadata->order_id;

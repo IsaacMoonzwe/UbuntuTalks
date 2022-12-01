@@ -35,10 +35,10 @@ class SponsorshipProgramGuideController extends AdminBaseController
         $frm = $this->getForm($testimonialId);
         if (0 < $testimonialId) {
             $data = SponsorshipProgramGuide::getAttributesById($testimonialId, [
-                        'program_guide_id',
-                        'program_guide_identifier',
-                        'program_guide_active',
-                        'program_guide_user_name'
+                'program_guide_id',
+                'program_guide_identifier',
+                'program_guide_active',
+                'program_guide_user_name'
             ]);
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
@@ -126,7 +126,6 @@ class SponsorshipProgramGuideController extends AdminBaseController
         $testimonialId = FatUtility::int($testimonialId);
         $frm = new Form('frmTestimonial');
         $frm->addHiddenField('', 'program_guide_id', $testimonialId);
-        //$frm->addRequiredField(Label::getLabel('LBL_Job_Function_Identifier', $this->adminLangId), 'testimonial_identifier');
         $frm->addRequiredField(Label::getLabel('LBL_Program_Guide_Title', $this->adminLangId), 'program_guide_user_name');
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
         $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'program_guide_active', $activeInactiveArr, '', [], '');
@@ -144,7 +143,4 @@ class SponsorshipProgramGuideController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
-
-
-
 }

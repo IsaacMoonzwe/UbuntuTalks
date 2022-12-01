@@ -33,7 +33,7 @@ class GroupClassesController extends MyAppController
         $languages = new SearchBase('tbl_spoken_languages');
         $allLanguages = FatApp::getDb()->fetchAll($languages->getResultSet());
         foreach ($allLanguages as $key => $value) {
-            $groupLanguages[$value['slanguage_identifier']]=$value['slanguage_identifier'];
+            $groupLanguages[$value['slanguage_identifier']] = $value['slanguage_identifier'];
         }
         $frm = new Form('frmOnlineContact');
         $frm->addRequiredField(Label::getLabel('LBL_First_Name', $langId), 'first_name', '');
@@ -43,7 +43,7 @@ class GroupClassesController extends MyAppController
         $fld_phn->requirements()->setRegularExpressionToValidate('^[\s()+-]*([0-9][\s()+-]*){5,20}$');
         $fld_phn->requirements()->setCustomErrorMessage(Label::getLabel('VLD_ADD_VALID_PHONE_NUMBER', $langId));
         $frm->addRequiredField(Label::getLabel('LBL_Group_Size', $langId), 'group_size', '');
-        $group_type = ['Private' => 'Private', 'Corporate' => 'Corporate', 'Faith-Based' => 'Faith-Based','Education'=>'Education'];
+        $group_type = ['Private' => 'Private', 'Corporate' => 'Corporate', 'Faith-Based' => 'Faith-Based', 'Education' => 'Education'];
         $frm->addSelectBox(Label::getLabel('LBL_Group_Type', $langId), 'group_type', $group_type, -1, [], '');
         $frm->addSelectBox(Label::getLabel('LBL_Language', $langId), 'Language', $groupLanguages, -1, [], '');
         $frm->addRequiredField(Label::getLabel('LBL_Others', $langId), 'others', '');
@@ -100,69 +100,60 @@ class GroupClassesController extends MyAppController
         $srch3->doNotCalculateRecords();
         $srch3->doNotLimitRecords();
         $srch3->addFld('slesson_teacher_join_time > 0');
-        // $teacher_id = UserAuthentication::getLoggedUserId();
-
         $srch = new SearchBase(TeacherGroupClasses::DB_TBL, 'grpcls');
         $srch->addCondition('grpcls.grpcls_id', '=', $grpcls_id);
         $classes = FatApp::getDb()->fetchAll($srch->getResultSet());
-        $flag=false;
+        $flag = false;
         foreach ($classes as $class) {
-            $post =$class;
-            $weeks_list  =$class['grpcls_weeks'];
-            $check=explode(',',$weeks_list);
-            if ($weeks_list!=='' && $weeks_list) {
-                $dbTtime=explode(' ',$class['grpcls_start_datetime']);
-                $endTime=explode(' ',$class['grpcls_end_datetime']);
-                $weekNames=explode(',',$weeks_list);
-				if(empty($weekNames)){
-				array_push($weekNames,$class['grpcls_weeks']);
-				}
-                foreach($weekNames as $w){
-                    if($w!=''){
-                    // $nextTime=strtotime('next '.$w);
-                    // $time = date("Y-m-d",$nextTime);
-                     $next_date=date('Y-m-d',strtotime('next '.$w,strtotime($class['grpcls_start_datetime'])));
-          
-                    $nT=$next_date.' '.$dbTtime[1];
-                    $classEndTime=$next_date.' '.$endTime[1];
-                    $newWeekEndTime=date($classEndTime);
-                    $newStartTime=date($nT);
-					$newWeek=$w;
-					$newWeek .= ",";
-                    $post['grpcls_weeks']=$newWeek;
-                    // $post['grpcls_start_datetime'] = MyDate::changeDateTimezone($newStartTime, $systemTimeZone, $user_timezone);
-                    // $post['grpcls_end_datetime'] = MyDate::changeDateTimezone($newWeekEndTime, $systemTimeZone, $user_timezone);
-                    $post['grpcls_start_datetime'] = $newStartTime;
-                    $post['grpcls_end_datetime'] = $newWeekEndTime;
-                    
-                    $post['grpcls_slug'] = isset($class['grpcls_slug']) ? $class['grpcls_slug'] : str_replace(" ", '-', strtolower($class['grpcls_title']));
-                    $tGrpClsSrchObj = new TeacherGroupClassesSearch();
-                    unset($post['grpcls_id']);
-                    unset($post['grpcls_slug']);
-                    $tGrpClsObj = new TeacherGroupClasses();
-                    $tGrpClsObj->assignValues($post);
-                    $db = FatApp::getDb();
-                    $db->startTransaction();
-                    if (true !== $tGrpClsObj->save()) {
-                        $db->rollbackTransaction();
-                        FatUtility::dieJsonError($tGrpClsObj->getError());
-                    }
-                    $seoUrl = CommonHelper::seoUrl($post['grpcls_title'] . '-' . $tGrpClsObj->getMainTableRecordId());
-                    if (!$db->updateFromArray(
-                                    TeacherGroupClasses::DB_TBL,
-                                    ['grpcls_slug' => $seoUrl],
-                                    ['smt' => 'grpcls_id = ?', 'vals' => [$tGrpClsObj->getMainTableRecordId()]]
-                            )) {
-                        $this->error = $db->getError();
-                        $db->rollbackTransaction();
-                        return false;
-                    }
-                    $db->commitTransaction();
-                    $msg = Label::getLabel('LBL_Group_Class_Saved_Successfully!');
+            $post = $class;
+            $weeks_list  = $class['grpcls_weeks'];
+            $check = explode(',', $weeks_list);
+            if ($weeks_list !== '' && $weeks_list) {
+                $dbTtime = explode(' ', $class['grpcls_start_datetime']);
+                $endTime = explode(' ', $class['grpcls_end_datetime']);
+                $weekNames = explode(',', $weeks_list);
+                if (empty($weekNames)) {
+                    array_push($weekNames, $class['grpcls_weeks']);
                 }
-             }
-             }
-                
+                foreach ($weekNames as $w) {
+                    if ($w != '') {
+                        $next_date = date('Y-m-d', strtotime('next ' . $w, strtotime($class['grpcls_start_datetime'])));
+                        $nT = $next_date . ' ' . $dbTtime[1];
+                        $classEndTime = $next_date . ' ' . $endTime[1];
+                        $newWeekEndTime = date($classEndTime);
+                        $newStartTime = date($nT);
+                        $newWeek = $w;
+                        $newWeek .= ",";
+                        $post['grpcls_weeks'] = $newWeek;
+                        $post['grpcls_start_datetime'] = $newStartTime;
+                        $post['grpcls_end_datetime'] = $newWeekEndTime;
+                        $post['grpcls_slug'] = isset($class['grpcls_slug']) ? $class['grpcls_slug'] : str_replace(" ", '-', strtolower($class['grpcls_title']));
+                        $tGrpClsSrchObj = new TeacherGroupClassesSearch();
+                        unset($post['grpcls_id']);
+                        unset($post['grpcls_slug']);
+                        $tGrpClsObj = new TeacherGroupClasses();
+                        $tGrpClsObj->assignValues($post);
+                        $db = FatApp::getDb();
+                        $db->startTransaction();
+                        if (true !== $tGrpClsObj->save()) {
+                            $db->rollbackTransaction();
+                            FatUtility::dieJsonError($tGrpClsObj->getError());
+                        }
+                        $seoUrl = CommonHelper::seoUrl($post['grpcls_title'] . '-' . $tGrpClsObj->getMainTableRecordId());
+                        if (!$db->updateFromArray(
+                            TeacherGroupClasses::DB_TBL,
+                            ['grpcls_slug' => $seoUrl],
+                            ['smt' => 'grpcls_id = ?', 'vals' => [$tGrpClsObj->getMainTableRecordId()]]
+                        )) {
+                            $this->error = $db->getError();
+                            $db->rollbackTransaction();
+                            return false;
+                        }
+                        $db->commitTransaction();
+                        $msg = Label::getLabel('LBL_Group_Class_Saved_Successfully!');
+                    }
+                }
+            }
         }
         $srch = new SearchBase(TeacherGroupClasses::DB_TBL, 'grpcls');
         $srch->addCondition('grpcls.grpcls_id', '!=', $grpcls_id);
@@ -236,7 +227,6 @@ class GroupClassesController extends MyAppController
     public function view($grpcls_slug)
     {
         $grpcls_slug  = CommonHelper::htmlEntitiesDecode($grpcls_slug);
-        // CommonHelper::htmlEntitiesDecode($class['grpcls_slug'])
         $srch = TeacherGroupClassesSearch::getSearchObj($this->siteLangId);
         $srch->joinTable(Country::DB_TBL, 'LEFT JOIN', 'ut.user_country_id = country.country_id', 'country');
         $srch->joinTable(Country::DB_TBL_LANG, 'LEFT JOIN', 'country.country_id = countryLang.countrylang_country_id and countryLang.countrylang_lang_id = ' . $this->siteLangId, 'countryLang');
@@ -264,5 +254,4 @@ class GroupClassesController extends MyAppController
         $frm->addSubmitButton('', 'btnSrchSubmit', '');
         return $frm;
     }
-
 }

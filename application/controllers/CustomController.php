@@ -16,11 +16,9 @@ class CustomController extends MyAppController
 
     public function paymentSuccess($orderId = null)
     {
-
         $textMessage = stripslashes(Label::getLabel('MSG_learner_success_order_{dashboard-url}_{contact-us-page-url}'));
         $fromKids=$_SESSION['fromKids'];
         $teacherId=$_SESSION['teacherId'];
-       
         $userTutorID = UserAuthentication::getLoggedUserId();
         $user_Data=User::getAttributesById($userTutorID);
         $srch_lesson = new SearchBase('tbl_scheduled_lessons');
@@ -32,7 +30,6 @@ class CustomController extends MyAppController
         $user_last = $user_Data['user_last_name'];
         $userFullName=$user_first." ". $user_last;
         $user_Notification->createLessonNotification($lastRecord['slesson_id'], $teacherId,$userFullName, USER::USER_TYPE_TEACHER, 'Testing');
- 
         $arrReplace = [
             '{dashboard-url}' => CommonHelper::generateUrl('Learner', '', [], CONF_WEBROOT_DASHBOARD),
             '{contact-us-page-url}' => CommonHelper::generateUrl('Contact'),
@@ -55,7 +52,6 @@ class CustomController extends MyAppController
             $lessonInfo = FatApp::getDb()->fetch($orderObj->getResultSet());
             $this->set('lessonInfo', $lessonInfo);
         }
-    
         $this->set('setMonthAndWeekName', true);
         $this->set('textMessage', $textMessage);
         $this->_template->addJs('js/moment.min.js');

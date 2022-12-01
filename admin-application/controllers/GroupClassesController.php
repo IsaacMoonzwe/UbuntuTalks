@@ -92,14 +92,6 @@ class GroupClassesController extends AdminBaseController
         $frm = $this->getFrm($teacher_id);
         $isSlotBooked = ScheduledLessonSearch::isSlotBooked($teacher_id, $data['grpcls_start_datetime'], $data['grpcls_end_datetime']);
         if ($isSlotBooked) {
-            // $fld = $frm->getField('grpcls_start_datetime');
-            // $fld->setFieldTagAttribute('disabled', 'disabled');
-            // $fld->setFieldTagAttribute('title', Label::getLabel("LBL_Start_Time_can_not_change_for_Booked_Class"));
-            // $fld->requirements()->setRequired(false);
-            // $fld = $frm->getField('grpcls_end_datetime');
-            // $fld->setFieldTagAttribute('disabled', 'disabled');
-            // $fld->setFieldTagAttribute('title', Label::getLabel("LBL_End_Time_can_not_change_for_Booked_Class"));
-            // $fld->requirements()->setRequired(false);
         }
         $frm->fill($data);
         $this->set('userId', $teacher_id);
@@ -111,7 +103,7 @@ class GroupClassesController extends AdminBaseController
     public function setup()
     {
         $post = FatApp::getPostedData();
-        $newPost=$post;
+        $newPost = $post;
         $grpcls_id = FatApp::getPostedData('grpcls_id', FatUtility::VAR_INT, 0);
         if ($grpcls_id > 0) {
             $class_details = TeacherGroupClasses::getAttributesById($grpcls_id);
@@ -119,15 +111,15 @@ class GroupClassesController extends AdminBaseController
                 FatUtility::dieJsonError(Label::getLabel("LBL_Unauthorized"));
             }
             $teacher_id = $class_details['grpcls_teacher_id'];
-            $newData=$class_details;
+            $newData = $class_details;
             $sLessonSrchObj = new ScheduledLessonSearch();
             $lessons = $sLessonSrchObj->getLessonsByClass($grpcls_id);
-           
+
             $frm = $this->getFrm($teacher_id);
             $isSlotBooked = ScheduledLessonSearch::isSlotBooked($teacher_id, $class_details['grpcls_start_datetime'], $class_details['grpcls_end_datetime']);
             if ($isSlotBooked) {
-               $newStartTime= $post['grpcls_start_datetime'];
-               $newEndTime= $post['grpcls_end_datetime'];
+                $newStartTime = $post['grpcls_start_datetime'];
+                $newEndTime = $post['grpcls_end_datetime'];
             }
         } else {
             FatUtility::dieJsonError(Label::getLabel("INVALID_REQUEST"));
@@ -153,69 +145,61 @@ class GroupClassesController extends AdminBaseController
         if ($grpcls_id == 0) {
             $post['grpcls_status'] = TeacherGroupClasses::STATUS_ACTIVE;
         }
-        
-        if($grpcls_id > 0 && sizeOf($lessons))
-        {
-            $post['grpcls_start_datetime']=$newPost['grpcls_start_datetime'];
-            $post['grpcls_end_datetime']=$newPost['grpcls_end_datetime'];
-            if(($post['grpcls_start_datetime'] != $class_details['grpcls_start_datetime'] ||$post['grpcls_end_datetime'] != $class_details['grpcls_end_datetime'])){
-                $startTime=$post['grpcls_start_datetime'];
-                $endTime=$post['grpcls_end_datetime'];
-                // $grpcls_id=0;
-                // $newData['grpcls_status'] = TeacherGroupClasses::STATUS_ACTIVE;
-                
-                $newData['grpcls_start_datetime']=$startTime;
-                $newData['grpcls_end_datetime']= $endTime;
+
+        if ($grpcls_id > 0 && sizeOf($lessons)) {
+            $post['grpcls_start_datetime'] = $newPost['grpcls_start_datetime'];
+            $post['grpcls_end_datetime'] = $newPost['grpcls_end_datetime'];
+            if (($post['grpcls_start_datetime'] != $class_details['grpcls_start_datetime'] || $post['grpcls_end_datetime'] != $class_details['grpcls_end_datetime'])) {
+                $startTime = $post['grpcls_start_datetime'];
+                $endTime = $post['grpcls_end_datetime'];
+                $newData['grpcls_start_datetime'] = $startTime;
+                $newData['grpcls_end_datetime'] = $endTime;
                 unset($newData['grpcls_id']);
                 unset($newData['grpcls_slug']);
                 $db = FatApp::getDb();
                 $db->startTransaction();
-                 $counter=0;   
-            $sLessonSrchObj = new ScheduledLessonSearch();
-            $lessons = $sLessonSrchObj->getLessonsByClass($grpcls_id);
-            foreach ($lessons as $lesson) {
-                if ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) {
-                    $counter=$counter+1;
-            
-                    $sLessonObj = new ScheduledLesson($lesson['slesson_id']);
-                    $sLessonObj->assignValues(['slesson_status' => ScheduledLesson::STATUS_CANCELLED]);
-                    if (!$sLessonObj->save()) {
-                        $db->rollbackTransaction();
-                        FatUtility::dieJsonError($sLessonObj->getError());
-                    }
-                    if (!$sLessonObj->cancelLessonByAdmin('')) {
-                        $db->rollbackTransaction();
-                        FatUtility::dieJsonError($sLessonObj->getError());
+                $counter = 0;
+                $sLessonSrchObj = new ScheduledLessonSearch();
+                $lessons = $sLessonSrchObj->getLessonsByClass($grpcls_id);
+                foreach ($lessons as $lesson) {
+                    if ($lesson['slesson_status'] == ScheduledLesson::STATUS_SCHEDULED) {
+                        $counter = $counter + 1;
+                        $sLessonObj = new ScheduledLesson($lesson['slesson_id']);
+                        $sLessonObj->assignValues(['slesson_status' => ScheduledLesson::STATUS_CANCELLED]);
+                        if (!$sLessonObj->save()) {
+                            $db->rollbackTransaction();
+                            FatUtility::dieJsonError($sLessonObj->getError());
+                        }
+                        if (!$sLessonObj->cancelLessonByAdmin('')) {
+                            $db->rollbackTransaction();
+                            FatUtility::dieJsonError($sLessonObj->getError());
+                        }
                     }
                 }
-            }
 
                 // $post=$newPost;
-            if(sizeOf($lessons)>0){
-            $post['grpcls_status'] = TeacherGroupClasses::STATUS_CANCELLED;
-            $post['grpcls_deleted']=1;
-                $newGroupClass= new TeacherGroupClasses(0);
-                $newGroupClass->assignValues($newData);
-                if (true !== $newGroupClass->save()) {
-                    FatUtility::dieJsonError($newGroupClass->getError());
+                if (sizeOf($lessons) > 0) {
+                    $post['grpcls_status'] = TeacherGroupClasses::STATUS_CANCELLED;
+                    $post['grpcls_deleted'] = 1;
+                    $newGroupClass = new TeacherGroupClasses(0);
+                    $newGroupClass->assignValues($newData);
+                    if (true !== $newGroupClass->save()) {
+                        FatUtility::dieJsonError($newGroupClass->getError());
+                    }
+                    $seoUrl = CommonHelper::seoUrl($newData['grpcls_title'] . '-' . $newGroupClass->getMainTableRecordId());
+                    if (!$db->updateFromArray(
+                        TeacherGroupClasses::DB_TBL,
+                        ['grpcls_slug' => $seoUrl],
+                        ['smt' => 'grpcls_id = ?', 'vals' => [$newGroupClass->getMainTableRecordId()]]
+                    )) {
+                        $this->error = $db->getError();
+                        $db->rollbackTransaction();
+                        // return false;
+                    }
+                    $db->commitTransaction();
+                    $post['grpcls_start_datetime'] = $class_details['grpcls_start_datetime'];
+                    $post['grpcls_end_datetime'] = $class_details['grpcls_end_datetime'];
                 }
-                $seoUrl = CommonHelper::seoUrl($newData['grpcls_title'] . '-' . $newGroupClass->getMainTableRecordId());
-                if (!$db->updateFromArray(
-                                TeacherGroupClasses::DB_TBL,
-                                ['grpcls_slug' => $seoUrl],
-                                ['smt' => 'grpcls_id = ?', 'vals' => [$newGroupClass->getMainTableRecordId()]]
-                        )) {
-                    $this->error = $db->getError();
-                    $db->rollbackTransaction();
-                    // return false;
-                }
-                $db->commitTransaction();
-                $post['grpcls_start_datetime']=$class_details['grpcls_start_datetime'];
-                $post['grpcls_end_datetime']=$class_details['grpcls_end_datetime']; 
-            
-            }
-
-                // $this->removeClass($grpcls_id);
             }
         }
         $tGrpClsObj = new TeacherGroupClasses($grpcls_id);
@@ -223,7 +207,6 @@ class GroupClassesController extends AdminBaseController
         if (true !== $tGrpClsObj->save()) {
             FatUtility::dieJsonError($tGrpClsObj->getError());
         }
-       
         $msg = Label::getLabel('LBL_Group_Class_Saved_Successfully!');
         if ($isAvailable) {
             $msg = Label::getLabel('LBL_Slot_is_already_added_for_1_to_1_class_whichever_first_booked_will_be_booked!');
@@ -391,5 +374,4 @@ class GroupClassesController extends AdminBaseController
         $frm->addSubmitButton('', 'submit', Label::getLabel('LBL_Save'));
         return $frm;
     }
-
 }

@@ -2,7 +2,6 @@
 session_start();
 class KidsController extends MyAppController
 {
-
     public function index()
     {
         $this->set('frmSrch', $this->getSearchForm());
@@ -13,8 +12,6 @@ class KidsController extends MyAppController
         if (isset($post['language']) && $post['language'] !== "") {
             $srch->addCondition('grpcls_tlanguage_id', '=', $post['language']);
         }
-        // OLD
-        // $srch->addCondition('grpcls_end_datetime', '>', date('Y-m-d H:i:s'));
         $rs = $srch->getResultSet();
         $classesList = FatApp::getDb()->fetchAll($rs);
         $newArr = [];
@@ -30,48 +27,33 @@ class KidsController extends MyAppController
         $this->set('priceArr', $priceArr);
         $this->set('daysArr', $daysArr);
         $this->set('timeSlotArr', $timeSlotArr);
-
         $this->_template->addJs('js/jquery.datetimepicker.js');
         $this->_template->addJs('js/ion.rangeSlider.js');
         $this->set('setMonthAndWeekName', true);
         $kidsBanner = ExtraPage::getBlockContent(ExtraPage::BLOCK_KIDS_BANNER, $this->siteLangId);
         $this->set('kidsBanner', $kidsBanner);
         $this->set('languages', TeachingLanguage::getAllLangsWithUserCount($this->siteLangId));
-        // $this->_template->render();
         $this->_template->render(true, true, 'kids/index.php');
     }
 
     public function joinnow()
     {
         $schecule_id = FatApp::getPostedData('myArrfay', FatUtility::VAR_INT, 0);
-        // $schecule_id = FatApp::getPostedData('grpclsId', FatUtility::VAR_INT, 0);
         $srch_lesson = new SearchBase('tbl_scheduled_lessons');
         $srch_lesson->addCondition('slesson_id', "=", $schecule_id);
         $rs_lesson = $srch_lesson->getResultSet();
         $langData = FatApp::getDb()->fetchAll($rs_lesson);
         $lastDataIndex = sizeOf($langData);
         $schedule = end($langData);
-        // $class = FatApp::getPostedData('class');
         $srch_data = new SearchBase('tbl_talkkids_classes');
         $srch_data->addCondition('grpcls_id', "=", $schedule['slesson_grpcls_id']);
         $rs_data = $srch_data->getResultSet();
         $kidsData = FatApp::getDb()->fetchAll($rs_data);
         $lastKidsDataIndex = sizeOf($kidsData);
         $kidsLast = end($kidsData);
-
-        // $srch_lesson = new SearchBase('tbl_scheduled_lessons');
-        // $srch_lesson->addCondition('slesson_grpcls_id',"=",$grpcls_id);
-        // $rs_lesson = $srch_lesson->getResultSet();
-        // $langData = FatApp::getDb()->fetchAll($rs_lesson);
-        // // print_r(sizeOf($langData));
-        // $lastDataIndex=sizeOf($langData);
-        // $schedule=$langData[$lastDataIndex-1];
         $totalLesson = (int)$kidsLast['grpcls_total_lesson'];
         if ($kidsLast['grpcls_total_lesson'] > $lastDataIndex) {
-
             $week_dates = array();
-            // foreach($kidsData as $kids)
-            // {
             $week_days = explode(',', $kidsLast['grpcls_weeks']);
             $next_date = date('Y-m-d', strtotime($kidsLast['grpcls_start_datetime']));
             array_push($week_dates, $next_date);
@@ -83,14 +65,12 @@ class KidsController extends MyAppController
                 }
                 array_push($week_dates, $next_date);
             }
+
             function sortFunction($a, $b)
             {
                 return strtotime($a) - strtotime($b);
             }
             usort($week_dates, "sortFunction");
-            // }
-
-
             $days = date('l', $schedule['slesson_date']);
             $key = array_search($days, $week_dates);
             if ($key >= sizeof($week_dates)) {
@@ -98,22 +78,14 @@ class KidsController extends MyAppController
             } else {
                 $key = $key + 1;
             }
-
             $startDateTime = MyDate::convertTimeFromSystemToUserTimezone('Y-m-d H:i:s', $week_dates[$key], true, $userTimezone);
-            // echo "<pre>";
-            // print_r($startDateTime);
-
-
             $id = $schedule['slesson_id'];
             unset($schedule['slesson_id']);
             unset($schedule['sldetail_learner_google_calendar_id']);
-
             $schedule['slesson_date'] = $startDateTime;
             $schedule['slesson_end_date'] = $startDateTime;
             $sLessonObj = new ScheduledLesson();
             $sLessonObj->assignValues($schedule);
-            // echo "<pre>";
-            // print_r($schedule);
             if (!$sLessonObj->save()) {
                 $this->error = $sLessonObj->getError();
                 return false;
@@ -201,7 +173,6 @@ class KidsController extends MyAppController
                         $sLessonObj->setFldValue('slesson_teacher_google_calendar_id', $calId);
                         $sLessonObj->save();
                     }
-                    // }
                 }
             }
         }
@@ -213,7 +184,6 @@ class KidsController extends MyAppController
         $srch = new SearchBase(TeacherKidsClasses::DB_TBL, 'grpcls');
         $user_timezone = MyDate::getUserTimeZone();
         $systemTimeZone = MyDate::getTimeZone();
-
         $srch2 = new SearchBase('tbl_scheduled_lesson_details');
         $srch2->joinTable('tbl_scheduled_lessons', 'INNER JOIN', 'slesson_id=sldetail_slesson_id');
         $srch2->addDirectCondition('slesson_grpcls_id=grpcls_id');
@@ -227,12 +197,9 @@ class KidsController extends MyAppController
         $srch3->doNotCalculateRecords();
         $srch3->doNotLimitRecords();
         $srch3->addFld('slesson_teacher_join_time > 0');
-        // $teacher_id = UserAuthentication::getLoggedUserId();
-
         $srch = new SearchBase(TeacherKidsClasses::DB_TBL, 'grpcls');
         $srch->addCondition('grpcls.grpcls_id', '=', $grpcls_id);
         $classes = FatApp::getDb()->fetchAll($srch->getResultSet());
-        // $srch->addCondition('grpcls.grpcls_end_datetime', '>', date('Y-m-d H:i:s'));
         $flag = false;
         foreach ($classes as $class) {
             $post = $class;
@@ -278,7 +245,6 @@ class KidsController extends MyAppController
         }
         $srch = new SearchBase(TeacherKidsClasses::DB_TBL, 'grpcls');
         $srch->addCondition('grpcls.grpcls_id', '!=', $grpcls_id);
-        // $srch->addCondition('grpcls.grpcls_end_datetime', '>', date('Y-m-d H:i:s'));
         $classes = FatApp::getDb()->fetchAll($srch->getResultSet());
         $totalRecords = $srch->recordCount();
         $pagingArr = [
@@ -315,10 +281,6 @@ class KidsController extends MyAppController
         $pageSize = FatApp::getPostedData('pageSize', FatUtility::VAR_INT, 12);
         $sortOrder = FatApp::getPostedData('sortOrder', FatUtility::VAR_STRING, '');
         $langId = CommonHelper::getLangId();
-        // echo  "YY";
-        // echo "<pre>";
-        // print_r($post);
-
         $_SESSION['search_filters'] = $post;
         $srch = new TeacherKidsClassesSearch($langId);
         $srch->addSearchListingFields();
@@ -328,23 +290,10 @@ class KidsController extends MyAppController
         $srch->setPageSize($pageSize);
         $srch->setPageNumber($page);
         $rawData = FatApp::getDb()->fetchAll($srch->getResultSet());
-        // $records = $srch->formatTeacherSearchData($rawData);
-        // $recordCount = $srch->getRecordCount();
-        // $startRecord = ($recordCount > 0) ? (($page - 1) * $pageSize + 1) : 0;
-        // $endRecord = ($recordCount < $page * $pageSize) ? $recordCount : $page * $pageSize;
-        // $recordCountTxt = ($recordCount > SEARCH_MAX_COUNT) ? $recordCount . '+' : $recordCount;
-        // $showing = 'Showing ' . $startRecord . ' - ' . $endRecord . ' Of ' . $recordCountTxt . ' ' . Label::getLabel('lbl_teachers');
-        // echo "Hello";
-        // echo "<pre>";
-        // print_r($rawData);
-
-        // $this->set('showing', $showing);
         $this->set('classes', $rawData);
         $this->set('postedData', $post);
         $this->set('page', $page);
         $this->set('pageSize', $pageSize);
-        // $this->set('recordCount', $recordCount);
-        // $this->set('pageCount', ceil($recordCount / $pageSize));
         $this->set('frm', $frm);
         $this->set('slots', TeacherGeneralAvailability::timeSlotArr());
         $this->_template->render(false, false);
@@ -367,33 +316,20 @@ class KidsController extends MyAppController
         if (isset($post['language']) && $post['language'] !== "") {
             $srch->addCondition('grpcls_tlanguage_id', '=', $post['language']);
         }
-        // OLD
         $srch->addCondition('grpcls_end_datetime', '>', date('Y-m-d H:i:s'));
         $rs = $srch->getResultSet();
         $classesList = FatApp::getDb()->fetchAll($rs);
-
-
-        // $rawData = FatApp::getDb()->fetchAll($srch->getResultSet());
-
-        // $classesList = $srch->formatTeacherSearchData($rawData);
-
         $group = new TeacherKidsClassesSearch();
         $group->addSearchListingFields();
         $group->addGroupBy('grpcls_ages');
         $newRs = $group->getResultSet();
         $groupList = FatApp::getDb()->fetchAll($newRs);
-
-        // echo "<pre>";
-        // print_r($classesList);
-        // $priceArr= FatApp::getDb()->fetchAll($rs);
         $newArr = [];
         $newArr['minPrice'] = min(array_column($classesList, 'minPrice'));
         $newArr['maxPrice'] = max(array_column($classesList, 'maxPrice'));
         $priceArr = $newArr;
         $_SESSION['min'] = $priceArr['minPrice'];
         $_SESSION['max'] = $priceArr['maxPrice'];
-
-        //  $recordCount = $srch->getRecordCount();
         $pagingArr = [
             'pageCount' => $srch->pages(),
             'page' => $page,
@@ -434,9 +370,6 @@ class KidsController extends MyAppController
         if (isset($post['language']) && $post['language'] !== "") {
             $srch->addCondition('grpcls_tlanguage_id', '=', $post['language']);
         }
-
-        // OLD
-        // $srch->addCondition('grpcls_end_datetime', '>', date('Y-m-d H:i:s'));
         $rs = $srch->getResultSet();
         $classesList = FatApp::getDb()->fetchAll($rs);
         $group = new TeacherKidsClassesSearch();
@@ -444,18 +377,12 @@ class KidsController extends MyAppController
         $group->addGroupBy('grpcls_ages');
         $newRs = $group->getResultSet();
         $groupList = FatApp::getDb()->fetchAll($newRs);
-
-        // echo "<pre>";
-        // print_r($classesList);
-        // $priceArr= FatApp::getDb()->fetchAll($rs);
         $newArr = [];
         $newArr['minPrice'] = min(array_column($classesList, 'minPrice'));
         $newArr['maxPrice'] = max(array_column($classesList, 'maxPrice'));
         $priceArr = $newArr;
         $_SESSION['min'] = $priceArr['minPrice'];
         $_SESSION['max'] = $priceArr['maxPrice'];
-
-        //  $recordCount = $srch->getRecordCount();
         $pagingArr = [
             'pageCount' => $srch->pages(),
             'page' => $page,
@@ -543,11 +470,9 @@ class KidsController extends MyAppController
         $userTimezone = MyDate::getUserTimeZone();
         $startDateTime = MyDate::changeDateTimezone($post['start'], $userTimezone, $systemTimeZone);
         $endDateTime = MyDate::changeDateTimezone($post['end'], $userTimezone, $systemTimeZone);
-
         if (strtotime($startDateTime) < strtotime(date('Y-m-d H:i:s'))) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Can_not_schdule_lesson_for_old_date'));
         }
-
         if (UserAuthentication::isUserLogged()) {
             $loggedUserId = UserAuthentication::getLoggedUserId();
             $checkGroupClassTiming = TeacherGroupClassesSearch::checkGroupClassTiming([$loggedUserId], $startDateTime, $endDateTime);
@@ -713,10 +638,8 @@ class KidsController extends MyAppController
 
     public function view($grpcls_slug)
     {
-        // $_SESSION['booked']=0;
         $grpcls_slug  = CommonHelper::htmlEntitiesDecode($grpcls_slug);
         $userId = UserAuthentication::isUserLogged() ? UserAuthentication::getLoggedUserId() : 0;
-        // CommonHelper::htmlEntitiesDecode($class['grpcls_slug'])
         $srch = TeacherKidsClassesSearch::getSearchObj($this->siteLangId);
         $srch->joinTable(Country::DB_TBL, 'LEFT JOIN', 'ut.user_country_id = country.country_id', 'country');
         $srch->joinTable(Country::DB_TBL_LANG, 'LEFT JOIN', 'country.country_id = countryLang.countrylang_country_id and countryLang.countrylang_lang_id = ' . $this->siteLangId, 'countryLang');
@@ -724,7 +647,6 @@ class KidsController extends MyAppController
         $srch->addMultipleFields(['IFNULL(country_name, country_code) as country_name', 'testat_reviewes', 'testat_ratings']);
         $srch->addCondition('grpcls_slug', '=', $grpcls_slug);
         $srch->setPageSize(1);
-        // $classData = FatApp::getDb()->fetch($srch->getResultSet());
         $rawData = FatApp::getDb()->fetchAll($srch->getResultSet());
         $classData = $srch->formatTeacherSearchData($rawData, $userId);
         if (empty($classData)) {
@@ -737,9 +659,7 @@ class KidsController extends MyAppController
         $srch2->joinTable('tbl_teacher_stats', 'LEFT JOIN', 'testat.testat_user_id = ut.user_id', 'testat');
         $srch2->addMultipleFields(['IFNULL(country_name, country_code) as country_name', 'testat_reviewes', 'testat_ratings']);
         $srch2->addCondition('grpcls_teacher_id', '=', $teacher_id);
-        // $srch2->addCondition('grpcls_end_datetime', '>', date('Y-m-d H:i:s'));
         $teacherClasses = FatApp::getDb()->fetchAll($srch2->getResultSet());
-
         $this->set('class', $classData[0]);
         $this->set('teacherClasses', $teacherClasses);
         $min_booking_time = FatApp::getConfig('CONF_CLASS_BOOKING_GAP', FatUtility::VAR_INT, 60);

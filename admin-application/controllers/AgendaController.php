@@ -35,7 +35,6 @@ class AgendaController extends AdminBaseController
             $pretty_offset = "timezone ${offset_prefix}${offset_formatted}";
             $timezone_list[$offset['three_reasons_id']] = $offset['registration_starting_days'];
         }
-
         echo json_encode($timezone_list);
         return $timezone_list;
     }
@@ -56,6 +55,7 @@ class AgendaController extends AdminBaseController
         $fld_submit->attachField($fld_cancel);
         return $frm;
     }
+
     public function search()
     {
         $srchForm = $this->getSearchForm();
@@ -77,7 +77,7 @@ class AgendaController extends AdminBaseController
             $event_srch->addCondition('t_e.three_reasons_id', '=', $value['event_id']);
             $eventrecords = FatApp::getDb()->fetch($event_srch->getResultSet());
             $value['registration_plan_title'] = $eventrecords['registration_plan_title'];
-            $value['registration_starting_days'] = explode(',',$eventrecords['registration_starting_days'])[0];
+            $value['registration_starting_days'] = explode(',', $eventrecords['registration_starting_days'])[0];
             $records[$key] = $value;
         }
         $canEdit = $this->objPrivilege->canEditTestimonial($this->admin_id, true);
@@ -124,10 +124,8 @@ class AgendaController extends AdminBaseController
     }
     public function agendaForm($testimonialId)
     {
-
         $testimonialId = FatUtility::int($testimonialId);
         $agendafrm = $this->getAgendaForm($testimonialId);
-
         if (0 < $testimonialId) {
             $data = Agenda::getAttributesById($testimonialId, [
                 'agenda_id',
@@ -139,20 +137,18 @@ class AgendaController extends AdminBaseController
                 'agenda_information'
             ]);
             if ($data === false) {
-
                 FatUtility::dieWithError($this->str_invalid_request);
             }
             $agendafrm->fill($data);
             $this->set('records', $data);
         }
-
         $this->set('languages', Language::getAllNames());
         $this->set('agenda_id', $testimonialId);
         $this->set('testimonial_id', $testimonialId);
-
         $this->set('agendafrm', $agendafrm);
         $this->_template->render(false, false);
     }
+
     public function form($testimonialId)
     {
         $testimonialId = FatUtility::int($testimonialId);
@@ -185,14 +181,7 @@ class AgendaController extends AdminBaseController
     public function agendasetup()
     {
         $this->objPrivilege->canEditTestimonial();
-        // $post =FatApp::getPostedData();
-        // echo "<pre>";
-        // print_r($post);
-
         $post = FatApp::getPostedData();
-        // $post['agenda_start_time']=$post['start_time'];
-        // $post['agenda_end_time']=$post['end_time'];
-
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
             FatUtility::dieJsonError(Message::getHtml());
@@ -204,7 +193,6 @@ class AgendaController extends AdminBaseController
             $post['agenda_added_on'] = date('Y-m-d H:i:s');
         }
         $record = new Agenda($testimonialId);
-
         $record->assignValues($post);
         if (!$record->save()) {
             Message::addErrorMessage($record->getError());
@@ -214,14 +202,9 @@ class AgendaController extends AdminBaseController
         if ($testimonialId > 0) {
             $languages = Language::getAllNames();
             foreach ($languages as $langId => $langName) {
-                // if (!$row = Agenda::getAttributesByLangId($langId, $testimonialId)) {
-                //     $newTabLangId = $langId;
-                //     break;
-                // }
             }
         } else {
             $testimonialId = $record->getMainTableRecordId();
-            // $newTabLangId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
         if ($newTabLangId == 0 && !$this->isMediaUploaded($testimonialId)) {
             $this->set('openMediaForm', true);
@@ -236,7 +219,6 @@ class AgendaController extends AdminBaseController
     {
         $this->objPrivilege->canEditTestimonial();
         $frm = $this->getForm();
-
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage(current($frm->getValidationErrors()));
@@ -253,31 +235,13 @@ class AgendaController extends AdminBaseController
             Message::addErrorMessage($record->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }
-        // $agendaFrm=$this->getAgendaForm();
-        // $newPost=$agendaFrm->getFormDataFromArray(FatApp::getPostedData());
-        // $agendaTestimonialId = $newPost['agenda_id'];
-        // unset($newPost['agenda_id']);
-        // if ($agendaTestimonialId == 0) {
-        //     $newPost['agenda_added_on'] = date('Y-m-d H:i:s');
-        // }
-        // $agendaRecord = new Agenda($agendaTestimonialId);
-        // $agendaRecord->assignValues($newPost);
-        // if (!$agendaRecord->save()) {
-        //     Message::addErrorMessage($agendaRecord->getError());
-        //     FatUtility::dieJsonError(Message::getHtml());
-        // }
         $newTabLangId = 0;
         if ($testimonialId > 0) {
             $languages = Language::getAllNames();
             foreach ($languages as $langId => $langName) {
-                // if (!$row = Agenda::getAttributesByLangId($langId, $testimonialId)) {
-                //     $newTabLangId = $langId;
-                //     break;
-                // }
             }
         } else {
             $testimonialId = $record->getMainTableRecordId();
-            // $newTabLangId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
         if ($newTabLangId == 0 && !$this->isMediaUploaded($testimonialId)) {
             $this->set('openMediaForm', true);
@@ -354,7 +318,6 @@ class AgendaController extends AdminBaseController
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
-
 
     public function changeStatus()
     {
@@ -443,7 +406,6 @@ class AgendaController extends AdminBaseController
             Message::addErrorMessage(Label::getLabel('MSG_Please_Select_A_File', $this->adminLangId));
             FatUtility::dieJsonError(Message::getHtml());
         }
-
         $fileHandlerObj = new AttachedFile();
         $fileHandlerObj->deleteFile($fileHandlerObj::FILETYPE_TESTIMONIAL_IMAGE, $testimonialId, 0, 0, $lang_id);
         if (!$res = $fileHandlerObj->saveAttachment($_FILES['file']['tmp_name'], $fileHandlerObj::FILETYPE_TESTIMONIAL_IMAGE, $testimonialId, 0, $_FILES['file']['name'], -1, $unique_record = false, $lang_id)) {
@@ -488,13 +450,9 @@ class AgendaController extends AdminBaseController
         $frm->addTextarea(Label::getLabel('LBL_Description', $this->adminLangId), 'event_description')->requirements()->setRequired();
         $fld = $frm->getField('event_description');
         $fld->setFieldTagAttribute('disabled', 'disabled');
-
         $frm->addTextarea(Label::getLabel('LBL_Information', $this->adminLangId), 'agenda_information')->requirements()->setRequired();
         $fld = $frm->getField('agenda_information');
         $fld->setFieldTagAttribute('disabled', 'disabled');
-        
-
-
         $frm->addRequiredField(Label::getLabel('LBL_Register_URL', $this->adminLangId), 'event_ticket_url');
         $fld = $frm->getField('event_ticket_url');
         $fld->setFieldTagAttribute('disabled', 'disabled');

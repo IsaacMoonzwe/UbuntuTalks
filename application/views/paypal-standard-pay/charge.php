@@ -10,6 +10,10 @@ $currencySymbolRight = CommonHelper::getCurrencySymbolRight();
 ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <style>
+    .section--grey {
+        background: #FFEBCD !important;
+    }
+
     header.header.nav-up {
         z-index: 9999;
     }

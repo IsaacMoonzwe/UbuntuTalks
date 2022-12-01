@@ -1,7 +1,3 @@
-  <?php
-  // echo "<pre>";
-  //   print_r($GooglePay); 
-  ?>
   <style>
     header.header.nav-up {
       z-index: 9999;
@@ -49,6 +45,12 @@
       transition: all .1s ease-in;
       width: 100%;
     }
+
+    img#option-merchant-logo-md {
+      box-shadow: none !important;
+      width: 150px !important;
+      height: 65px;
+    }
   </style>
   <section class="section section--grey section--page -pattern">
     <div class="container container--fixed">
@@ -81,8 +83,17 @@
   </section>
   <script src="https://checkout.flutterwave.com/v3.js"></script>
   <script>
-    var origin = window.location.href;
 
+    /* Added ID in IFrame tag */
+    $(document).ready(function() {
+      $("#start-payment-button").click(function() {
+        setTimeout(function() {
+          $("iframe").attr("id", "myIFrame");
+        }, 2000);
+      });
+    });
+
+    /* Airetl Payment checkout function  */
     function makePayment() {
       FlutterwaveCheckout({
         public_key: "FLWPUBK_TEST-8ef458df28b5db9f7199f989f1158237-X",
@@ -103,13 +114,14 @@
         },
         customizations: {
           title: "UbuntuTalks",
-          description: "UbuntuTalks",
-          logo: "https://ubuntutalks.com/image/site-logo/1",
+          description: "Language Learning Online Courses | Ubuntu Talks",
+          logo: "https://ubuntutalks.com/public/images/UT.jpg",
         },
       });
     }
 
-
+    /* Calling the callback function */
+    var origin = window.location.href;
     let paramString = origin.split('?')[1];
     let second = paramString.split('&');
     let queryString = new URLSearchParams(paramString);
@@ -117,6 +129,7 @@
       callback();
     }
 
+    /* Tickert Generation function */
     function callback() {
       $.ajax({
         type: "post",
@@ -124,7 +137,6 @@
         data: {},
         dataType: "json",
         success: function(data) {
-          // console.log('hii', data.redirectUrl);
           setTimeout(() => {
             window.location.href = data.redirectUrl;
           }, 500);

@@ -35,10 +35,10 @@ class FieldServicesController extends AdminBaseController
         $frm = $this->getForm($testimonialId);
         if (0 < $testimonialId) {
             $data = FieldServices::getAttributesById($testimonialId, [
-                        'testimonial_id',
-                        'testimonial_identifier',
-                        'testimonial_active',
-                        'testimonial_user_name'
+                'testimonial_id',
+                'testimonial_identifier',
+                'testimonial_active',
+                'testimonial_user_name'
             ]);
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
@@ -84,9 +84,6 @@ class FieldServicesController extends AdminBaseController
             $testimonialId = $record->getMainTableRecordId();
             $newTabLangId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
-        // if ($newTabLangId == 0 && !$this->isMediaUploaded($testimonialId)) {
-        //     $this->set('openMediaForm', true);
-        // }
         $this->set('msg', $this->str_setup_successful);
         $this->set('testimonialId', $testimonialId);
         $this->set('langId', $newTabLangId);
@@ -150,9 +147,6 @@ class FieldServicesController extends AdminBaseController
                 break;
             }
         }
-        // if ($newTabLangId == 0 && !$this->isMediaUploaded($testimonialId)) {
-        //     $this->set('openMediaForm', true);
-        // }
         $this->set('msg', $this->str_setup_successful);
         $this->set('testimonialId', $testimonialId);
         $this->set('langId', $newTabLangId);
@@ -207,7 +201,6 @@ class FieldServicesController extends AdminBaseController
         $testimonialId = FatUtility::int($testimonialId);
         $frm = new Form('frmTestimonial');
         $frm->addHiddenField('', 'testimonial_id', $testimonialId);
-        //$frm->addRequiredField(Label::getLabel('LBL_Job_Function_Identifier', $this->adminLangId), 'testimonial_identifier');
         $frm->addRequiredField(Label::getLabel('LBL_Add_Field_Services_List_Name', $this->adminLangId), 'testimonial_user_name');
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
         $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'testimonial_active', $activeInactiveArr, '', [], '');
@@ -225,7 +218,4 @@ class FieldServicesController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
-
-
-
 }

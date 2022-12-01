@@ -84,14 +84,9 @@ class SponsorshipController extends AdminBaseController
         if ($testimonialId > 0) {
             $languages = Language::getAllNames();
             foreach ($languages as $langId => $langName) {
-                // if (!$row = Sponsorship::getAttributesByLangId($langId, $testimonialId)) {
-                //     $newTabLangId = $langId;
-                //     break;
-                // }
             }
         } else {
              $testimonialId = $record->getMainTableRecordId();
-            // $newTabLangId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
         if ($newTabLangId == 0 && !$this->isMediaUploaded($testimonialId)) {
             $this->set('openMediaForm', true);
@@ -257,7 +252,6 @@ class SponsorshipController extends AdminBaseController
             Message::addErrorMessage(Label::getLabel('MSG_Please_Select_A_File', $this->adminLangId));
             FatUtility::dieJsonError(Message::getHtml());
         }
-        
         $fileHandlerObj = new AttachedFile();
         $fileHandlerObj->deleteFile($fileHandlerObj::FILETYPE_SPONSORSHIP_IMAGE, $testimonialId, 0, 0, $lang_id);
         if (!$res = $fileHandlerObj->saveAttachment($_FILES['file']['tmp_name'], $fileHandlerObj::FILETYPE_SPONSORSHIP_IMAGE, $testimonialId, 0, $_FILES['file']['name'], -1, $unique_record = false, $lang_id)) {

@@ -115,7 +115,6 @@ class EventUsersController extends AdminBaseController
             'utr.utrequest_status',
             'utr.utrequest_id',
             'utr.utrequest_user_id'
-            
         ]);
         $srch->setPageNumber($page);
         $srch->setPageSize($pagesize);
@@ -188,7 +187,6 @@ class EventUsersController extends AdminBaseController
         $this->objPrivilege->canEditUsers();
         $user_id = FatUtility::int($user_id);
         $frmUser = $this->getForm($user_id);
-
         $userObj = new EventUser($user_id);
         $srch = $userObj->getUserSearchObj();
         $srch->addMultipleFields(['u.*']);
@@ -270,7 +268,6 @@ class EventUsersController extends AdminBaseController
         $DonationplanData->addCondition('event_user_donation_status', '=', 1);
         $DonationplanData->addCondition('event_user_user_id', '=', $userId);
         $DonationplanResult = FatApp::getDb()->fetchAll($DonationplanData->getResultSet());
-        
         $this->set('DonationplanResult', $DonationplanResult);
         $this->set('PurchaseSponserShip', $PurchaseSponserShip);
         $this->set('EventplanResult', $EventplanResult);
@@ -396,7 +393,6 @@ class EventUsersController extends AdminBaseController
         if (false === $post) {
             FatUtility::dieJsonError(current($pwdFrm->getValidationErrors()));
         }
-
         if (!$user->setLoginPassword($post['new_password'])) {
             FatUtility::dieJsonError(Label::getLabel('LBL_Password_could_not_be_set ', $this->adminLangId) . ' ' . $user->getError());
         }
@@ -407,12 +403,10 @@ class EventUsersController extends AdminBaseController
             '{user_email}' => $data['credential_email'],
             '{user_password}' => $post['new_password'],
         ];
-
         if (!EmailHandler::sendMailTpl($data['credential_email'], 'user_password_changed_successfully', FatApp::getConfig('conf_default_site_lang'), $vars)) {
             Message::addErrorMessage(Label::getLabel('LBL_Mail_not_sent!', $this->adminLangId));
             FatUtility::dieJsonError(Message::getHtml());
         }
-
         $this->set('msg', $this->str_setup_successful);
         $this->_template->render(false, false, 'json-success.php');
     }

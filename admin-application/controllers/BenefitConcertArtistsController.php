@@ -8,6 +8,7 @@ class BenefitConcertArtistsController extends AdminBaseController
         $this->_template->addJs('js/jquery.datetimepicker.js');
         $this->_template->addCss('css/jquery.datetimepicker.css');
     }
+
     public function index()
     {
         $canEdit = $this->objPrivilege->canEditTestimonial($this->admin_id, true);
@@ -16,6 +17,7 @@ class BenefitConcertArtistsController extends AdminBaseController
         $this->_template->addCss('css/jquery.datetimepicker.css');
         $this->_template->render();
     }
+
     public function search()
     {
         $srch = BenefitConcertArtists::getSearchObject($this->adminLangId, false);
@@ -33,6 +35,7 @@ class BenefitConcertArtistsController extends AdminBaseController
         $this->set('recordCount', $srch->recordCount());
         $this->_template->render(false, false);
     }
+
     public function agendaForm($testimonialId)
     {
         $srch_event_listing = new SearchBase('tbl_agenda');
@@ -45,17 +48,16 @@ class BenefitConcertArtistsController extends AdminBaseController
         $this->set('EventListingCategoriesList', $EventListingCategoriesList);
         $this->_template->render(false, false);
     }
+
     public function form($testimonialId)
     {
         $testimonialId = FatUtility::int($testimonialId);
-
         $frm = $this->getForm($testimonialId);
         if (0 < $testimonialId) {
             $data = BenefitConcertArtists::getAttributesById($testimonialId);
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
             }
-
             $frm->fill($data);
         }
         $this->set('languages', Language::getAllNames());
@@ -64,6 +66,7 @@ class BenefitConcertArtistsController extends AdminBaseController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
+
     public function setup()
     {
         $this->objPrivilege->canEditTestimonial();
@@ -96,24 +99,17 @@ class BenefitConcertArtistsController extends AdminBaseController
         if ($testimonialId > 0) {
             $languages = Language::getAllNames();
             foreach ($languages as $langId => $langName) {
-                // if (!$row = BenefitConcertArtists::getAttributesByLangId($langId, $testimonialId)) {
-                //     $newTabLangId = $langId;
-                //     break;
-                // }
             }
         } else {
             $testimonialId = $record->getMainTableRecordId();
-            // $newTabLangId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
-        // if ($newTabLangId == 0 && !$this->isMediaUploaded($testimonialId)) {
-        //     $this->set('openMediaForm', true);
-        // }
         $this->set('msg', $this->str_setup_successful);
         $this->set('testimonialId', $testimonialId);
         $this->set('testimonial_id', $testimonialId);
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function langForm($testimonialId = 0, $lang_id = 0)
     {
         $testimonialId = FatUtility::int($testimonialId);
@@ -133,6 +129,7 @@ class BenefitConcertArtistsController extends AdminBaseController
         $this->set('formLayout', Language::getLayoutDirection($lang_id));
         $this->_template->render(false, false);
     }
+
     public function langSetup()
     {
         $this->objPrivilege->canEditTestimonial();
@@ -178,6 +175,7 @@ class BenefitConcertArtistsController extends AdminBaseController
         $this->set('langId', $newTabLangId);
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function updateOrder()
     {
         $this->objPrivilege->canEditTestimonial();
@@ -192,11 +190,11 @@ class BenefitConcertArtistsController extends AdminBaseController
             $this->_template->render(false, false, 'json-success.php');
         }
     }
+
     public function changeStatus()
     {
         $this->objPrivilege->canEditTestimonial();
         $testimonialId = FatApp::getPostedData('testimonialId', FatUtility::VAR_INT, 0);
-        // $status = FatApp::getPostedData('status', FatUtility::VAR_INT, 0);
         if (0 >= $testimonialId) {
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
@@ -215,6 +213,7 @@ class BenefitConcertArtistsController extends AdminBaseController
         $this->set('msg', $this->str_update_record);
         FatUtility::dieJsonSuccess($this->str_update_record);
     }
+
     public function deleteRecord()
     {
         $this->objPrivilege->canEditTestimonial();
@@ -235,6 +234,7 @@ class BenefitConcertArtistsController extends AdminBaseController
         }
         FatUtility::dieJsonSuccess($this->str_delete_record);
     }
+
     public function media($testimonialId = 0)
     {
         $this->objPrivilege->canEditTestimonial();
@@ -247,6 +247,7 @@ class BenefitConcertArtistsController extends AdminBaseController
         $this->set('testimonialImages', $testimonialImages);
         $this->_template->render(false, false);
     }
+
     public function getMediaForm($testimonialId)
     {
         $frm = new Form('frmTestimonialMedia');
@@ -259,6 +260,7 @@ class BenefitConcertArtistsController extends AdminBaseController
         $frm->addHtml('', 'testimonial_image_display_div', '');
         return $frm;
     }
+
     public function uploadTestimonialMedia()
     {
         $this->objPrivilege->canEditTestimonial();
@@ -288,6 +290,7 @@ class BenefitConcertArtistsController extends AdminBaseController
         $this->set('msg', $_FILES['file']['name'] . Label::getLabel('MSG_File_Uploaded_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
+
     public function removeTestimonialImage($testimonialId = 0, $lang_id = 0)
     {
         $testimonialId = FatUtility::int($testimonialId);
@@ -304,6 +307,7 @@ class BenefitConcertArtistsController extends AdminBaseController
         $this->set('msg', Label::getLabel('MSG_Deleted_Successfully', $this->adminLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
+
     private function getForm($testimonialId = 0)
     {
         $testimonialId = FatUtility::int($testimonialId);
@@ -311,9 +315,6 @@ class BenefitConcertArtistsController extends AdminBaseController
         $frm->addHiddenField('', 'benefit_concert_artists_id', $testimonialId);
         $frm->addHtml('', 'testimonial_image_display_div', '');
         $frm->addRequiredField(Label::getLabel('LBL_benefit_concert_artists_Plan_Title', $this->adminLangId), 'benefit_concert_artists_plan_title');
-        // $frm->addRequiredField(Label::getLabel('LBL_benefit_concert_artists_Starting_Days_(Date)'), 'benefit_concert_artists_starting_date', '', ['id' => 'benefit_concert_artists_starting_date', 'autocomplete' => 'off']);
-        // $frm->addRequiredField(Label::getLabel('LBL_benefit_concert_artists_Ending_Days_(Date)'), 'benefit_concert_artists_ending_date', '', ['id' => 'benefit_concert_artists_ending_date', 'autocomplete' => 'off']);
-
         $frm->addRequiredField(Label::getLabel('LBL_Benefit_Concert_Artists_Video_Link', $this->adminLangId), 'benefit_concert_artists_video_link');
         $frm->addTextarea(Label::getLabel('LBL_Description', $this->adminLangId), 'benefit_concert_artists_plan_description')->requirements()->setRequired();
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
@@ -321,6 +322,7 @@ class BenefitConcertArtistsController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
     private function getLangForm($testimonialId = 0, $lang_id = 0)
     {
         $frm = new Form('frmTestimonialLang');
@@ -331,6 +333,7 @@ class BenefitConcertArtistsController extends AdminBaseController
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));
         return $frm;
     }
+
     private function isMediaUploaded($testimonialId)
     {
         if ($attachment = AttachedFile::getAttachment(AttachedFile::FILETYPE_EVENT_PLAN_IMAGE, $testimonialId, 0)) {
@@ -338,6 +341,7 @@ class BenefitConcertArtistsController extends AdminBaseController
         }
         return false;
     }
+    
     public function image($recordId, $langId = 0, $sizeType = '', $afile_id = 0, $displayUniversalImage = true)
     {
         $default_image = 'user_deafult_image.jpg';

@@ -51,21 +51,18 @@ class EventsController extends MyEventAppController
         $speakers_positions_listing->addCondition('speakers_position_active', '=', 1);
         $positionsListing = $speakers_positions_listing->getResultSet();
         $SpeakersPositionsListing = FatApp::getDb()->fetchAll($positionsListing);
-
         $srch_categories = new SearchBase('tbl_sponsorshipcategories');
         $srch_categories->addCondition('sponsorshipcategories_deleted', '=', 0);
         $srch_categories->addCondition('sponsorshipcategories_active', '=', 1);
         $srch_categories->addCondition('sponsorshipcategories_type', '=', 'Regular');
         $sponsorship_categories = $srch_categories->getResultSet();
         $SponsorshipCategoriesList = FatApp::getDb()->fetchAll($sponsorship_categories);
-
         $srch_categories_dinner = new SearchBase('tbl_sponsorshipcategories');
         $srch_categories_dinner->addCondition('sponsorshipcategories_deleted', '=', 0);
         $srch_categories_dinner->addCondition('sponsorshipcategories_active', '=', 1);
         $srch_categories_dinner->addCondition('sponsorshipcategories_type', '=', 'Dinner');
         $sponsorship_categories_dinner = $srch_categories_dinner->getResultSet();
         $SponsorshipCategoriesDinnerList = FatApp::getDb()->fetchAll($sponsorship_categories_dinner);
-
         $srch_events_details = new SearchBase('tbl_event_and_agenda');
         $events_categories = $srch_events_details->getResultSet();
         $EventsList = FatApp::getDb()->fetchAll($events_categories);
@@ -216,6 +213,7 @@ class EventsController extends MyEventAppController
         $this->set('siteLangId', $this->siteLangId);
         $this->_template->render(false, false);
     }
+
     public function contact()
     {
         $contactFrm = $this->contactUsForm($this->siteLangId);
@@ -236,6 +234,7 @@ class EventsController extends MyEventAppController
         $this->set('siteLangId', $this->siteLangId);
         $this->_template->render(false, false);
     }
+
     public function image($recordId, $langId = 0, $sizeType = '', $afile_id = 0, $displayUniversalImage = true)
     {
         $default_image = 'user_deafult_image.jpg';
@@ -274,6 +273,7 @@ class EventsController extends MyEventAppController
                 break;
         }
     }
+
     public function sponsorshipimage($recordId, $langId = 0, $sizeType = '', $afile_id = 0, $displayUniversalImage = true)
     {
         $default_image = 'user_deafult_image.jpg';
@@ -317,6 +317,7 @@ class EventsController extends MyEventAppController
                 break;
         }
     }
+
     public function contactSubmit()
     {
         $frm = $this->contactUsForm($this->siteLangId);
@@ -344,6 +345,7 @@ class EventsController extends MyEventAppController
         }
         FatApp::redirectUser(CommonHelper::generateUrl('events'));
     }
+    
     private function contactUsForm(int $langId)
     {
         $frm = new Form('frmContact');

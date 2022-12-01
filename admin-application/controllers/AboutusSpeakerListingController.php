@@ -41,9 +41,6 @@ class AboutusSpeakerListingController extends AdminBaseController
         $srch = AboutusSpeakerListing::getSearchObject($this->adminLangId, false);
         $srch->addMultipleFields(['t.*', 't_l.aboutus_speaker_listing_title', 't_l.aboutus_speaker_listing_text']);
         $srch->addOrder('aboutus_speaker_listing_active', 'desc');
-        // $srch->setPageNumber($page);
-        // $srch->setPageSize($pagesize);
-
         $records = FatApp::getDb()->fetchAll($srch->getResultSet());
         foreach ($records as $key => $value) {
             $testimonialImages = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_ABOUTUS_SPEAKER_LISTING_IMAGE, $value['aboutus_speaker_listing_id'], 0, -1);
@@ -116,14 +113,9 @@ class AboutusSpeakerListingController extends AdminBaseController
         if ($testimonialId > 0) {
             $languages = Language::getAllNames();
             foreach ($languages as $langId => $langName) {
-                // if (!$row = AboutusSpeakerListing::getAttributesByLangId($langId, $testimonialId)) {
-                //     $newTabLangId = $langId;
-                //     break;
-                // }
             }
         } else {
             $testimonialId = $record->getMainTableRecordId();
-            // $newTabLangId = FatApp::getConfig('CONF_ADMIN_DEFAULT_LANG', FatUtility::VAR_INT, 1);
         }
         if ($newTabLangId == 0 && !$this->isMediaUploaded($testimonialId)) {
             $this->set('openMediaForm', true);
@@ -205,8 +197,6 @@ class AboutusSpeakerListingController extends AdminBaseController
     {
         $this->objPrivilege->canEditTestimonial();
         $post = FatApp::getPostedData();
-        // echo "<pre>";
-        // print_r($post);
         if (!empty($post)) {
             $pMethodObj = new AboutusSpeakerListing();
             if (!$pMethodObj->updateOrder($post['paymentMethod'])) {
@@ -223,7 +213,6 @@ class AboutusSpeakerListingController extends AdminBaseController
     {
         $this->objPrivilege->canEditTestimonial();
         $testimonialId = FatApp::getPostedData('testimonialId', FatUtility::VAR_INT, 0);
-        //$status = FatApp::getPostedData('status', FatUtility::VAR_INT, 0);
         if (0 >= $testimonialId) {
             Message::addErrorMessage($this->str_invalid_request_id);
             FatUtility::dieWithError(Message::getHtml());
@@ -308,7 +297,6 @@ class AboutusSpeakerListingController extends AdminBaseController
             Message::addErrorMessage(Label::getLabel('MSG_Please_Select_A_File', $this->adminLangId));
             FatUtility::dieJsonError(Message::getHtml());
         }
-
         $fileHandlerObj = new AttachedFile();
         $fileHandlerObj->deleteFile($fileHandlerObj::FILETYPE_ABOUTUS_SPEAKER_LISTING_IMAGE, $testimonialId, 0, 0, $lang_id);
         if (!$res = $fileHandlerObj->saveAttachment($_FILES['file']['tmp_name'], $fileHandlerObj::FILETYPE_ABOUTUS_SPEAKER_LISTING_IMAGE, $testimonialId, 0, $_FILES['file']['name'], -1, $unique_record = false, $lang_id)) {

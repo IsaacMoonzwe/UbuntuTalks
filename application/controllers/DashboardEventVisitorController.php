@@ -20,7 +20,6 @@ class DashboardEventVisitorController extends MyEventAppController
         $EventplanData->addCondition('event_user_id', '=', $userId);
         $EventplanResult = FatApp::getDb()->fetchAll($EventplanData->getResultSet());
         foreach ($EventplanResult as $key => $value) {
-
             $EventsTicketsplanData = new SearchBase('tbl_three_reasons');
             $EventsTicketsplanData->addCondition('three_reasons_deleted', '=', 0);
             $EventsTicketsplanData->addCondition('three_reasons_id', '=', $value['event_user_plan_id']);
@@ -36,16 +35,11 @@ class DashboardEventVisitorController extends MyEventAppController
             $OrderResults = FatApp::getDb()->fetch($OrderDatas->getResultSet());
             $value['order_data'] = $OrderProductsResults;
             $value['coupon_code'] = $OrderResults['order_discount_coupon_code'];
-
             $value['plan_name'] = $EventsTicketsplanResult['registration_plan_title'];
             $value['plan_start_date'] = $EventsTicketsplanResult['registration_starting_date'];
             $value['plan_end_date'] = $EventsTicketsplanResult['registration_ending_date'];
             $EventplanResult[$key] = $value;
         }
-        // echo "<pre>";
-        // print_r($EventplanResult);
-
-
         $BenefitConcertplanData = new SearchBase('tbl_event_concert_ticket_plan');
         $BenefitConcertplanData->addCondition('event_user_ticket_pay_status', '=', 1);
         $BenefitConcertplanData->addCondition('event_user_id', '=', $userId);
@@ -60,7 +54,6 @@ class DashboardEventVisitorController extends MyEventAppController
             $value['plan_end_date'] = $BenefitConcertTicketsplanResult['benefit_concert_ending_date'];
             $BenefitConcertplanResult[$key] = $value;
         }
-
         $PreSymposiumDinnerplanData = new SearchBase('tbl_pre_symposium_dinner_ticket_plan');
         $PreSymposiumDinnerplanData->addCondition('event_user_ticket_pay_status', '=', 1);
         $PreSymposiumDinnerplanData->addCondition('event_user_id', '=', $userId);
@@ -75,37 +68,27 @@ class DashboardEventVisitorController extends MyEventAppController
             $value['plan_end_date'] = $PreSymposiumDinnerTicketsplanResult['pre_symposium_dinner_ending_date'];
             $PreSymposiumDinnerplanResult[$key] = $value;
         }
-
-
-
         $SponsorshipeventplanData = new SearchBase('tbl_event_user_become_sponser');
         $SponsorshipeventplanData->addCondition('event_user_payment_status', '=', 1);
         $SponsorshipeventplanData->addCondition('event_user_id', '=', $userId);
-        //   $SponsorshipeventplanData->addMultipleFields(['*','COUNT(event_user_become_id) as total_data']);
-        //  $SponsorshipeventplanData->addGroupBy('event_user_sponser_selected_plan');
         $SponsorshipeventplanResult = FatApp::getDb()->fetchAll($SponsorshipeventplanData->getResultSet());
         $eventList = array();
         $events = array();
         $plan = '';
         $index = 0;
         $SponserEvent = array();
-        // echo "<pre>";
-        // print_r($SponsorshipeventplanResult);
         foreach ($SponsorshipeventplanResult as $key => $value) {
             $plan_name = '';
             $plan_qty = '';
-
             $sponserId = unserialize($value['event_user_sponsrship_id']);
             $sponser_qty = unserialize($value['event_user_sponsership_qty']);
             $qty_json = json_decode($sponser_qty);
             $allValues = array_values((array)$qty_json);
             $qty_index = 0;
             $qty_plan = 0;
-
             $json = json_decode($sponserId);
             $allKeysOfEmployee = array_keys((array)$json);
             $total_qty = 0;
-
             $SponEventsSelectionData = new SearchBase('tbl_events_sponsorship_categories');
             $SponEventsSelectionData->addCondition('events_sponsorship_categories_id', '=', $value['event_user_sponser_selected_plan']);
             $SponSorshipEventsSelectionplanResult = FatApp::getDb()->fetch($SponEventsSelectionData->getResultSet());
@@ -148,7 +131,6 @@ class DashboardEventVisitorController extends MyEventAppController
                     }
                     $qty_index++;
                 }
-
                 $OrderProductData = new SearchBase('tbl_order_products');
                 $OrderProductData->addCondition('op_grpcls_id', '=', $value['event_user_become_id']);
                 $OrderProductData->addCondition('op_teacher_id', '=', $userId);
@@ -171,7 +153,6 @@ class DashboardEventVisitorController extends MyEventAppController
             $index++;
         }
         $sponserEventData = $SponserEvent;
-
         $SponsorshipplanData = new SearchBase('tbl_event_user_become_sponser');
         $SponsorshipplanData->addCondition('event_user_payment_status', '=', 1);
         $SponsorshipplanData->addCondition('event_user_id', '=', $userId);
@@ -223,16 +204,11 @@ class DashboardEventVisitorController extends MyEventAppController
         $DonationplanResult = FatApp::getDb()->fetchAll($DonationplanData->getResultSet());
         $DisclaimerSection = LanguageSymposium::getBlockContent(LanguageSymposium::BLOCK_DISCLAIMER_SECTION, $this->siteLangId);
         $userFirstName = EventUserAuthentication::getLoggedUserAttribute('user_first_name');
-
-
-
         $BenefitConcertplanData = new SearchBase('tbl_event_concert_ticket_plan');
         $BenefitConcertplanData->addCondition('event_user_ticket_pay_status', '=', 1);
         $BenefitConcertplanData->addCondition('event_user_id', '=', $userId);
-
         $BenefitConcertplanResult = FatApp::getDb()->fetchAll($BenefitConcertplanData->getResultSet());
         foreach ($BenefitConcertplanResult as $key => $value) {
-
             $OrderProductData = new SearchBase('tbl_order_products');
             $OrderProductData->addCondition('op_grpcls_id', '=', $value['event_concert_ticket_plan_id']);
             $OrderProductData->addCondition('op_teacher_id', '=', $userId);
@@ -249,7 +225,6 @@ class DashboardEventVisitorController extends MyEventAppController
             $value['plan_end_date'] = $BenefitConcertTicketsplanResult['benefit_concert_ending_date'];
             $BenefitConcertplanResult[$key] = $value;
         }
-        
         $this->set('PreSymposiumDinnerplanResult', $PreSymposiumDinnerplanResult);
         $this->set('BenefitConcertplanResult', $BenefitConcertplanResult);
         $this->set('userFirstName', $userFirstName);
@@ -362,7 +337,6 @@ class DashboardEventVisitorController extends MyEventAppController
         $this->_template->render(false, false, 'json-success.php');
     }
 
-
     public function dailySchedule()
     {
         $userId = EventUserAuthentication::getLoggedUserId();
@@ -432,12 +406,10 @@ class DashboardEventVisitorController extends MyEventAppController
         $eventData = FatApp::getDb()->fetchAll($fetchAll_results);
         foreach ($eventData as $event_key => $event_value) {
             $event_all_agenda = new SearchBase('tbl_agenda');
-
             $event_all_agenda->addCondition('event_id', '=', $event_value['three_reasons_id']);
             $event_all_agenda->addCondition('agenda_deleted', '=', 0);
             $event_all_agenda_set = $event_all_agenda->getResultSet();
             $agenda_event_data = FatApp::getDb()->fetchAll($event_all_agenda_set);
-
             $event_value['available_data'] = sizeOf($agenda_event_data);
             $eventData[$event_key] = $event_value;
         }
@@ -480,9 +452,7 @@ class DashboardEventVisitorController extends MyEventAppController
         $frm = $this->getChangeEmailForm();
         $ChnagePasswordfrm = $this->getChangePasswordForm();
         $userRow['user_food_department'] = json_decode($userRow['user_food_department'], true);
-
         $diet_data = EventUser::getFoodDepartmentArr();
-
         $this->set('ChnagePasswordfrm', $ChnagePasswordfrm);
         $this->set('frm', $frm);
         $this->set('userPendingRequest', $userPendingRequest);
@@ -509,13 +479,11 @@ class DashboardEventVisitorController extends MyEventAppController
             $fldUname->requirements()->setRegularExpressionToValidate('^[A-Za-z0-9-_]{3,35}$');
             $fldUname->requirements()->setRequired();
             $fldUname->requirements()->setCustomErrorMessage(Label::getLabel('LBL_Invalid_Username', $this->siteLangId));
-            // $fldUname->requirements()->setUsername();
         }
         $diets_data = EventUser::getFoodDepartmentArr();
         foreach ($diets_data as $key => $week) {
             $speekLangField = $frm->addCheckBox($week, 'user_food_department[' . $key . ']', $week, ['class' => 'diet-boxes'], false, 0);
         }
-
         $frm->addTextBox(Label::getLabel('LBL_Food_Allergies'), 'user_food_allergies');
         $frm->addTextArea(Label::getLabel('LBL_Other_Food_Restriction'), 'user_other_food_restriction');
         $frm->addTextBox(Label::getLabel('LBL_Other_Requirement'), 'user_other_requirement');
@@ -596,23 +564,17 @@ class DashboardEventVisitorController extends MyEventAppController
             $fldUname->requirements()->setRegularExpressionToValidate('^[A-Za-z0-9-_]{3,35}$');
             $fldUname->requirements()->setRequired();
             $fldUname->requirements()->setCustomErrorMessage(Label::getLabel('LBL_Invalid_Username', $this->siteLangId));
-            // $fldUname->requirements()->setUsername();
         }
         $fldFname = $frm->addRequiredField(Label::getLabel('LBL_First_Name'), 'user_first_name');
-        // $fldFname->requirements()->setCharOnly();
         $fldLname = $frm->addRequiredField(Label::getLabel('LBL_Last_Name'), 'user_last_name');
         $fldRegisterPlan = $frm->addRequiredField(Label::getLabel('LBL_Registeration_Plan'), 'user_sponsorship_plan');
         $fldRegisterPlan->requirement->setRequired(false);
         $fldSponserShipPlan = $frm->addRequiredField(Label::getLabel('LBL_SponserShip_Plan'), 'user_become_sponsership_plan');
         $fldSponserShipPlan->requirement->setRequired(false);
-
-        // $fldLname->requirements()->setCharOnly();
         $frm->addRadioButtons(Label::getLabel('LBL_Gender'), 'user_gender', EventUser::getGenderArr());
-
         $frm->addRadioButtons(Label::getLabel('LBL_Diet_Requirement'), 'user_food_department', EventUser::getFoodDepartmentArr());
         $frm->addTextBox(Label::getLabel('LBL_Food_Allergies'), 'user_food_allergies');
         $frm->addTextArea(Label::getLabel('LBL_Other_Food_Restriction'), 'user_other_food_restriction');
-
         $fldPhn = $frm->addTextBox(Label::getLabel('LBL_Phone'), 'user_phone');
         $fldPhn->requirements()->setRegularExpressionToValidate(applicationConstants::PHONE_NO_REGEX);
         $fldPhn->requirements()->setCustomErrorMessage(Label::getLabel('LBL_PHONE_NO_VALIDATION_MSG'));
@@ -632,8 +594,6 @@ class DashboardEventVisitorController extends MyEventAppController
             $fld3 = $frm->addSelectBox(Label::getLabel('LBL_Booking_Before'), 'us_booking_before', $bookingOptionArr, 'us_booking_before', array(), Label::getLabel('LBL_Select'));
             $fld3->requirement->setRequired(true);
         }
-        /* $fld = $frm->addTextArea(Label::getLabel('LBL_Biography'), 'user_profile_info');
-          $fld->requirements()->setLength(1, 500); */
         $frm->addSelectBox(Label::getLabel('LBL_Site_Language'), 'us_site_lang', Language::getAllNames(), '', array(), Label::getLabel('LBL_Select'));
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_SAVE_CHANGES'));
         return $frm;
@@ -641,7 +601,6 @@ class DashboardEventVisitorController extends MyEventAppController
 
     public function eventProfileInfoForm()
     {
-        // $profileImgFrm = $this->getProfileImageForm();
         $userRow = EventUser::getAttributesById(EventUserAuthentication::getLoggedUserId(), array(
             'user_id', 'user_url_name', 'user_first_name', 'user_last_name',
             'user_gender', 'user_food_department as user_food_department', 'user_phone', 'user_phone_code', 'user_country_id',
@@ -655,7 +614,6 @@ class DashboardEventVisitorController extends MyEventAppController
         $this->set('isProfilePicUploaded', EventUser::isProfilePicUploaded());
         $this->set('userRow', $userRow);
         $this->set('profileFrm', $profileFrm);
-        // $this->set('profileImgFrm', $profileImgFrm);
         $this->set('languages', Language::getAllNames(false));
         $this->_template->render(false, false);
     }
@@ -692,7 +650,6 @@ class DashboardEventVisitorController extends MyEventAppController
         $frm = $this->getDietProfileInfoForm($isTeacher);
         $post = FatApp::getPostedData();
         $post = $frm->getFormDataFromArray($post);
-
         $user_food_department  = implode(',', $post['user_food_department']);
         if (isset($post['user_food_department']) && !empty($post['user_food_department']) && $user_food_department[0] != '') {
             $user_food_department  = implode(',', $post['user_food_department']);
@@ -704,7 +661,6 @@ class DashboardEventVisitorController extends MyEventAppController
             Message::addErrorMessage(current($frm->getValidationErrors()));
             FatUtility::dieWithError(Message::getHtml());
         }
-
         $db = FatApp::getDb();
         $db->startTransaction();
         $user = new EventUser(EventUserAuthentication::getLoggedUserId());
@@ -769,9 +725,7 @@ class DashboardEventVisitorController extends MyEventAppController
         $con = new Country();
         $FindObj = $con->getCountryById($select_design);
         $country_codes = strval($FindObj["country_code"]);
-
         $timezones = DateTimeZone::listIdentifiers(DateTimeZone::PER_COUNTRY, $country_codes);
-
         $timezone_offsets = array();
         foreach ($timezones as $timezone) {
             $tz = new DateTimeZone($timezone);
@@ -781,9 +735,7 @@ class DashboardEventVisitorController extends MyEventAppController
         foreach ($timezone_offsets as $timezone => $offset) {
             $offset_prefix = $offset < 0 ? '-' : '+';
             $offset_formatted = gmdate('H:i', abs($offset));
-
             $pretty_offset = "timezone ${offset_prefix}${offset_formatted}";
-
             $timezone_list[$timezone] = "(${pretty_offset}) $timezone";
         }
         echo json_encode($timezone_list);
@@ -818,8 +770,6 @@ class DashboardEventVisitorController extends MyEventAppController
             'user_first_name' => $userRow['user_first_name'],
             'user_last_name' => $userRow['user_last_name']
         ];
-        // echo "<pre>";
-        // print_r($userData);
         if ($userRow['credential_password'] != EventUserAuthentication::encryptPassword($post['current_password'])) {
             FatUtility::dieJsonError(Label::getLabel('MSG_YOUR_CURRENT_PASSWORD_MIS_MATCHED'));
         }
@@ -845,6 +795,7 @@ class DashboardEventVisitorController extends MyEventAppController
         }
         FatUtility::dieJsonSuccess(Label::getLabel('MSG_Please_verify_your_email'));
     }
+
     private function sendEmailChangeVerificationLink($_token, $data, &$error)
     {
         $link = CommonHelper::generateFullUrl('EventUser', 'verifyEmail', [$_token], CONF_WEBROOT_FRONT_URL);
@@ -928,11 +879,8 @@ class DashboardEventVisitorController extends MyEventAppController
     public function profileImageForm()
     {
         $userId = EventUserAuthentication::getLoggedUserId();
-        // $isTeacher = User::getAttributesById($userId, 'user_is_teacher');
-        // $userSettings = UserSetting::getUserSettings($userId);
         $isTeacherDashboardActive = (EventUser::getDashboardActiveTab() == EventUser::USER_TEACHER_DASHBOARD);
         $profileImgFrm = $this->getProfileImageForm($isTeacherDashboardActive);
-        // $profileImgFrm->fill(['us_video_link' => $userSettings['us_video_link'] ?? '']);
         $userFirstName = EventUserAuthentication::getLoggedUserAttribute('user_first_name');
         $isProfilePicUploaded = EventUser::isProfilePicUploaded($userId);
         $this->set('profileImgFrm', $profileImgFrm);
@@ -964,9 +912,7 @@ class DashboardEventVisitorController extends MyEventAppController
 
     public function setUpProfileImage()
     {
-
         $userId = EventUserAuthentication::getLoggedUserId();
-
         $isTeacherDashboardActive = (EventUser::getDashboardActiveTab() == EventUser::USER_TEACHER_DASHBOARD);
         $profileImgFrm = $this->getProfileImageForm($isTeacherDashboardActive);
         $post = FatApp::getPostedData();
@@ -1009,12 +955,6 @@ class DashboardEventVisitorController extends MyEventAppController
             CommonHelper::crop($data, CONF_UPLOADS_PATH . $res);
             $this->set('file', CommonHelper::generateFullUrl('Image', 'user', [$userId, 'MEDIUM', true], CONF_WEBROOT_FRONTEND) . '?' . time());
         }
-        // if ($isTeacherDashboardActive) {
-        //     $userSettings = new UserSetting($userId);
-        //     if (!$userSettings->saveData(['us_video_link' => $post['us_video_link']])) {
-        //         FatUtility::dieJsonError($userSettings->getError());
-        //     }
-        // }
         $this->set('msg', Label::getLabel('MSG_Data_uploaded_successfully'));
         $this->_template->render(false, false, 'json-success.php');
     }
