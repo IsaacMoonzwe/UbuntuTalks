@@ -99,7 +99,7 @@ class DashboardEventVisitorController extends MyEventAppController
                     $sponserPlan = new SearchBase('tbl_sponsorshipcategories');
                     $sponserPlan->addCondition('sponsorshipcategories_id', '=', $tempKey);
                     $sponserPlanResult = FatApp::getDb()->fetch($sponserPlan->getResultSet());
-                    $plan_name = $plan_name . " " . $sponserPlanResult['sponsorshipcategories_name'] . ",";
+                    $plan_name = $plan_name . " " . $sponserPlanResult['sponsorshipcategories_name'] . " - " . $allValues[$qty_index] .",";
                     $plan_qty = $plan_qty . " " . $allValues[$qty_index] . ",";
                     $qty_plan = $allValues[$qty_index];
                     $total_qty = $total_qty + $qty_plan;
@@ -108,14 +108,14 @@ class DashboardEventVisitorController extends MyEventAppController
                         unset($events['plan']);
                         $plans = $plans . ',' . $sponserPlanResult['sponsorshipcategories_name'];
                         $unique = implode(',', array_unique(str_word_count($plans, 1)));
-                        $events['plan'] = $unique;
+                        $events['plan'] = $plan_name;
                         $total = $events[$SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title']] + $qty_plan;;
                         unset($events[$SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title']]);
                         $events[$SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title']] = $total;
                     } else {
                         $plan = $sponserPlanResult['sponsorshipcategories_name'];
                         $unique = implode(',', array_unique(str_word_count($plan, 1)));
-                        $events['plan'] = $unique;
+                        $events['plan'] = $plan_name;
                         $events['index'] = $index;
                         // $events['plan'] = $plan;
                         $events[$SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title']] = $qty_plan;
