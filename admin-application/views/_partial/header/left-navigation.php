@@ -107,6 +107,15 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                             <li><a href="<?php echo CommonHelper::generateUrl('EventUsers'); ?>"><?php echo Label::getLabel('LBL_Events_User_Listing', $adminLangId); ?></a></li>
                         <?php } ?>
                         <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
+                            <li><a href="<?php echo CommonHelper::generateUrl('DonationInformation', 'viewSchedules', ['all']); ?>"><?php echo Label::getLabel('LBL_Donation_Users_Listing', $adminLangId); ?></a></li>
+                        <?php } ?>
+                        <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
+                            <li><a href="<?php echo CommonHelper::generateUrl('SponsorshipInformation', 'viewSchedules', ['all']); ?>"><?php echo Label::getLabel('LBL_Sponsorship_Users_Listing', $adminLangId); ?></a></li>
+                        <?php } ?>
+                        <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
+                            <li><a href="<?php echo CommonHelper::generateUrl('SymposiumInformation', 'viewSchedules', ['all']); ?>"><?php echo Label::getLabel('LBL_UT_Symposium_Booking_Listing', $adminLangId); ?></a></li>
+                        <?php } ?>
+                        <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('LanguageSymposium'); ?>"><?php echo Label::getLabel('LBL_UT_Content_Blocks', $adminLangId); ?></a></li>
                         <?php } ?>
                         <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
