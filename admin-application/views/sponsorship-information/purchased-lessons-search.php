@@ -56,15 +56,22 @@
                             <tr>
                                 <td><?php echo $i++; ?></td>
                                 <td><?php echo $value['sponsorship'][0]['event_user_id'];  ?></td>
-                                <td><?php echo $value['sponsorship'][0]['user_first_name'] ." ".$value['sponsorship'][0]['user_last_name']; ?></td>
-                                <td><?php echo $value['sponsorship'][0]['user_phone_code'] ." ".$value['sponsorship'][0]['user_phone'];  ?></td>
+                                <td><?php echo $value['sponsorship'][0]['user_first_name'] . " " . $value['sponsorship'][0]['user_last_name']; ?></td>
+                                <td><?php echo $value['sponsorship'][0]['user_phone_code'] . " " . $value['sponsorship'][0]['user_phone'];  ?></td>
                                 <td><?php echo $value['event_name'];  ?></td>
                                 <td><?php echo $value['plan'];  ?></td>
                                 <td><?php echo $value['event_ending_time'];  ?></td>
                             </tr>
                         <?php } ?>
                     </tbody>
+
                 </table>
+                <?php
+                if (!empty($sponserEventData)) {
+                } else {
+                ?>
+                    <h3 style="text-align:center;padding-top:15px;">No Records Found..!!</h3>
+                <?php } ?>
                 <form name="frmPurchaseLessonSearchPaging"><input type="hidden" name="page" value=""></form>
             </div>
         </div>

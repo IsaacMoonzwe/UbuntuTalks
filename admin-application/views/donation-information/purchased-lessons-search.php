@@ -65,6 +65,12 @@
                         <?php } ?>
                     </tbody>
                 </table>
+                <?php
+                if (!empty($DonationInformationCategoriesList)) {
+                } else {
+                ?>
+                    <h3 style="text-align:center;padding-top:15px;">No Records Found..!!</h3>
+                <?php } ?>
                 <form name="frmPurchaseLessonSearchPaging"><input type="hidden" name="page" value=""></form>
             </div>
         </div>
