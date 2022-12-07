@@ -40,41 +40,35 @@
                     <thead>
                         <tr>
                             <th><?php echo Label::getLabel('LBL_SR_No', $adminLangId); ?></th>
-                            <th><?php echo Label::getLabel('LBL_Symposium_Id', $adminLangId); ?></th>
+                            <th><?php echo Label::getLabel('LBL_Symposium_Dinner_Id', $adminLangId); ?></th>
                             <th><?php echo Label::getLabel('LBL_Visitor_Name', $adminLangId); ?></th>
                             <th><?php echo Label::getLabel('LBL_Visitor_Email', $adminLangId); ?></th>
                             <th><?php echo Label::getLabel('LBL_Visitor_Phone', $adminLangId); ?></th>
-                            <th><?php echo Label::getLabel('LBL_Symposium_Title_(Events)', $adminLangId); ?></th>
+                            <th><?php echo Label::getLabel('LBL_Ticket_Category', $adminLangId); ?></th>
                             <th><?php echo Label::getLabel('LBL_Starting_Date', $adminLangId); ?></th>
                             <th><?php echo Label::getLabel('LBL_Ending_Date', $adminLangId); ?></th>
                             <th><?php echo Label::getLabel('LBL_Total_Ticket', $adminLangId); ?></th>
-                            <th><?php echo Label::getLabel('LBL_Download_Donation_Receipt', $adminLangId); ?></th>
+                            <th><?php echo Label::getLabel('LBL_Download_Ticket_Receipt', $adminLangId); ?></th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $i = 1;
-                        foreach ($SymposiumInformationCategoriesList as $value) {  ?>
+                        foreach ($PreSymposiumDinnerInformationCategoriesList as $value) {  ?>
                             <tr>
                                 <td><?php echo $i++; ?></td>
-                                <td><?php echo $value['event_user_ticket_plan_id']; ?></td>
-                                <td><?php echo $value['user_first_name'] . "<br>" . $value['user_last_name']; ?></td>
+                                <td><?php echo $value['pre_symposium_dinner_ticket_plan_id']; ?></td>
+                                <td><?php echo $value['user_first_name'] . " " . $value['user_last_name']; ?></td>
                                 <td><?php echo $value['user_email']; ?></td>
                                 <td><?php echo $value['user_phone_code'] . " " . $value['user_phone']; ?></td>
                                 <td><?php echo $value['registration_plan_title']; ?></td>
                                 <td><?php echo $value['registration_starting_date']; ?></td>
                                 <td><?php echo $value['registration_ending_date']; ?></td>
                                 <td><?php echo $value['event_user_ticket_count']; ?></td>
-                                <td><a href="<?php echo $value['event_user_ticket_download_url']; ?>" download="<?php echo $value['registration_plan_title'] . '.jpeg'; ?>">Download</a></td>
+                                <td><a href="<?php echo $value['event_user_ticket_download_url']; ?>" download="<?php echo $value['registration_plan_title'] . '.jpeg'; ?>">Download</i></a></td>
                             </tr>
                         <?php } ?>
                     </tbody>
                 </table>
-                <?php
-                if (!empty($SymposiumInformationCategoriesList)) {
-                } else {
-                ?>
-                    <h3 style="text-align:center;padding-top:15px;">No Records Found..!!</h3>
-                <?php } ?>
                 <form name="frmPurchaseLessonSearchPaging"><input type="hidden" name="page" value=""></form>
             </div>
         </div>

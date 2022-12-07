@@ -116,6 +116,12 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                             <li><a href="<?php echo CommonHelper::generateUrl('SymposiumInformation', 'viewSchedules', ['all']); ?>"><?php echo Label::getLabel('LBL_UT_Symposium_Booking_Listing', $adminLangId); ?></a></li>
                         <?php } ?>
                         <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
+                            <li><a href="<?php echo CommonHelper::generateUrl('BenefitConcertInformation', 'viewSchedules', ['all']); ?>"><?php echo Label::getLabel('LBL_Benefit_Concert_Booking_Listing', $adminLangId); ?></a></li>
+                        <?php } ?>
+                        <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
+                            <li><a href="<?php echo CommonHelper::generateUrl('PreSymposiumDinnerInformation', 'viewSchedules', ['all']); ?>"><?php echo Label::getLabel('LBL_Symposium_Dinner_Booking_Listing', $adminLangId); ?></a></li>
+                        <?php } ?>
+                        <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('LanguageSymposium'); ?>"><?php echo Label::getLabel('LBL_UT_Content_Blocks', $adminLangId); ?></a></li>
                         <?php } ?>
                         <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
