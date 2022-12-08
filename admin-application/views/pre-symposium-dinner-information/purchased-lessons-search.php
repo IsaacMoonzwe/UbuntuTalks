@@ -70,7 +70,7 @@
                     </tbody>
                 </table>
                 <?php
-                if (!empty($SymposiumInformationCategoriesList)) {
+                if (!empty($PreSymposiumDinnerInformationCategoriesList)) {
                 } else {
                 ?>
                     <h3 style="text-align:center;padding-top:15px;">No Records Found..!!</h3>

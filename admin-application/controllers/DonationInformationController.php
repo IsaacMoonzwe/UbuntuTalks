@@ -132,6 +132,33 @@ class DonationInformationController extends AdminBaseController
         $this->_template->render(false, false, null, false, false);
     }
 
+    public function export()
+    {
+        $DonationInformationSection = new SearchBase('tbl_event_user_donation');
+        $DonationInformationSection->addOrder('event_user_donation_id', 'DESC');
+        $DonationInformation_categories = $DonationInformationSection->getResultSet();
+        $DonationInformationCategoriesList = FatApp::getDb()->fetchAll($DonationInformation_categories);
+        foreach ($DonationInformationCategoriesList as $key => $value) {
+            $userObj = new SearchBase('tbl_event_user_credentials');
+            $userObj->addCondition('credential_user_id', ' = ', $value['event_user_user_id']);
+            $userSet = $userObj->getResultSet();
+            $userData = FatApp::getDb()->fetch($userSet);
+            $userObjs = new SearchBase('tbl_event_users');
+            $userObjs->addCondition('user_id', ' = ', $value['event_user_user_id']);
+            $userSets = $userObjs->getResultSet();
+            $userDatas = FatApp::getDb()->fetch($userSets);
+            $value['user_email'] = $userData['credential_email'];
+            $value['user_username'] = $userData['credential_username'];
+            $value['user_first_name'] = $userDatas['user_first_name'];
+            $value['user_last_name'] = $userDatas['user_last_name'];
+            $value['user_phone_code'] = $userDatas['user_phone_code'];
+            $value['user_phone'] = $userDatas['user_phone'];
+            $DonationInformationCategoriesList[$key] = $value;
+        }
+        $this->set("DonationInformationCategoriesList", $DonationInformationCategoriesList);
+        $this->_template->render(false, false);
+    }
+
     public function search()
     {
         $frmSearch = $this->getOrderPurchasedLessonsForm();

@@ -171,12 +171,10 @@ class SponsorshipInformationController extends AdminBaseController
                 $OrderProductData->addCondition('op_grpcls_id', '=', $value['event_user_become_id']);
                 $OrderProductData->addOrder('op_id', 'DESC');
                 $OrderProductsResult = FatApp::getDb()->fetch($OrderProductData->getResultSet());
-
                 $OrderData = new SearchBase('tbl_orders');
                 $OrderData->addCondition('order_id', '=', $OrderProductsResult['op_order_id']);
                 $OrderData->addCondition('order_is_paid', '=', 1);
                 $OrderResult = FatApp::getDb()->fetch($OrderData->getResultSet());
-
                 $userObjs = new SearchBase('tbl_event_users');
                 $userObjs->addCondition('user_id', ' = ', $OrderProductsResult['op_teacher_id']);
                 $userSets = $userObjs->getResultSet();
@@ -206,6 +204,105 @@ class SponsorshipInformationController extends AdminBaseController
         // print_r($sponserEventData);
         $this->set("sponserEventData", $sponserEventData);
         $this->_template->render(false, false, null, false, false);
+    }
+
+    public function export()
+    {
+        $SponsorshipeventplanData = new SearchBase('tbl_event_user_become_sponser');
+        $SponsorshipeventplanData->addCondition('event_user_payment_status', '=', 1);
+        $SponsorshipeventplanResult = FatApp::getDb()->fetchAll($SponsorshipeventplanData->getResultSet());
+        $eventList = array();
+        $events = array();
+        $plan = '';
+        $index = 0;
+        $SponserEvent = array();
+        foreach ($SponsorshipeventplanResult as $key => $value) {
+            $plan_name = '';
+            $plan_qty = '';
+            $sponserId = unserialize($value['event_user_sponsrship_id']);
+            $sponser_qty = unserialize($value['event_user_sponsership_qty']);
+            $qty_json = json_decode($sponser_qty);
+            $allValues = array_values((array)$qty_json);
+            $qty_index = 0;
+            $qty_plan = 0;
+            $json = json_decode($sponserId);
+            $allKeysOfEmployee = array_keys((array)$json);
+            $total_qty = 0;
+            $SponEventsSelectionData = new SearchBase('tbl_events_sponsorship_categories');
+            $SponEventsSelectionData->addCondition('events_sponsorship_categories_id', '=', $value['event_user_sponser_selected_plan']);
+            $SponSorshipEventsSelectionplanResult = FatApp::getDb()->fetch($SponEventsSelectionData->getResultSet());
+            $events['event_name'] = $SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title'];
+            $events['event_ending_time'] = $SponSorshipEventsSelectionplanResult['events_sponsorship_categories_ending_date'];
+            if (!empty($SponSorshipEventsSelectionplanResult)) {
+                foreach ($allKeysOfEmployee as $tempKey) {
+                    $sponserPlan = new SearchBase('tbl_sponsorshipcategories');
+                    $sponserPlan->addCondition('sponsorshipcategories_id', '=', $tempKey);
+                    $sponserPlanResult = FatApp::getDb()->fetch($sponserPlan->getResultSet());
+                    $plan_name = $plan_name . " " . $sponserPlanResult['sponsorshipcategories_name'] . " - " . $allValues[$qty_index] . ",";
+                    $plan_qty = $plan_qty . " " . $allValues[$qty_index] . ",";
+                    $qty_plan = $allValues[$qty_index];
+                    $total_qty = $total_qty + $qty_plan;
+                    if (array_key_exists($SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title'], $events)) {
+                        $plans = $events['plan'];
+                        unset($events['plan']);
+                        $plans = $plans . ',' . $sponserPlanResult['sponsorshipcategories_name'];
+                        $unique = implode(',', array_unique(str_word_count($plans, 1)));
+                        $events['plan'] = $plan_name;
+                        $total = $events[$SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title']] + $qty_plan;;
+                        unset($events[$SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title']]);
+                        $events[$SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title']] = $total;
+                    } else {
+                        $plan = $sponserPlanResult['sponsorshipcategories_name'];
+                        $unique = implode(',', array_unique(str_word_count($plan, 1)));
+                        $events['plan'] = $plan_name;
+                        $events['index'] = $index;
+                        $events[$SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title']] = $qty_plan;
+                    }
+                    if (array_key_exists($sponserPlanResult['sponsorshipcategories_name'], $eventList)) {
+                        $total = $eventList[$sponserPlanResult['sponsorshipcategories_name']] + $qty_plan;
+                        unset($eventList[$sponserPlanResult['sponsorshipcategories_name']]);
+                        $eventList[$sponserPlanResult['sponsorshipcategories_name']] = $total;
+                    } else {
+                        $plan = $sponserPlanResult['sponsorshipcategories_name'];
+                        $eventList[$sponserPlanResult['sponsorshipcategories_name']] = $qty_plan;
+                    }
+                    $qty_index++;
+                }
+                $OrderProductData = new SearchBase('tbl_order_products');
+                $OrderProductData->addCondition('op_grpcls_id', '=', $value['event_user_become_id']);
+                $OrderProductData->addOrder('op_id', 'DESC');
+                $OrderProductsResult = FatApp::getDb()->fetch($OrderProductData->getResultSet());
+                $OrderData = new SearchBase('tbl_orders');
+                $OrderData->addCondition('order_id', '=', $OrderProductsResult['op_order_id']);
+                $OrderData->addCondition('order_is_paid', '=', 1);
+                $OrderResult = FatApp::getDb()->fetch($OrderData->getResultSet());
+                $userObjs = new SearchBase('tbl_event_users');
+                $userObjs->addCondition('user_id', ' = ', $OrderProductsResult['op_teacher_id']);
+                $userSets = $userObjs->getResultSet();
+                $userDatas = FatApp::getDb()->fetch($userSets);
+                $value['user_email'] = $userData['credential_email'];
+                $value['user_username'] = $userData['credential_username'];
+                $value['user_first_name'] = $userDatas['user_first_name'];
+                $value['user_last_name'] = $userDatas['user_last_name'];
+                $value['user_phone_code'] = $userDatas['user_phone_code'];
+                $value['user_phone'] = $userDatas['user_phone'];
+                $SponsorishipInformationCategoriesList[$key] = $value;
+                $events['sponsorship'] = $SponsorishipInformationCategoriesList;
+                $events['order_data'] = $OrderProductsResult;
+                $events['coupon_code'] = $OrderResult['order_discount_coupon_code'];
+                $value['total'] = $events[$SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title']];
+                $value['event_name'] = $SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title'];
+                $value['event_ending_time'] = $SponSorshipEventsSelectionplanResult['events_sponsorship_categories_ending_date'];
+                $value['sponser_plan'] = $plan_name;
+                $value['sponser_plan_qty'] = $plan_qty;
+                $SponsorshipeventplanResult[$key] = $value;
+                $SponserEvent[$SponSorshipEventsSelectionplanResult['events_sponsorship_categories_plan_title']] = $events;
+            }
+            $index++;
+        }
+        $sponserEventData = $SponserEvent;
+        $this->set("sponserEventData", $sponserEventData);
+        $this->_template->render(false, false);
     }
 
     public function search()

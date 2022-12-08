@@ -141,6 +141,39 @@ class PreSymposiumDinnerInformationController extends AdminBaseController
         $this->_template->render(false, false, null, false, false);
     }
 
+    public function export(){
+        $PreSymposiumDinnerInformationSection = new SearchBase('tbl_pre_symposium_dinner_ticket_plan');
+        $PreSymposiumDinnerInformationSection->addOrder('pre_symposium_dinner_ticket_plan_id', 'DESC');
+        $PreSymposiumDinnerInformation_categories = $PreSymposiumDinnerInformationSection->getResultSet();
+        $PreSymposiumDinnerInformationCategoriesList = FatApp::getDb()->fetchAll($PreSymposiumDinnerInformation_categories);
+        foreach ($PreSymposiumDinnerInformationCategoriesList as $key => $value) {
+            $eventsDetails = new SearchBase('tbl_pre_symposium_dinner');
+            $eventsDetails->addCondition('pre_symposium_dinner_id', ' = ', $value['event_user_pre_symposium_dinner_id']);
+            $eventsDetailsInformation = $eventsDetails->getResultSet();
+            $eventsDeatailsCategoriesListing = FatApp::getDb()->fetch($eventsDetailsInformation);
+            $value['registration_plan_title'] = $eventsDeatailsCategoriesListing['pre_symposium_dinner_plan_title'];
+            $value['registration_starting_date'] = $eventsDeatailsCategoriesListing['pre_symposium_dinner_starting_date'];
+            $value['registration_ending_date'] = $eventsDeatailsCategoriesListing['pre_symposium_dinner_ending_date'];
+            $userObj = new SearchBase('tbl_event_user_credentials');
+            $userObj->addCondition('credential_user_id', ' = ', $value['event_user_id']);
+            $userSet = $userObj->getResultSet();
+            $userData = FatApp::getDb()->fetch($userSet);
+            $userObjs = new SearchBase('tbl_event_users');
+            $userObjs->addCondition('user_id', ' = ', $value['event_user_id']);
+            $userSets = $userObjs->getResultSet();
+            $userDatas = FatApp::getDb()->fetch($userSets);
+            $value['user_email'] = $userData['credential_email'];
+            $value['user_username'] = $userData['credential_username'];
+            $value['user_first_name'] = $userDatas['user_first_name'];
+            $value['user_last_name'] = $userDatas['user_last_name'];
+            $value['user_phone_code'] = $userDatas['user_phone_code'];
+            $value['user_phone'] = $userDatas['user_phone'];
+            $PreSymposiumDinnerInformationCategoriesList[$key] = $value;
+        }
+        $this->set("PreSymposiumDinnerInformationCategoriesList", $PreSymposiumDinnerInformationCategoriesList);
+        $this->_template->render(false,false);
+     }
+
     public function search()
     {
         $frmSearch = $this->getOrderPurchasedLessonsForm();

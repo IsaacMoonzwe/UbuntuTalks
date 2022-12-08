@@ -139,6 +139,40 @@ class BenefitConcertInformationController extends AdminBaseController
         $this->_template->render(false, false, null, false, false);
     }
 
+    public function export()
+    {
+        $BenefitConcertSection = new SearchBase('tbl_event_concert_ticket_plan');
+        $BenefitConcertSection->addOrder('event_concert_ticket_plan_id', 'DESC');
+        $BenefitConcert_categories = $BenefitConcertSection->getResultSet();
+        $BenefitConcertCategoriesList = FatApp::getDb()->fetchAll($BenefitConcert_categories);
+        foreach ($BenefitConcertCategoriesList as $key => $value) {
+            $eventsDetails = new SearchBase('tbl_benefit_concert');
+            $eventsDetails->addCondition('benefit_concert_id', ' = ', $value['event_user_concert_id']);
+            $eventsDetailsInformation = $eventsDetails->getResultSet();
+            $eventsDeatailsCategoriesListing = FatApp::getDb()->fetch($eventsDetailsInformation);
+            $value['registration_plan_title'] = $eventsDeatailsCategoriesListing['benefit_concert_plan_title'];
+            $value['registration_starting_date'] = $eventsDeatailsCategoriesListing['benefit_concert_starting_date'];
+            $value['registration_ending_date'] = $eventsDeatailsCategoriesListing['benefit_concert_ending_date'];
+            $userObj = new SearchBase('tbl_event_user_credentials');
+            $userObj->addCondition('credential_user_id', ' = ', $value['event_user_id']);
+            $userSet = $userObj->getResultSet();
+            $userData = FatApp::getDb()->fetch($userSet);
+            $userObjs = new SearchBase('tbl_event_users');
+            $userObjs->addCondition('user_id', ' = ', $value['event_user_id']);
+            $userSets = $userObjs->getResultSet();
+            $userDatas = FatApp::getDb()->fetch($userSets);
+            $value['user_email'] = $userData['credential_email'];
+            $value['user_username'] = $userData['credential_username'];
+            $value['user_first_name'] = $userDatas['user_first_name'];
+            $value['user_last_name'] = $userDatas['user_last_name'];
+            $value['user_phone_code'] = $userDatas['user_phone_code'];
+            $value['user_phone'] = $userDatas['user_phone'];
+            $BenefitConcertCategoriesList[$key] = $value;
+        }
+        $this->set("BenefitConcertCategoriesList", $BenefitConcertCategoriesList);
+        $this->_template->render(false, false);
+    }
+
     public function search()
     {
         $frmSearch = $this->getOrderPurchasedLessonsForm();

@@ -139,6 +139,40 @@ class SymposiumInformationController extends AdminBaseController
         $this->_template->render(false, false, null, false, false);
     }
 
+    public function export()
+    {
+        $SymposiumInformationSection = new SearchBase('tbl_event_user_ticket_plan');
+        $SymposiumInformationSection->addOrder('event_user_ticket_plan_id', 'DESC');
+        $SymposiumInformation_categories = $SymposiumInformationSection->getResultSet();
+        $SymposiumInformationCategoriesList = FatApp::getDb()->fetchAll($SymposiumInformation_categories);
+        foreach ($SymposiumInformationCategoriesList as $key => $value) {
+            $eventsDetails = new SearchBase('tbl_three_reasons');
+            $eventsDetails->addCondition('three_reasons_id', ' = ', $value['event_user_plan_id']);
+            $eventsDetailsInformation = $eventsDetails->getResultSet();
+            $eventsDeatailsCategoriesListing = FatApp::getDb()->fetch($eventsDetailsInformation);
+            $value['registration_plan_title'] = $eventsDeatailsCategoriesListing['registration_plan_title'];
+            $value['registration_starting_date'] = $eventsDeatailsCategoriesListing['registration_starting_date'];
+            $value['registration_ending_date'] = $eventsDeatailsCategoriesListing['registration_ending_date'];
+            $userObj = new SearchBase('tbl_event_user_credentials');
+            $userObj->addCondition('credential_user_id', ' = ', $value['event_user_id']);
+            $userSet = $userObj->getResultSet();
+            $userData = FatApp::getDb()->fetch($userSet);
+            $userObjs = new SearchBase('tbl_event_users');
+            $userObjs->addCondition('user_id', ' = ', $value['event_user_id']);
+            $userSets = $userObjs->getResultSet();
+            $userDatas = FatApp::getDb()->fetch($userSets);
+            $value['user_email'] = $userData['credential_email'];
+            $value['user_username'] = $userData['credential_username'];
+            $value['user_first_name'] = $userDatas['user_first_name'];
+            $value['user_last_name'] = $userDatas['user_last_name'];
+            $value['user_phone_code'] = $userDatas['user_phone_code'];
+            $value['user_phone'] = $userDatas['user_phone'];
+            $SymposiumInformationCategoriesList[$key] = $value;
+        }
+        $this->set("SymposiumInformationCategoriesList", $SymposiumInformationCategoriesList);
+        $this->_template->render(false, false);
+    }
+
     public function search()
     {
         $frmSearch = $this->getOrderPurchasedLessonsForm();

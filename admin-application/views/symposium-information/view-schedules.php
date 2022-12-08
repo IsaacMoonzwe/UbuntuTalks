@@ -1,5 +1,21 @@
-
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<style>
+    .Export-Button {
+        text-align: end;
+    }
+
+    input.button.button-primary.user_export_button {
+        cursor: pointer;
+        background-color: #12bbe0;
+        color: #FFF;
+        padding: 10px 15px 10px 15px;
+        border: none;
+        font-size: 15px;
+        border-radius: 5px;
+        letter-spacing: 0.7px;
+        font-family: 'Nunito', sans-serif !important;
+    }
+</style>
 <div class='page'>
     <div class='fixed_container'>
         <div class="row">
@@ -13,22 +29,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- <section class="section searchform_filter">
-                    <div class="sectionhead">
-                        <h4> <?php echo Label::getLabel('LBL_Search...', $adminLangId); ?></h4>
-                    </div>
-                    <div class="sectionbody space togglewrap" style="display:none;">
-                        <?php
-                        $searchForm->setFormTagAttribute('onsubmit', 'searchPuchasedLessons(this,1); return(false);');
-                        $searchForm->setFormTagAttribute('class', 'web_form');
-                        $searchForm->developerTags['colClassPrefix'] = 'col-md-';
-                        $searchForm->developerTags['fld_default_col'] = 6;
-                        $fld = $searchForm->getField('btn_clear');
-                        $fld->addFieldTagAttribute('onclick', 'clearPuchasedLessonSearch()');
-                        echo $searchForm->getFormHtml();
-                        ?>
-                    </div>
-                </section> -->
                 <?php
                 $pending_arry = array();
                 $completed_arry = array();
@@ -36,15 +36,19 @@
                     if ($value['events_report_comments_status'] == 0) {
                         $pending = $value['events_report_comments_status'];
                         array_push($pending_arry, $pending);
-                     } 
+                    }
 
-                     if ($value['events_report_comments_status'] == 1) {
+                    if ($value['events_report_comments_status'] == 1) {
                         $completed = $value['events_report_comments_status'];
                         array_push($completed_arry, $completed);
                     }
-
                 }
                 ?>
+                <div class="Export-Button">
+                    <form action="/admin/symposium-information/export" method="get">
+                        <input type="submit" class="button button-primary user_export_button" value="Export CSV">
+                    </form>
+                </div>
                 <section class="section">
                     <div class="sectionbody">
                         <div class="tablewrap">
