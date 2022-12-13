@@ -84,6 +84,7 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                     </ul>
                 </li>
                 <li><a href="<?php echo CommonHelper::generateUrl('BookedLessons', 'viewSchedules', ['all']); ?>"><?php echo Label::getLabel('LBL_Booked_Lessons', $adminLangId); ?></a></li>
+                <li><a href="<?php echo CommonHelper::generateUrl('TransactionHistory', 'viewSchedules', ['all']); ?>"><?php echo Label::getLabel('LBL_Transaction_History', $adminLangId); ?></a></li>
                 <li><a href="<?php echo CommonHelper::generateUrl('ReportAnIssue', 'viewSchedules', ['all']); ?>"><?php echo Label::getLabel('LBL_Report_An_Issue', $adminLangId); ?></a></li>
                 <li class="haschild"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_About_Us', $adminLangId); ?></a>
                     <ul>
