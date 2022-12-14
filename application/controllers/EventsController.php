@@ -134,6 +134,7 @@ class EventsController extends MyEventAppController
         $CodeOfConductContent = LanguageSymposium::getBlockContent(LanguageSymposium::BLOCK_CODE_OF_CONDUCT_INFORMATION, $this->siteLangId);
         $DisclaimerSection = LanguageSymposium::getBlockContent(LanguageSymposium::BLOCK_DISCLAIMER_SECTION, $this->siteLangId);
         $AboutVenue = LanguageSymposium::getBlockContent(LanguageSymposium::BLOCK_ABOUT_VENUE, $this->siteLangId);
+        $BenefitConcertTicketInformation = LanguageSymposium::getBlockContent(LanguageSymposium::BLOCK_BENEFIT_CONCERT_TICKET_INFORMATION, $this->siteLangId);
         $PreSymposiumDinner = LanguageSymposium::getBlockContent(LanguageSymposium::BLOCK_PRE_SYMPOSIUM_DINNER, $this->siteLangId);
         $PreSymposiumDinners = new SearchBase('tbl_pre_symposium_dinner');
         $PreSymposiumDinners->addCondition('pre_symposium_dinner_deleted', '=', 0);
@@ -152,6 +153,7 @@ class EventsController extends MyEventAppController
         $this->set('BenefitConcertArtistsDetailsList', $BenefitConcertArtistsDetailsList);
         $this->set('ticketManagerDetails', $ticketManagerDetails);
         $this->set('BenefitConcertDetailsList', $BenefitConcertDetailsList);
+        $this->set('BenefitConcertTicketInformation', $BenefitConcertTicketInformation);
         $this->set('AboutVenue', $AboutVenue);
         $this->set('DisclaimerSection', $DisclaimerSection);
         $this->set('CodeOfConductContent', $CodeOfConductContent);

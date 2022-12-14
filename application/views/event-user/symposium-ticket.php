@@ -229,7 +229,7 @@ defined('SYSTEM_INIT') or exit('Invalid Usage.');
   </div>
 </div>
 <script type="text/javascript">
-  jQuery("body").prepend('<div class="ticket-title" style="z-index:9999;background-color: #FFEBCD !important;height: 100vh !important;display: flex;align-items: center;justify-content: center;"><div class="ticket-box"><p>Generating Tickets</p><div class="stage"><div class="dot-flashing"></div></div></div></div>');
+  jQuery("body").prepend('<div class="ticket-title" style="z-index:9999;background-color: #FFEBCD !important;height: 100vh !important;display: flex;align-items: center;justify-content: center;"><div><div class="ticket-box"><p>Generating Tickets</p><div class="stage"><div class="dot-flashing"></div></div></div><div><h6 style="text-align: center;margin-top: 15px;font-size: 17px;">Note: Please do not refresh OR close the page ticket is processing...</h6><h3></h3></div></div></div>');
 
   $(document).ready(function() {
 

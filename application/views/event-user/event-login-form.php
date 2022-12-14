@@ -23,7 +23,7 @@ if (isset($userType) && !empty($userType)) {
                         <h4 class="-border-title"><?php echo Label::getLabel('LBL_Login'); ?></h4>
                     </div>
                     <div class="box__body -padding-40 div-login-form">
-                        <?php $this->includeTemplate('guest-user/_partial/learner-social-media-signup.php', $userTypeArray); ?>
+                        <?php $this->includeTemplate('event-user/_partial/learner-social-media-signup.php', $userTypeArray); ?>
                         <?php echo $frm->getFormHtml(); ?>
                         <div class="-align-center">
                             <a href="<?php echo CommonHelper::generateUrl('EventUser', 'ForgotPasswordForm'); ?>" class="-link-underline"><?php echo Label::getLabel('LBL_Forgot_Password?'); ?></a>

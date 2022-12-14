@@ -16,6 +16,7 @@ class DashboardEventVisitorController extends MyEventAppController
         $userDetails = $userObj->getDashboardData(CommonHelper::getLangId());
 
         $EventplanData = new SearchBase('tbl_event_user_ticket_plan');
+        $EventplanData->addOrder('event_user_ticket_plan_id', 'DESC');
         $EventplanData->addCondition('event_user_ticket_pay_status', '=', 1);
         $EventplanData->addCondition('event_user_id', '=', $userId);
         $EventplanResult = FatApp::getDb()->fetchAll($EventplanData->getResultSet());
@@ -24,23 +25,32 @@ class DashboardEventVisitorController extends MyEventAppController
             $EventsTicketsplanData->addCondition('three_reasons_deleted', '=', 0);
             $EventsTicketsplanData->addCondition('three_reasons_id', '=', $value['event_user_plan_id']);
             $EventsTicketsplanResult = FatApp::getDb()->fetch($EventsTicketsplanData->getResultSet());
+
             $OrderProductDatas = new SearchBase('tbl_order_products');
             $OrderProductDatas->addCondition('op_grpcls_id', '=', $value['event_user_ticket_plan_id']);
             $OrderProductDatas->addCondition('op_teacher_id', '=', $userId);
             $OrderProductDatas->addOrder('op_id', 'DESC');
             $OrderProductsResults = FatApp::getDb()->fetch($OrderProductDatas->getResultSet());
-            $OrderDatas = new SearchBase('tbl_orders');
-            $OrderDatas->addCondition('order_id', '=', $OrderProductsResults['op_order_id']);
-            $OrderDatas->addCondition('order_is_paid', '=', 1);
+            $OrderDatas = new SearchBase('tbl_order_payments');
+            $OrderDatas->addCondition('opayment_order_id', '=', $OrderProductsResults['op_order_id']);
             $OrderResults = FatApp::getDb()->fetch($OrderDatas->getResultSet());
+            $OrderDatass = new SearchBase('tbl_orders');
+            $OrderDatass->addCondition('order_id', '=', $OrderProductsResults['op_order_id']);
+            $OrderDatass->addCondition('order_is_paid', '=', 1);
+            $OrderResultss = FatApp::getDb()->fetch($OrderDatass->getResultSet());
+            
             $value['order_data'] = $OrderProductsResults;
             $value['coupon_code'] = $OrderResults['order_discount_coupon_code'];
             $value['plan_name'] = $EventsTicketsplanResult['registration_plan_title'];
             $value['plan_start_date'] = $EventsTicketsplanResult['registration_starting_date'];
             $value['plan_end_date'] = $EventsTicketsplanResult['registration_ending_date'];
+            $value['plan_price'] = $EventsTicketsplanResult['registration_plan_price'];
+            $value['order_net_amount'] = $OrderResultss['order_net_amount'];
+            $value['order_currency_code'] = $OrderResultss['order_currency_code'];
             $EventplanResult[$key] = $value;
         }
         $BenefitConcertplanData = new SearchBase('tbl_event_concert_ticket_plan');
+        $BenefitConcertplanData->addOrder('event_concert_ticket_plan_id', 'DESC');
         $BenefitConcertplanData->addCondition('event_user_ticket_pay_status', '=', 1);
         $BenefitConcertplanData->addCondition('event_user_id', '=', $userId);
         $BenefitConcertplanResult = FatApp::getDb()->fetchAll($BenefitConcertplanData->getResultSet());
@@ -49,13 +59,33 @@ class DashboardEventVisitorController extends MyEventAppController
             $BenefitConcertTicketsplanData->addCondition('benefit_concert_deleted', '=', 0);
             $BenefitConcertTicketsplanData->addCondition('benefit_concert_id', '=', $value['event_user_concert_id']);
             $BenefitConcertTicketsplanResult = FatApp::getDb()->fetch($BenefitConcertTicketsplanData->getResultSet());
+
+            $OrderProductDatas = new SearchBase('tbl_order_products');
+            $OrderProductDatas->addCondition('op_grpcls_id', '=', $value['event_concert_ticket_plan_id']);
+            $OrderProductDatas->addCondition('op_teacher_id', '=', $userId);
+            $OrderProductDatas->addOrder('op_id', 'DESC');
+            $OrderProductsResults = FatApp::getDb()->fetch($OrderProductDatas->getResultSet());
+            $OrderDatas = new SearchBase('tbl_order_payments');
+            $OrderDatas->addCondition('opayment_order_id', '=', $OrderProductsResults['op_order_id']);
+            $OrderResults = FatApp::getDb()->fetch($OrderDatas->getResultSet());
+            $OrderDatass = new SearchBase('tbl_orders');
+            $OrderDatass->addCondition('order_id', '=', $OrderProductsResults['op_order_id']);
+            $OrderDatass->addCondition('order_is_paid', '=', 1);
+            $OrderResultss = FatApp::getDb()->fetch($OrderDatass->getResultSet());
+
             $value['plan_name'] = $BenefitConcertTicketsplanResult['benefit_concert_plan_title'];
             $value['plan_start_date'] = $BenefitConcertTicketsplanResult['benefit_concert_starting_date'];
             $value['plan_end_date'] = $BenefitConcertTicketsplanResult['benefit_concert_ending_date'];
+            $value['plan_price'] = $EventsTicketsplanResult['benefit_concert_plan_price'];
+            $value['order_net_amount'] = $OrderResultss['order_net_amount'];
+            $value['order_currency_code'] = $OrderResultss['order_currency_code'];
             $BenefitConcertplanResult[$key] = $value;
         }
+        // echo "<pre>";
+        // print_r($BenefitConcertplanResult);
         $PreSymposiumDinnerplanData = new SearchBase('tbl_pre_symposium_dinner_ticket_plan');
         $PreSymposiumDinnerplanData->addCondition('event_user_ticket_pay_status', '=', 1);
+        $PreSymposiumDinnerplanData->addOrder('pre_symposium_dinner_ticket_plan_id', 'DESC');
         $PreSymposiumDinnerplanData->addCondition('event_user_id', '=', $userId);
         $PreSymposiumDinnerplanResult = FatApp::getDb()->fetchAll($PreSymposiumDinnerplanData->getResultSet());
         foreach ($PreSymposiumDinnerplanResult as $key => $value) {
@@ -63,9 +93,26 @@ class DashboardEventVisitorController extends MyEventAppController
             $PreSymposiumDinnerTicketsplanData->addCondition('pre_symposium_dinner_deleted', '=', 0);
             $PreSymposiumDinnerTicketsplanData->addCondition('pre_symposium_dinner_id', '=', $value['event_user_pre_symposium_dinner_id']);
             $PreSymposiumDinnerTicketsplanResult = FatApp::getDb()->fetch($PreSymposiumDinnerTicketsplanData->getResultSet());
+
+            $OrderProductDatas = new SearchBase('tbl_order_products');
+            $OrderProductDatas->addCondition('op_grpcls_id', '=', $value['pre_symposium_dinner_ticket_plan_id']);
+            $OrderProductDatas->addCondition('op_teacher_id', '=', $userId);
+            $OrderProductDatas->addOrder('op_id', 'DESC');
+            $OrderProductsResults = FatApp::getDb()->fetch($OrderProductDatas->getResultSet());
+            $OrderDatas = new SearchBase('tbl_order_payments');
+            $OrderDatas->addCondition('opayment_order_id', '=', $OrderProductsResults['op_order_id']);
+            $OrderResults = FatApp::getDb()->fetch($OrderDatas->getResultSet());
+            $OrderDatass = new SearchBase('tbl_orders');
+            $OrderDatass->addCondition('order_id', '=', $OrderProductsResults['op_order_id']);
+            $OrderDatass->addCondition('order_is_paid', '=', 1);
+            $OrderResultss = FatApp::getDb()->fetch($OrderDatass->getResultSet());
+
             $value['plan_name'] = $PreSymposiumDinnerTicketsplanResult['pre_symposium_dinner_plan_title'];
             $value['plan_start_date'] = $PreSymposiumDinnerTicketsplanResult['pre_symposium_dinner_starting_date'];
             $value['plan_end_date'] = $PreSymposiumDinnerTicketsplanResult['pre_symposium_dinner_ending_date'];
+            $value['plan_price'] = $EventsTicketsplanResult['pre_symposium_dinner_plan_price'];
+            $value['order_net_amount'] = $OrderResultss['order_net_amount'];
+            $value['order_currency_code'] = $OrderResultss['order_currency_code'];
             $PreSymposiumDinnerplanResult[$key] = $value;
         }
         $SponsorshipeventplanData = new SearchBase('tbl_event_user_become_sponser');
@@ -207,7 +254,9 @@ class DashboardEventVisitorController extends MyEventAppController
         $BenefitConcertplanData = new SearchBase('tbl_event_concert_ticket_plan');
         $BenefitConcertplanData->addCondition('event_user_ticket_pay_status', '=', 1);
         $BenefitConcertplanData->addCondition('event_user_id', '=', $userId);
+        $BenefitConcertplanData->addOrder('event_concert_ticket_plan_id', 'DESC');
         $BenefitConcertplanResult = FatApp::getDb()->fetchAll($BenefitConcertplanData->getResultSet());
+       
         foreach ($BenefitConcertplanResult as $key => $value) {
             $OrderProductData = new SearchBase('tbl_order_products');
             $OrderProductData->addCondition('op_grpcls_id', '=', $value['event_concert_ticket_plan_id']);
@@ -218,11 +267,15 @@ class DashboardEventVisitorController extends MyEventAppController
             $OrderData->addCondition('order_id', '=', $OrderProductsResult['op_order_id']);
             $OrderData->addCondition('order_is_paid', '=', 1);
             $OrderResult = FatApp::getDb()->fetch($OrderData->getResultSet());
+           
             $value['order_data'] = $OrderProductsResult;
             $value['coupon_code'] = $OrderResult['order_discount_coupon_code'];
             $value['plan_name'] = $BenefitConcertTicketsplanResult['benefit_concert_plan_title'];
             $value['plan_start_date'] = $BenefitConcertTicketsplanResult['benefit_concert_starting_date'];
             $value['plan_end_date'] = $BenefitConcertTicketsplanResult['benefit_concert_ending_date'];
+            $value['plan_price'] = $EventsTicketsplanResult['benefit_concert_plan_price'];
+            $value['order_net_amount'] = $OrderResult['order_net_amount'];
+            $value['order_currency_code'] = $OrderResult['order_currency_code'];
             $BenefitConcertplanResult[$key] = $value;
         }
         $this->set('PreSymposiumDinnerplanResult', $PreSymposiumDinnerplanResult);

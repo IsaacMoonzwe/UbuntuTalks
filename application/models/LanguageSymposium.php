@@ -15,6 +15,7 @@ class LanguageSymposium extends MyAppModel
     const BLOCK_ABOUT_JOYOUS_CELEBRATION = 31;
     const BLOCK_ABOUT_VENUE = 32;
     const BLOCK_PRE_SYMPOSIUM_DINNER = 34;
+    const BLOCK_BENEFIT_CONCERT_TICKET_INFORMATION = 35;
 
     private $pageType;
 

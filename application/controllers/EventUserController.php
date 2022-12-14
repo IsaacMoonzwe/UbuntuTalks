@@ -342,7 +342,7 @@ class EventUserController extends MyEventAppController
             if (!isset($_SESSION['ticketUrl'])) {
                 FatApp::redirectUser(CommonHelper::generateUrl('EventUser', 'EventTicket', [$orderId, $_SESSION['planSelected']]));
             } elseif ($ticket_download != '' && $ticket_generate_url != '') {
-            
+
                 $record = new TableRecord('tbl_event_user_ticket_plan');
                 $record->assignValues(['event_user_ticket_url' => $ticket_generate_url, 'event_user_ticket_download_url' => $ticket_download]);
                 if (!$record->update(['smt' => 'event_user_ticket_plan_id = ?', 'vals' => [$orderResult['op_grpcls_id']]])) {
@@ -633,7 +633,7 @@ class EventUserController extends MyEventAppController
             'order_is_wallet_selected' => $cartData['cartWalletSelected'],
             'order_wallet_amount_charge' => $walletAmountCharge,
             'order_currency_id' => CommonHelper::getCurrencyId(),
-            'order_currency_code' => CommonHelper::getCurrencyCode(),
+            'order_currency_code' => $currency,
             'order_currency_value' => CommonHelper::getCurrencyValue(),
             'order_pmethod_id' => $pmethodId,
             'order_discount_coupon_code' => $cartData['cartDiscounts']['coupon_code'] ?? '',
@@ -2430,7 +2430,7 @@ class EventUserController extends MyEventAppController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
-    public function GetSymposiumTicketsPaymentSummary($method = '', $ticketCount = 1, $checkLogged = 1,$currency = 'USD')
+    public function GetSymposiumTicketsPaymentSummary($method = '', $ticketCount = 1, $checkLogged = 1, $currency = 'USD')
     {
         $_SESSION['Event_userId'] = 0;
         if ($checkLogged > 0) {
@@ -2714,7 +2714,7 @@ class EventUserController extends MyEventAppController
         $this->set('frm', $frm);
         $this->_template->render(false, false);
     }
-    public function GetConcertTicketsPaymentSummary($method = '', $ticketCount = 1, $checkLogged = 1,$currency = 'USD')
+    public function GetConcertTicketsPaymentSummary($method = '', $ticketCount = 1, $checkLogged = 1, $currency = 'USD')
     {
         $_SESSION['Event_userId'] = 0;
         if ($checkLogged > 0) {
@@ -2817,7 +2817,7 @@ class EventUserController extends MyEventAppController
         $currencySwitcherData->addOrder('currencies_switcher_display_order', 'ASC');
         $currencySwitcherResultData = FatApp::getDb()->fetchall($currencySwitcherData->getResultSet());
         $selectedPlan = $cartData['itemId'];
-    
+
         $registrationPlanData = new SearchBase('tbl_benefit_concert');
         $registrationPlanData->addCondition('benefit_concert_id', '=', $selectedPlan);
         $registrationPlanData->addCondition('benefit_concert_active', '=', '1');
@@ -3280,19 +3280,19 @@ class EventUserController extends MyEventAppController
             if ($row) {
                 if ($row['credential_active'] != applicationConstants::ACTIVE) {
                     Message::addErrorMessage(Label::getLabel("ERR_YOUR_ACCOUNT_HAS_BEEN_DEACTIVATED"));
-                    FatApp::redirectUser(CommonHelper::generateUrl('Teachers', 'languages'));
+                    FatApp::redirectUser(CommonHelper::generateUrl('Events'));
                 }
                 $userObj->setMainTableRecordId($row['user_id']);
                 $arr = ['user_googleplus_id' => $userGoogleId,];
                 if (!$userObj->setUserInfo($arr)) {
                     Message::addErrorMessage(Label::getLabel('LBL_ERROR_TO_UPDATE_USER_DATA'));
-                    FatApp::redirectUser(CommonHelper::generateUrl('Teachers', 'languages'));
+                    FatApp::redirectUser(CommonHelper::generateUrl('Events'));
                 }
                 $row['credential_verified'] = FatUtility::int($row['credential_verified']);
                 if ($row['credential_verified'] != applicationConstants::YES) {
                     if (!$userObj->verifyAccount(applicationConstants::YES)) {
                         Message::addErrorMessage(Label::getLabel('LBL_ERROR_TO_UPDATE_USER_DATA'));
-                        FatApp::redirectUser(CommonHelper::generateUrl('Teachers', 'languages'));
+                        FatApp::redirectUser(CommonHelper::generateUrl('Events'));
                     }
                 }
                 if ($row['user_preferred_dashboard'] == EventUser::USER_TEACHER_DASHBOARD) {
@@ -3315,13 +3315,13 @@ class EventUserController extends MyEventAppController
                 if (!$userObj->save()) {
                     Message::addErrorMessage(Label::getLabel("MSG_USER_COULD_NOT_BE_SET") . $userObj->getError());
                     $db->rollbackTransaction();
-                    FatApp::redirectUser(CommonHelper::generateUrl('Teachers', 'languages'));
+                    FatApp::redirectUser(CommonHelper::generateUrl('Events'));
                 }
                 $username = str_replace(" ", "", $userGoogleName) . $userGoogleId;
                 if (!$userObj->setLoginCredentials($username, $userGoogleEmail, uniqid(), 1, 1)) {
                     Message::addErrorMessage(Label::getLabel("MSG_LOGIN_CREDENTIALS_COULD_NOT_BE_SET") . $userObj->getError());
                     $db->rollbackTransaction();
-                    FatApp::redirectUser(CommonHelper::generateUrl('Teachers', 'languages'));
+                    FatApp::redirectUser(CommonHelper::generateUrl('Events'));
                 }
                 $db->commitTransaction();
                 $userId = $userObj->getMainTableRecordId();
@@ -3340,15 +3340,15 @@ class EventUserController extends MyEventAppController
             $userInfo = $userObj->getUserInfo(['user_googleplus_id', 'user_is_teacher', 'credential_username', 'credential_password']);
             if (!$userInfo || ($userInfo && $userInfo['user_googleplus_id'] != $userGoogleId)) {
                 Message::addErrorMessage(Label::getLabel("MSG_USER_COULD_NOT_BE_SET"));
-                FatApp::redirectUser(CommonHelper::generateUrl('Teachers', 'languages'));
+                FatApp::redirectUser(CommonHelper::generateUrl('Events'));
             }
             $authentication = new EventUserAuthentication();
             if (!$authentication->login($userInfo['credential_username'], $userInfo['credential_password'], $_SERVER['REMOTE_ADDR'], false)) {
                 Message::addErrorMessage(Label::getLabel($authentication->getError()));
-                FatApp::redirectUser(CommonHelper::generateUrl('Teachers', 'languages'));
+                FatApp::redirectUser(CommonHelper::generateUrl('Events'));
             }
             unset($_SESSION['access_token']);
-            $redirectUrl = CommonHelper::generateUrl('Teachers', 'languages');
+            $redirectUrl = CommonHelper::generateUrl('Events');
             $isUserTeacher = FatUtility::int($userInfo['user_is_teacher']);
             if ($userType == EventUser::USER_TYPE_TEACHER && $isUserTeacher != applicationConstants::YES) {
                 $redirectUrl = CommonHelper::generateUrl('TeacherRequest', 'form');

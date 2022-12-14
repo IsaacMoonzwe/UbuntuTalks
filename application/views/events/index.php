@@ -229,7 +229,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                        </div>
                                        <div class="ticket-card-nav">
                                           <div>
-                                             <h2 class="ticket-price"><?php echo "$" . $value['registration_plan_price']; ?></h2>
+                                             <h2 class="ticket-price"><?php echo "USD " . $value['registration_plan_price']; ?></h2>
                                              <div class="ticket-date">
                                                 <p class="ticket-decription"><?php echo $value['registration_plan_description']; ?></p>
                                                 <div class="ticket-information">
@@ -866,7 +866,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                        </div>
                                        <div class="ticket-card-nav">
                                           <div>
-                                             <h2 class="ticket-price"><?php echo "$" . $value['pre_symposium_dinner_plan_price']; ?></h2>
+                                             <h2 class="ticket-price"><?php echo "USD " . $value['pre_symposium_dinner_plan_price']; ?></h2>
                                              <div class="ticket-date">
                                                 <p class="ticket-decription"><?php echo $value['pre_symposium_dinner_plan_description']; ?></p>
                                                 <div class="ticket-information">
@@ -953,7 +953,9 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                      </div>
                      <div class="col-md-12 donation-title">
                         <div class="registration_card">
+                           
                            <h1 class="concert-title"><?php echo Label::getLabel('LBL_Tickets', $adminLangId); ?></h1>
+                           <?php echo FatUtility::decodeHtmlEntities($BenefitConcertTicketInformation); ?>
                            <div class="row">
                               <?php
 
@@ -972,7 +974,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                        </div>
                                        <div class="ticket-card-nav">
                                           <div>
-                                             <h2 class="ticket-price"><?php echo "$" . $value['benefit_concert_plan_price']; ?></h2>
+                                             <h2 class="ticket-price"><?php echo "USD " . $value['benefit_concert_plan_price']; ?></h2>
                                              <div class="ticket-date">
                                                 <p class="ticket-decription"><?php echo $value['benefit_concert_plan_description']; ?></p>
                                                 <div class="ticket-information">

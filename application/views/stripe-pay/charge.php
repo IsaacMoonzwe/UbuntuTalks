@@ -192,7 +192,7 @@
 <script type="text/javascript">
   const stripe = Stripe("pk_live_51JwGHMEBydRe3lMmmahLFCh1YNTKub0lzgFJjhXDlDYD5Jt0LadbEhxKJ2vQKoRptpyXyVXt4Sax6C2gTlkPudQn00zyBXlhX3");
 
-  //const stripe = Stripe("pk_test_51JwGHMEBydRe3lMmSMnKBfxpsc6QoqlBI7vQMsj53qfdPSNNq97yVUHEpUaoeckkrFIx2aFVTH8YZdYpxQSrGcya00je6gTKLD");
+ // const stripe = Stripe("pk_test_51JwGHMEBydRe3lMmSMnKBfxpsc6QoqlBI7vQMsj53qfdPSNNq97yVUHEpUaoeckkrFIx2aFVTH8YZdYpxQSrGcya00je6gTKLD");
 
   // The items the customer wants to buy
   const items = [{

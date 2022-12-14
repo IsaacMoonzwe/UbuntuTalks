@@ -19,7 +19,7 @@ $fldPassword->captionWrapper = array(Label::getLabel('LBL_Password'), '<a onClic
     <div class="-align-center">
         <p class="account-title"><?php echo Label::getLabel('LBL_Don\'t_have_an_account?'); ?> <a href="javascript:void(0)" onclick="EventSignUpFormPopUp();" class="-link-underline link-color account-signUp"><?php echo Label::getLabel('LBL_Sign_Up'); ?></a></p>
     </div>
-    <?php $this->includeTemplate('guest-user/_partial/learner-social-media-signup.php', $userTypeArray); ?>
+    <?php $this->includeTemplate('event-user/_partial/learner-social-media-signup.php', $userTypeArray); ?>
     <?php
     $frm->setFormTagAttribute('class', 'form');
     $frm->developerTags['colClassPrefix'] = 'col-sm-';

@@ -354,7 +354,8 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                                 <th><?php echo Label::getLabel('LBL_Events'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Stating_Date'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Ending_Date'); ?></th>
-                                                                <th><?php echo Label::getLabel('LBL_Total_Tickets'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_No_Of_Tickets'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Price'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Coupon_Code'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Tickets'); ?></th>
                                                             </tr>
@@ -382,6 +383,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                                             <td><?php echo $value['plan_start_date']; ?></td>
                                                                             <td><?php echo $value['plan_end_date']; ?></td>
                                                                             <td><?php echo $value['event_user_ticket_count']; ?></td>
+                                                                            <td><?php echo $value['order_currency_code'] ." ". $value['order_net_amount']; ?></td>
                                                                             <td class="ccode">
                                                                                 <?php
                                                                                 if (!empty($value['coupon_code'])) {
@@ -479,7 +481,8 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                                 <th><?php echo Label::getLabel('LBL_Concert_Tickets_Category'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Stating_Date'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Ending_Date'); ?></th>
-                                                                <th><?php echo Label::getLabel('LBL_Total_Tickets'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_No_Of_Tickets'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Price'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Coupon_Code'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Tickets'); ?></th>
                                                             </tr>
@@ -507,6 +510,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                                             <td><?php echo $value['plan_start_date']; ?></td>
                                                                             <td><?php echo $value['plan_end_date']; ?></td>
                                                                             <td><?php echo $value['event_user_ticket_count']; ?></td>
+                                                                            <td><?php echo $value['order_currency_code']." ".$value['order_net_amount']; ?></td>
                                                                             <td class="ccode">
                                                                                 <?php
                                                                                 if (!empty($value['coupon_code'])) {
@@ -547,7 +551,8 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                                 <th><?php echo Label::getLabel('LBL_Concert_Tickets_Category'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Stating_Date'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Ending_Date'); ?></th>
-                                                                <th><?php echo Label::getLabel('LBL_Total_Tickets'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_No_Of_Tickets'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Price'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Coupon_Code'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Tickets'); ?></th>
                                                             </tr>
@@ -576,6 +581,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                                             <td><?php echo $value['plan_start_date']; ?></td>
                                                                             <td><?php echo $value['plan_end_date']; ?></td>
                                                                             <td><?php echo $value['event_user_ticket_count']; ?></td>
+                                                                            <td><?php echo $value['order_currency_code']. " ". $value['order_net_amount']; ?></td>
                                                                             <td class="ccode">
                                                                                 <?php
                                                                                 if (!empty($value['coupon_code'])) {
