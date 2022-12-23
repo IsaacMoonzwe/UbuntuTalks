@@ -9,10 +9,6 @@
         width: 20%;
     }
 
-
-
-    span {}
-
     ul.pagination li span {
         width: 35px;
         line-height: 32px;

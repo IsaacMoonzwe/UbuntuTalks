@@ -331,6 +331,75 @@ class TransactionHistoryController extends AdminBaseController
         $this->_template->render(false, false, null, false, false);
     }
 
+    public function export()
+    {
+        $OrderPaymentInformationSection = new SearchBase('tbl_order_payments');
+        $OrderPaymentInformationSection->addOrder('opayment_id', 'DESC');
+        $OrderPaymentInformation_categories = $OrderPaymentInformationSection->getResultSet();
+        $OrderPaymentInformationCategoriesList = FatApp::getDb()->fetchAll($OrderPaymentInformation_categories);
+        foreach ($OrderPaymentInformationCategoriesList as $key => $value) {
+            $Orders = new SearchBase('tbl_orders');
+            $Orders->addCondition('order_id', ' = ', $value['opayment_order_id']);
+            $OrdersInformation = $Orders->getResultSet();
+            $OrdersDeatailsCategoriesListing = FatApp::getDb()->fetch($OrdersInformation);
+            $value['order_user_id'] = $OrdersDeatailsCategoriesListing['order_user_id'];
+            $value['order_net_amount'] = $OrdersDeatailsCategoriesListing['order_net_amount'];
+            $value['order_wallet_amount_charge'] = $OrdersDeatailsCategoriesListing['order_wallet_amount_charge'];
+            $value['order_discount_coupon_code'] = $OrdersDeatailsCategoriesListing['order_discount_coupon_code'];
+            $value['order_discount_value'] = $OrdersDeatailsCategoriesListing['order_discount_value'];
+            $value['order_discount_total'] = $OrdersDeatailsCategoriesListing['order_discount_total'];
+            $userObj = new SearchBase('tbl_event_user_credentials');
+            $userObj->addCondition('credential_user_id', ' = ', $value['order_user_id']);
+            $userSet = $userObj->getResultSet();
+            $userData = FatApp::getDb()->fetch($userSet);
+            $userObjs = new SearchBase('tbl_event_users');
+            $userObjs->addCondition('user_id', ' = ', $value['event_user_id']);
+            $userSets = $userObjs->getResultSet();
+            $userDatas = FatApp::getDb()->fetch($userSets);
+            $value['user_email'] = $userData['credential_email'];
+            $value['user_username'] = $userData['credential_username'];
+            $value['user_first_name'] = $userDatas['user_first_name'];
+            $value['user_last_name'] = $userDatas['user_last_name'];
+            $value['user_phone_code'] = $userDatas['user_phone_code'];
+            $value['user_phone'] = $userDatas['user_phone'];
+            $userObj = new SearchBase('tbl_user_credentials');
+            $userObj->addCondition('credential_user_id', '=', $value['order_user_id']);
+            $userSet = $userObj->getResultSet();
+            $userData = FatApp::getDb()->fetch($userSet);
+            if (empty($userData)) {
+                $userObj = new SearchBase('tbl_event_user_credentials');
+                $userObj->addCondition('credential_user_id', '=', $value['order_user_id']);
+                $userSet = $userObj->getResultSet();
+                $userData = FatApp::getDb()->fetch($userSet);
+            }
+            $userObjs = new SearchBase('tbl_users');
+            $userObjs->addCondition('user_id', '=', $value['order_user_id']);
+            $userSets = $userObjs->getResultSet();
+            $userDatas = FatApp::getDb()->fetch($userSets);
+            if (empty($userDatas)) {
+                $userObjs = new SearchBase('tbl_event_users');
+                $userObjs->addCondition('user_id', '=', $value['order_user_id']);
+                $userSets = $userObjs->getResultSet();
+                $userDatas = FatApp::getDb()->fetch($userSets);
+            }
+            $value['user_email'] = $userData['credential_email'];
+            $value['user_username'] = $userData['credential_username'];
+            $value['user_first_name'] = $userDatas['user_first_name'];
+            $value['user_last_name'] = $userDatas['user_last_name'];
+            $value['user_phone_code'] = $userDatas['user_phone_code'];
+            $value['user_phone'] = $userDatas['user_phone'];
+            $value['user_email'] = $userData['credential_email'];
+            $value['user_username'] = $userData['credential_username'];
+            $value['user_first_name'] = $userDatas['user_first_name'];
+            $value['user_last_name'] = $userDatas['user_last_name'];
+            $value['user_phone_code'] = $userDatas['user_phone_code'];
+            $value['user_phone'] = $userDatas['user_phone'];
+            $TransactionHistoryInformationCategoriesList[$key] = $value;
+        }
+        $this->set('TransactionHistoryInformationCategoriesList', $TransactionHistoryInformationCategoriesList);
+        $this->_template->render(false, false);
+    }
+
 
     public function viewDetail($opayment_order_id)
     {

@@ -11,7 +11,6 @@ $contactFrm->developerTags['colClassPrefix'] = 'col-md-';
 $contactFrm->developerTags['fld_default_col'] = 12;
 ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
-
 <section class="section">
    <div class="container container--narrow">
       <div class="owl-carousel owl-theme">
@@ -953,7 +952,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                      </div>
                      <div class="col-md-12 donation-title">
                         <div class="registration_card">
-                           
+
                            <h1 class="concert-title"><?php echo Label::getLabel('LBL_Tickets', $adminLangId); ?></h1>
                            <?php echo FatUtility::decodeHtmlEntities($BenefitConcertTicketInformation); ?>
                            <div class="row">
@@ -1024,9 +1023,11 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                        <ul class="nav nav-tabs" id="agenda-tab" role="tablist">
                                           <?php
                                           $num = 0;
-
-                                          foreach ($AgendaEventsList as $value) {
-                                             if ($value['available_data'] > 0) {
+                                          // echo "<pre>";
+                                          // print_r($AgendaCategoriesList);
+                                          // die;
+                                          foreach ($AgendaCategoriesList as $value) {
+                                             if ($value['agenda_start_time']) {
                                                 $splitTimeStamp = explode(" ", $value['agenda_start_time']);
                                                 $date = $splitTimeStamp[0];
                                                 $DiffTime = $splitTimeStamp[1];
@@ -1036,15 +1037,18 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                 } else {
                                                    $activeClass = "";
                                                 }
-                                                $Starting_date = $value['registration_starting_date'];
+                                                $Starting_date = $value['agenda_start_time'];
                                                 $CreatedDate_Convert = date("d F", strtotime($Starting_date));
-                                                $Starting_date_title = $value['registration_starting_days'];
-                                                $Agenda_Title = $CreatedDate_Convert . "-" . $Starting_date_title;
+                                                $Starting_date_title = $value['agenda_starting_days'];
+                                                $Agenda_Title = $Starting_date_title;
+                                                $splitTimeStamp = explode(" ", $value['agenda_start_time'])[0];
+                                                $tab=explode('-',$splitTimeStamp);
+                                                $tabClickId=join('',$tab);
+                                               
                                           ?>
                                                 <li class="nav-item">
-                                                   <a class="nav-link <?php echo $activeClass; ?>" id="<?php echo "agenda" . $value['three_reasons_id'] . "-tab"; ?>" data-toggle="tab" onclick="tabClick(<?php echo $value['three_reasons_id']; ?>);" href="#<?php echo $value['three_reasons_id']; ?>" role="tab" aria-controls="agendaOne" aria-selected="true">
+                                                   <a class="nav-link <?php echo $activeClass; ?>" id="<?php echo "agenda" . $tabClickId . "-tab"; ?>" data-toggle="tab" onclick="tabClick(<?php echo $tabClickId; ?>);" href="#<?php echo $tabClickId; ?>" role="tab" aria-controls="agendaOne" aria-selected="true">
                                                       <h6 class="event-name"><?php echo $Agenda_Title ?></h6>
-                                                      <!-- <span class="agenda-date"><?php echo $nameOfDay . ", " . $date; ?></span> -->
                                                    </a>
                                                 </li>
                                                 <div class="nav-item-divider"></div>
@@ -1064,7 +1068,12 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                               foreach ($FullAgendaCategoriesList as $value) {
                                  $duration = '';
                                  $splitTimeStamp = explode(" ", $value['agenda_start_time']);
+                                 // $splitTimeStamp = explode(" ", $value['agenda_start_time'])[0];
+                                 $tab=explode('-',$splitTimeStamp[0]);
+                                 $tabClickId=join('',$tab);
                                  $StartTime = $splitTimeStamp[1];
+                                 $splitTimeStampEndTime = explode(" ", $value['agenda_end_time']);
+                                 $EndTime = $splitTimeStampEndTime[1];
                                  $time_in_12_hour_format  = date("g:i a", strtotime($StartTime));
                                  $dateDiff = intval((strtotime($value['agenda_end_time']) - strtotime($value['agenda_start_time'])) / 60);
                                  $hours = intval($dateDiff / 60);
@@ -1084,16 +1093,17 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                  if ($minutes_diff > 0) {
                                     $duration .= $minutes_diff . " minutes";
                                  }
-                                 if ($duration == '') {
-                                    $duration = "0 hours";
+                                 if ($duration == '' || $value['agenda_end_time'] == 0) {
+                                    $duration = "- - -";
                                  }
-
+                                 
+                              
                               ?>
-                                 <div class="tab-pane tab_agenda fade show" id="<?php echo $value['event_id']; ?>" role="tabpanel" aria-labelledby="<?php echo "agenda" . $value['event_id'] . "-tab"; ?>">
+                                 <div class="tab-pane tab_agenda fade show" id="<?php echo $tabClickId; ?>" role="tabpanel" aria-labelledby="<?php echo "agenda" . $tabClickId . "-tab"; ?>">
                                     <div class="timeline-item">
                                        <div class="timeline">
                                           <div class="timeline-sticky timezone">
-                                             <h5><?php echo $StartTime; ?></h5>
+                                             <h5><?php echo $StartTime . "-" . $EndTime; ?></h5>
                                           </div>
                                        </div>
                                        <div class="session-type-icon">
@@ -1106,7 +1116,9 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                           <div class="timeline-track-sub-text">
                                              <p>
                                                 <span><img src="https://iili.io/SXumsS.png" alt=""><?php echo $duration; ?></span>
-                                                <span><img src="https://iili.io/SXubX2.png" alt=""><?php echo $value['agenda_event_location']; ?></span>
+                                                <?php if (!empty($value['agenda_event_location'])) { ?>
+                                                   <span><img src="https://iili.io/SXubX2.png" alt=""><?php echo $value['agenda_event_location']; ?></span>
+                                                <?php }  ?>
                                              </p>
                                           </div>
                                        </div>
@@ -1598,8 +1610,9 @@ $contactFrm->developerTags['fld_default_col'] = 12;
    tabClick(initial_list_id);
 
    function tabClick(id) {
-      console.log("id", id);
+      console.log("id--", id);
       var list = document.getElementsByClassName("tab_agenda");
+      console.log("tab_id--",list);
       for (var i = 0; i < list.length; i++) {
          var tab_id = list[i].getAttribute("id");
          console.log("ii", tab_id);

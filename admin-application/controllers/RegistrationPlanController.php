@@ -323,7 +323,9 @@ class RegistrationPlanController extends AdminBaseController
         $frm->addRequiredField(Label::getLabel('LBL_Registration_Plan_Title', $this->adminLangId), 'registration_plan_title');
         $frm->addRequiredField(Label::getLabel('LBL_Registration_Starting_Days_(Date)'), 'registration_starting_date', '', ['id' => 'registration_starting_date', 'autocomplete' => 'off']);
         $frm->addRequiredField(Label::getLabel('LBL_Registration_Ending_Days_(Date)'), 'registration_ending_date', '', ['id' => 'registration_ending_date', 'autocomplete' => 'off']);
-        $frm->addRequiredField(Label::getLabel('LBL_Registration_Starting_Days_(Title)', $this->adminLangId), 'registration_starting_days');
+        // $frm->addRequiredField(Label::getLabel('LBL_Registration_Starting_Days_(Title)', $this->adminLangId), 'registration_starting_days');
+        // $fld =  $frm->addRequiredField(Label::getLabel('LBL_Number_Of_Days', $this->adminLangId), 'registration_number_of_days');
+        //$fld->requirements()->setRequired(false);
         $frm->addRequiredField(Label::getLabel('LBL_Registration_Plan_Price_USD($)', $this->adminLangId), 'registration_plan_price');
         $fld = $frm->addRequiredField(Label::getLabel('LBL_Registration_Plan_Price_ZMW(ZK)', $this->adminLangId), 'registration_plan_zk_price');
         $fld->requirements()->setRequired(false);

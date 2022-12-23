@@ -104,7 +104,7 @@ class AgendaController extends AdminBaseController
         $agendafrm->addHiddenField('', 'event_id', $testimonialId);
         $job_function_data = new SearchBase('tbl_three_reasons');
         $job_function_data->addCondition('three_reasons_deleted', '=', '0');
-        $job_function_data->addCondition('three_reasons_active', '=', '1');
+        //$job_function_data->addCondition('three_reasons_active', '=', '1');
         $job_function_dropdown_value = FatApp::getDb()->fetchAll($job_function_data->getResultSet());
         $person_job_function = array();
         $Event_Starting_Data_function = array();
@@ -112,6 +112,7 @@ class AgendaController extends AdminBaseController
             $person_job_function[$value['three_reasons_id']] = $value['registration_plan_title'];
             $Event_Starting_Data_function[$value['three_reasons_id']] = $value['registration_starting_days'];
         }
+        $agendafrm->addRequiredField(Label::getLabel('LBL_Agenda_Starting_Days', $this->adminLangId), 'agenda_starting_days');
         $agendafrm->addSelectBox(Label::getLabel('LBL_Event_Listing', $langId), 'event_listing', $person_job_function, -1, [], '');
         $agendafrm->addSelectBox(Label::getLabel('LBL_Event_Starting_Days', $langId), 'event_starting_days', $Event_Starting_Data_function, -1, [], '');
         $agendafrm->addRequiredField(Label::getLabel('LBl_Agenda_Start_Time'), 'agenda_start_time', '', ['id' => 'agenda_start_time', 'autocomplete' => 'off']);
@@ -133,6 +134,7 @@ class AgendaController extends AdminBaseController
                 'agenda_start_time',
                 'agenda_end_time',
                 'agenda_schedule',
+                'agenda_starting_days',
                 'agenda_event_location',
                 'agenda_information'
             ]);
@@ -163,6 +165,7 @@ class AgendaController extends AdminBaseController
                 'event_end_time',
                 'agenda_start_time',
                 'agenda_end_time',
+                'agenda_starting_days',
                 'agenda_schedule',
                 'agenda_event_location',
                 'agenda_information'

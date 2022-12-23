@@ -1,4 +1,21 @@
 <?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
+<style>
+    .Export-Button {
+        text-align: end;
+    }
+
+    input.button.button-primary.user_export_button {
+        cursor: pointer;
+        background-color: #12bbe0;
+        color: #FFF;
+        padding: 10px 15px 10px 15px;
+        border: none;
+        font-size: 15px;
+        border-radius: 5px;
+        letter-spacing: 0.7px;
+        font-family: 'Nunito', sans-serif !important;
+    }
+</style>
 <div class='page'>
     <div class='fixed_container'>
         <div class="row">
@@ -11,6 +28,11 @@
                             <?php $this->includeTemplate('_partial/header/header-breadcrumb.php'); ?>
                         </div>
                     </div>
+                </div>
+                <div class="Export-Button">
+                    <form action="/admin/transaction-history/export" method="get">
+                        <input type="submit" class="button button-primary user_export_button" value="Export CSV">
+                    </form>
                 </div>
                 <section class="section">
                     <div class="sectionbody">
