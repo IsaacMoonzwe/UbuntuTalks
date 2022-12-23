@@ -1,19 +1,4 @@
 /*** LTR ***/
-.box-foot {
-  text-align: end;
-  display: block !important;
-}
-
-.getUserTeachLangues .box-foot {
-  text-align: end;
-  display: flex !important;
-}
-
-.kidsBookingForm .box-foot {
-  text-align: end;
-  display: flex !important;
-}
-
 #button {
   display: inline-block;
   background-color: #006313;
@@ -194,26 +179,6 @@ nav.menu.nav--primary-offset {
 }
 
 @media (max-width: 767px) {
-  .travelAccommodationTab-data ul.uk-list div {
-    display: block;
-  }
-
-  .small-cards li.cards__item {
-    margin-right: 0px !important;
-  }
-
-  body .event-page-section a.speakers-tab {
-    width: 100% !important;
-  }
-
-  .others-speakers .ent-btn {
-    margin-top: 20px;
-  }
-
-  .gallery-lightboxes .image-lightbox:target .image-lightbox-wrapper {
-    transform: translate(0px, 5%) !important;
-  }
-
   .header-primary {
     padding: var(--padding-4) 0;
   }
@@ -8381,7 +8346,7 @@ h5.timeline-title a {
 }
 
 .timeline {
-  padding: 0px 0px 0px 30px;
+  padding: 24px 16px;
   width: 168px;
   min-width: 124px;
 }
@@ -8394,8 +8359,8 @@ h5.timeline-title a {
 
 .session-type-icon {
   position: absolute;
-  left: 15.2%;
-  top: 40%;
+  left: 15.9%;
+  top: 15%;
   background-color: #ce4400;
   height: 20px;
   width: 20px;
@@ -9198,14 +9163,12 @@ span.card-landscape__title {
 }
 
 @media (max-width: 767px) {
-  body .events-box-section .selection--onehalf .selection-tabs__label {
+  body .events-box-section .selection--onehalf .selection-tabs__label{
     max-width: 100% !important;
   }
-
-  .selection--checkout .selection-tabs__label .selection-tabs__title span {
+  .selection--checkout .selection-tabs__label .selection-tabs__title span{
     font-size: 16px !important;
   }
-
   select#currencyswitchers {
     width: 100% !important;
   }

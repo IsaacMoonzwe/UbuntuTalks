@@ -383,7 +383,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                                             <td><?php echo $value['plan_start_date']; ?></td>
                                                                             <td><?php echo $value['plan_end_date']; ?></td>
                                                                             <td><?php echo $value['event_user_ticket_count']; ?></td>
-                                                                            <td><?php echo $value['order_currency_code'] . " " . $value['order_net_amount']; ?></td>
+                                                                            <td><?php echo $value['order_currency_code'] ." ". $value['order_net_amount']; ?></td>
                                                                             <td class="ccode">
                                                                                 <?php
                                                                                 if (!empty($value['coupon_code'])) {
@@ -425,6 +425,8 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                                 <th><?php echo Label::getLabel('LBL_Sponsorship_Plan'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Sponsorship_Plan'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Coupon_Code'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Qty'); ?></th>
+
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -452,6 +454,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                                             }
                                                                             ?>
                                                                         </td>
+                                                                        <td><?php echo $value[$value['event_name']]; ?></td>
                                                                     </tr>
                                                             <?php
                                                                     $sr_no++;
@@ -507,7 +510,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                                             <td><?php echo $value['plan_start_date']; ?></td>
                                                                             <td><?php echo $value['plan_end_date']; ?></td>
                                                                             <td><?php echo $value['event_user_ticket_count']; ?></td>
-                                                                            <td><?php echo $value['order_currency_code'] . " " . $value['order_net_amount']; ?></td>
+                                                                            <td><?php echo $value['order_currency_code']." ".$value['order_net_amount']; ?></td>
                                                                             <td class="ccode">
                                                                                 <?php
                                                                                 if (!empty($value['coupon_code'])) {
@@ -578,7 +581,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                                             <td><?php echo $value['plan_start_date']; ?></td>
                                                                             <td><?php echo $value['plan_end_date']; ?></td>
                                                                             <td><?php echo $value['event_user_ticket_count']; ?></td>
-                                                                            <td><?php echo $value['order_currency_code'] . " " . $value['order_net_amount']; ?></td>
+                                                                            <td><?php echo $value['order_currency_code']. " ". $value['order_net_amount']; ?></td>
                                                                             <td class="ccode">
                                                                                 <?php
                                                                                 if (!empty($value['coupon_code'])) {

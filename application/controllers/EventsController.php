@@ -68,16 +68,16 @@ class EventsController extends MyEventAppController
         $EventsList = FatApp::getDb()->fetchAll($events_categories);
         $srch_agenda_details = new SearchBase('tbl_agenda');
         $srch_agenda_details->addCondition('agenda_deleted', '=', 0);
-        $srch_agenda_details->addGroupBy('DATE(agenda_start_time)');    
+        $srch_agenda_details->addGroupBy('event_id');
+        $srch_agenda_details->addOrder('event_id');
         $agenda_categories = $srch_agenda_details->getResultSet();
         $AgendaCategoriesList = FatApp::getDb()->fetchAll($agenda_categories);
-    
         $AgendaEventsrecods = FatApp::getDb()->fetchAll($agenda_categories);
         foreach ($AgendaCategoriesList as $key => $value) {
             $srch_agends_events_details = new SearchBase('tbl_three_reasons');
             $srch_agends_events_details->addCondition('three_reasons_deleted', '=', 0);
             $srch_agends_events_details->addCondition('three_reasons_active', '=', 1);
-            $srch_agends_events_details->addOrder('registration_starting_date', 'DESC');
+            $srch_agends_events_details->addOrder('registration_starting_date', 'ASC');
             $agenda_events_categories = $srch_agends_events_details->getResultSet();
             $AgendaEventsList = FatApp::getDb()->fetchAll($agenda_events_categories);
         }
@@ -95,7 +95,6 @@ class EventsController extends MyEventAppController
         $srch_full_agenda_details->addOrder('agenda_start_time');
         $full_agenda_categories = $srch_full_agenda_details->getResultSet();
         $FullAgendaCategoriesList = FatApp::getDb()->fetchAll($full_agenda_categories);
-       
         $srch_sponsorship = new SearchBase('tbl_sponsorship');
         $srch_sponsorship->addCondition('sponsorship_deleted', '=', 0);
         $srch_sponsorship->addCondition('sponsorship_active', '=', 1);
@@ -166,7 +165,6 @@ class EventsController extends MyEventAppController
         $this->set('EventsList', $EventsList);
         $this->set('AgendaEventsrecods', $AgendaEventsrecods);
         $this->set('FullAgendaCategoriesList', $FullAgendaCategoriesList);
-        $this->set('AgendaCategoriesList', $AgendaCategoriesList);
         $this->set('AgendaEventsList', $AgendaEventsList);
         $this->set('ThreeReasonsCategoriesList', $ThreeReasonsCategoriesList);
         $this->set('Sponsershiprecords', $Sponsershiprecords);
