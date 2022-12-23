@@ -229,7 +229,7 @@ class CommonHelper extends FatUtility
         if ($encodeUrl) {
             $url = urlencode($url);
         }
-        return $protocol . $_SERVER['SERVER_NAME'] . $url;
+        return $protocol . $_SERVER['SERVER_NAME'] .":444". $url;
     }
 
     public static function getRootUrl()

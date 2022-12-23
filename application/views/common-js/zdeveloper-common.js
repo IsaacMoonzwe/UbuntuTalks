@@ -1,3 +1,36 @@
+$(document).ready(function () {
+  if (window.matchMedia("(max-width: 767px)").matches) {
+    jQuery(document).on('click', '.open-icon', function () {
+      $(".close-icon").addClass("display-close-icon");
+      $(".open-icon").addClass("block-open-icon");
+    });
+
+    jQuery(document).on('click', '.close-icon', function () {
+      $(".close-icon").removeClass("display-close-icon");
+      $(".open-icon").removeClass("block-open-icon");
+    });
+
+    $(window).scroll(function () {
+      var scroll = $(window).scrollTop();
+      if (scroll >= 100) {
+        $("#explore").removeClass("is-visible");
+        $(".close-icon").removeClass("display-close-icon");
+        $(".open-icon").removeClass("block-open-icon");
+      }
+    });
+  }
+
+  jQuery(document).mouseup(function (e) {
+    var container = jQuery(".header-dropdown.header-dropdown--explore");
+    // if the target of the click isn't the container nor a descendant of the container
+    if (!container.is(e.target) && container.has(e.target).length === 0) {
+      $("#explore").removeClass("is-visible");
+      $(".close-icon").removeClass("display-close-icon");
+      $(".open-icon").removeClass("block-open-icon");
+    }
+  });
+});
+
 var isRuningTeacherFavoriteAjax = false;
 var newsletterAjaxRuning = false;
 function getCountryStates(countryId, stateId, dv) {
@@ -1168,7 +1201,7 @@ $(document).ready(function () {
   };
 
 
-  GetBenefitConcertPlanTicketsPaymentSummary = function (plan,ticketCount) {
+  GetBenefitConcertPlanTicketsPaymentSummary = function (plan, ticketCount) {
     $.loader.show();
     if (plan == "" || ticketCount <= 0) {
       $.loader.hide();

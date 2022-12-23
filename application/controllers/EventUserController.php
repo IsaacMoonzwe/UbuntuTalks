@@ -191,8 +191,12 @@ class EventUserController extends MyEventAppController
         $this->set('redirectUrl', $redirectUrl);
         $this->_template->render(false, false);
     }
+
+
     public function paymentSuccess($orderId = null, $ticket_generate_url = 0)
     {
+        // $InstanceId = "instance26927";
+        // $WhatsappToken = "15kz0vkra6xxi7z7";
         $orderPaymentObj = new OrderPayment($orderId, $this->siteLangId);
         $paymentAmount = $orderPaymentObj->getOrderPaymentGatewayAmount();
         $orderData = new SearchBase('tbl_order_products');
@@ -262,6 +266,32 @@ class EventUserController extends MyEventAppController
                 'user_email' => $userRow['user_email'],
                 'plan' => $planTitle,
             ];
+
+            // $phonenumber = $userRow['user_phone_code'] . "" . $userRow['user_phone'];
+            // $donation_msg = "*Welcome to UbuntuTalks* %0a%0aThanks *" . $userRow['user_first_name'] . " " . $userRow['user_last_name'] . "* for connecting in our team %0aYou booked the *Sponsorship plan " . $planTitle . "%0a%0a*Thank for connecting* %0a*UbuntuTalks*";
+
+            // $curl = curl_init();
+
+            // /* Whatsapp Notification */
+            // curl_setopt_array($curl, array(
+            //     CURLOPT_URL => "https://api.ultramsg.com/" . $InstanceId . "/messages/image",
+            //     CURLOPT_RETURNTRANSFER => true,
+            //     CURLOPT_ENCODING => "",
+            //     CURLOPT_MAXREDIRS => 10,
+            //     CURLOPT_TIMEOUT => 30,
+            //     CURLOPT_SSL_VERIFYHOST => 0,
+            //     CURLOPT_SSL_VERIFYPEER => 0,
+            //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            //     CURLOPT_CUSTOMREQUEST => "POST",
+            //     CURLOPT_POSTFIELDS => "token=" . $WhatsappToken . "&to=" . $phonenumber . "&image=https://ubuntutalks.com/image/editor-image/1659933871-450.png&caption=" . $donation_msg . "&referenceId=&nocache=",
+            //     CURLOPT_HTTPHEADER => array(
+            //         "content-type: application/x-www-form-urlencoded"
+            //     ),
+            // ));
+
+            // $response = curl_exec($curl);
+            // $err = curl_error($curl);
+            // curl_close($curl);
             $email = new EmailHandler();
             if (true !== $email->sendSponsorshipplanEmail($this->siteLangId, $data)) {
                 return false;
@@ -300,9 +330,37 @@ class EventUserController extends MyEventAppController
                     'user_first_name' => $userRow['user_first_name'],
                     'user_last_name' => $userRow['user_last_name'],
                     'user_email' => $userRow['user_email'],
+                    'user_phone_code' => $userRow['user_phone_code'],
+                    'user_phone' => $userRow['user_phone'],
                     'plan' => $_SESSION['become_sponser'],
                     'file_upload' => $_SESSION['donationUrl'],
                 ];
+
+                // $phonenumber = $userRow['user_phone_code'] . "" . $userRow['user_phone'];
+                // $donation_msg = "*Welcome to UbuntuTalks* %0a%0aThanks *" . $userRow['user_first_name'] . " " . $userRow['user_last_name'] . "* for connecting in our team %0ayour donation amount is : " . $paymentAmount . "%0a%0a*Note:* Download the ticket from dashboard %0ahttps://ubuntutalks.com/dashboard-event-visitor %0a%0a*Thanks for connecting*%0a*UbuntuTalks*";
+                // $curl = curl_init();
+
+                // /* Whatsapp Notification */
+                // curl_setopt_array($curl, array(
+                //     CURLOPT_URL => "https://api.ultramsg.com/" . $InstanceId . "/messages/image",
+                //     CURLOPT_RETURNTRANSFER => true,
+                //     CURLOPT_ENCODING => "",
+                //     CURLOPT_MAXREDIRS => 10,
+                //     CURLOPT_TIMEOUT => 30,
+                //     CURLOPT_SSL_VERIFYHOST => 0,
+                //     CURLOPT_SSL_VERIFYPEER => 0,
+                //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                //     CURLOPT_CUSTOMREQUEST => "POST",
+                //     CURLOPT_POSTFIELDS => "token=" . $WhatsappToken . "&to=" . $phonenumber . "&image=https://ubuntutalks.com/image/editor-image/1659933871-450.png&caption=" . $donation_msg . "&referenceId=&nocache=",
+                //     CURLOPT_HTTPHEADER => array(
+                //         "content-type: application/x-www-form-urlencoded"
+                //     ),
+                // ));
+
+                // $response = curl_exec($curl);
+                // $err = curl_error($curl);
+                // curl_close($curl);
+
                 $email = new EmailHandler();
                 if (true !== $email->sendDonationEmail($this->siteLangId, $data)) {
                     return false;
@@ -359,6 +417,34 @@ class EventUserController extends MyEventAppController
                     'plan' => $_SESSION['planSelected'],
                     'file_upload' => $_SESSION['ticketUrl'],
                 ];
+
+                // $phonenumber = $userRow['user_phone_code'] . "" . $userRow['user_phone'];
+                // $donation_msg = "*Welcome to UbuntuTalks* %0a%0aThanks *" . $userRow['user_first_name'] . " " . $userRow['user_last_name'] . "* for connecting in our team %0aYou booked the ticket for *Benefit Concert* the plan category is *" . $_SESSION['planSelected'] . "* and Total Number of Tickets : *" . $_SESSION['ticket_count'] . "*%0a%0a*Note:* Download the ticket from dashboard %0ahttps://ubuntutalks.com/dashboard-event-visitor* %0a%0a*Thank for connecting* %0a*UbuntuTalks*";
+
+                // $curl = curl_init();
+
+                // /* Whatsapp Notification */
+                // curl_setopt_array($curl, array(
+                //     CURLOPT_URL => "https://api.ultramsg.com/" . $InstanceId . "/messages/image",
+                //     CURLOPT_RETURNTRANSFER => true,
+                //     CURLOPT_ENCODING => "",
+                //     CURLOPT_MAXREDIRS => 10,
+                //     CURLOPT_TIMEOUT => 30,
+                //     CURLOPT_SSL_VERIFYHOST => 0,
+                //     CURLOPT_SSL_VERIFYPEER => 0,
+                //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                //     CURLOPT_CUSTOMREQUEST => "POST",
+                //     CURLOPT_POSTFIELDS => "token=" . $WhatsappToken . "&to=" . $phonenumber . "&image=https://ubuntutalks.com/image/editor-image/1659933871-450.png&caption=" . $donation_msg . "&referenceId=&nocache=",
+                //     CURLOPT_HTTPHEADER => array(
+                //         "content-type: application/x-www-form-urlencoded"
+                //     ),
+                // ));
+
+                // $response = curl_exec($curl);
+                // $err = curl_error($curl);
+                // curl_close($curl);
+
+
                 $email = new EmailHandler();
                 if (true !== $email->sendRegisterplanEmail($this->siteLangId, $data)) {
                     return false;
@@ -408,6 +494,7 @@ class EventUserController extends MyEventAppController
                 $srch = $userObj->getUserSearchObj();
                 $rs = $srch->getResultSet();
                 $usersRow = FatApp::getDb()->fetch($rs);
+
                 $userRow['user_email'] = $usersRow['credential_email'];
                 $data = [
                     'user_first_name' => $userRow['user_first_name'],
@@ -415,7 +502,34 @@ class EventUserController extends MyEventAppController
                     'user_email' => $userRow['user_email'],
                     'plan' => $_SESSION['concertPlan'],
                     'file_upload' => $_SESSION['concertUrl'],
+                    'concert_ticket' => $_SESSION['concert_ticket'],
                 ];
+                // $phonenumber = $userRow['user_phone_code'] . "" . $userRow['user_phone'];
+                // $donation_msg = "*Welcome to UbuntuTalks* %0a%0aThanks *" . $userRow['user_first_name'] . " " . $userRow['user_last_name'] . "* for connecting in our team %0aYou booked the ticket for *Benefit Concert* the plan category is *" . $_SESSION['concertPlan'] . "* and Total Number of Tickets : *" . $_SESSION['concert_ticket'] . "*%0a%0a*Note:* Download the ticket from dashboard %0ahttps://ubuntutalks.com/dashboard-event-visitor* %0a%0a*Thank for connecting* %0a*UbuntuTalks*";
+
+                // $curl = curl_init();
+
+                // /* Whatsapp Notification */
+                // curl_setopt_array($curl, array(
+                //     CURLOPT_URL => "https://api.ultramsg.com/" . $InstanceId . "/messages/image",
+                //     CURLOPT_RETURNTRANSFER => true,
+                //     CURLOPT_ENCODING => "",
+                //     CURLOPT_MAXREDIRS => 10,
+                //     CURLOPT_TIMEOUT => 30,
+                //     CURLOPT_SSL_VERIFYHOST => 0,
+                //     CURLOPT_SSL_VERIFYPEER => 0,
+                //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                //     CURLOPT_CUSTOMREQUEST => "POST",
+                //     CURLOPT_POSTFIELDS => "token=" . $WhatsappToken . "&to=" . $phonenumber . "&image=https://ubuntutalks.com/image/editor-image/1659933871-450.png&caption=" . $donation_msg . "&referenceId=&nocache=",
+                //     CURLOPT_HTTPHEADER => array(
+                //         "content-type: application/x-www-form-urlencoded"
+                //     ),
+                // ));
+
+                // $response = curl_exec($curl);
+                // $err = curl_error($curl);
+                // curl_close($curl);
+
                 $email = new EmailHandler();
                 if (true !== $email->sendConcertplanEmail($this->siteLangId, $data)) {
                     return false;
@@ -472,6 +586,34 @@ class EventUserController extends MyEventAppController
                     'plan' => $_SESSION['symposiumPlan'],
                     'file_upload' => $_SESSION['symposiumUrl'],
                 ];
+
+                // $phonenumber = $userRow['user_phone_code'] . "" . $userRow['user_phone'];
+                // $donation_msg = "*Welcome to UbuntuTalks* %0a%0aThanks *" . $userRow['user_first_name'] . " " . $userRow['user_last_name'] . "* for connecting in our team %0aYou booked the ticket for *Pre-Symposium Dinner* the plan category is *" . $_SESSION['symposiumPlan'] . "* and Total Number of Tickets : *" . $_SESSION['symposium_ticket'] . "*%0a%0a*Note:* Download the ticket from dashboard %0ahttps://ubuntutalks.com/dashboard-event-visitor* %0a%0a*Thank for connecting* %0a*UbuntuTalks*";
+
+                // $curl = curl_init();
+
+                // /* Whatsapp Notification */
+                // curl_setopt_array($curl, array(
+                //     CURLOPT_URL => "https://api.ultramsg.com/" . $InstanceId . "/messages/image",
+                //     CURLOPT_RETURNTRANSFER => true,
+                //     CURLOPT_ENCODING => "",
+                //     CURLOPT_MAXREDIRS => 10,
+                //     CURLOPT_TIMEOUT => 30,
+                //     CURLOPT_SSL_VERIFYHOST => 0,
+                //     CURLOPT_SSL_VERIFYPEER => 0,
+                //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                //     CURLOPT_CUSTOMREQUEST => "POST",
+                //     CURLOPT_POSTFIELDS => "token=" . $WhatsappToken . "&to=" . $phonenumber . "&image=https://ubuntutalks.com/image/editor-image/1659933871-450.png&caption=" . $donation_msg . "&referenceId=&nocache=",
+                //     CURLOPT_HTTPHEADER => array(
+                //         "content-type: application/x-www-form-urlencoded"
+                //     ),
+                // ));
+
+                // $response = curl_exec($curl);
+                // $err = curl_error($curl);
+                // curl_close($curl);
+
+
                 $email = new EmailHandler();
                 if (true !== $email->sendSymposiumplanEmail($this->siteLangId, $data)) {
                     return false;
@@ -960,7 +1102,6 @@ class EventUserController extends MyEventAppController
         $this->set('userType', EventUser::USER_TYPE_LEANER);
         $this->set('userId', $userId);
         $this->set('userWalletBalance', $userWalletBalance);
-
         $this->_template->render(false, false);
         // $this->_template->render(false, false);
     }

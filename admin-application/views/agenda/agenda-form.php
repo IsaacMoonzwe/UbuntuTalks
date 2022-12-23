@@ -10,8 +10,8 @@ $agendafrm->getField('agenda_start_time')->setFieldTagAttribute('data-fatdatetim
 $agendafrm->getField('agenda_end_time')->setFieldTagAttribute('data-fatdatetimeformat', $dateformat . ' ' . $timeformat);
 $agendafrm->getField('agenda_start_time')->setFieldTagAttribute('data-type', 'start');
 $agendafrm->getField('agenda_end_time')->setFieldTagAttribute('data-type', 'end');
-$agendafrm->getField('event_starting_days')->setFieldTagAttribute('id','event_starting_days');
-$agendafrm->getField('event_listing')->setFieldTagAttribute('id','event_listing');
+$agendafrm->getField('event_starting_days')->setFieldTagAttribute('id', 'event_starting_days');
+$agendafrm->getField('event_listing')->setFieldTagAttribute('id', 'event_listing');
 
 ?>
 <section class="section">
@@ -46,7 +46,7 @@ $agendafrm->getField('event_listing')->setFieldTagAttribute('id','event_listing'
 
                             </div>
 
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-md-12">
                                     <div class="field-set">
                                         <div class="caption-wraper">
@@ -59,7 +59,21 @@ $agendafrm->getField('event_listing')->setFieldTagAttribute('id','event_listing'
                                         </div>
                                     </div>
                                 </div>
+                            </div> -->
 
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="field-set">
+                                        <div class="caption-wraper">
+                                            <label class="field_label"><?php echo Label::getLabel('LBL_Agenda_Starting_Days_(Title)', $siteLangId) ?></label>
+                                        </div>
+                                        <div class="field-wraper">
+                                            <div class="field_cover">
+                                                <?php echo $agendafrm->getFieldHTML('agenda_starting_days'); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
 
@@ -146,33 +160,34 @@ $agendafrm->getField('event_listing')->setFieldTagAttribute('id','event_listing'
                 </div>
             </div>
             <script type="text/javascript">
-                 function event_days_data(){
-            var product_code = $("[name='event_listing'] option:selected").val();
-            console.log("product",product_code);
-            $.ajax(
-                    {
-                        type:"post",
+                function event_days_data() {
+                    var product_code = $("[name='event_listing'] option:selected").val();
+                    console.log("product", product_code);
+                    $.ajax({
+                        type: "post",
                         url: fcom.makeUrl('Agenda', 'event_days'),
-                        data:{ product_code:product_code},
+                        data: {
+                            product_code: product_code
+                        },
                         dataType: 'json',
-                        success:function(data)
-                        {
-                                var len = data.length;
-                                console.log(data);
-                                $("[name='event_starting_days']").empty();
-                                    $.each(data, function(k, v) {
-                                        var id = k;
-                                        var name =v;
-                                        $("[name='event_starting_days']").append("<option value='"+id+"'>"+name+"</option>");
-                                    })
+                        success: function(data) {
+                            var len = data.length;
+                            console.log(data);
+                            $("[name='event_starting_days']").empty();
+                            $.each(data, function(k, v) {
+                                var id = k;
+                                var name = v;
+                                $("[name='event_starting_days']").append("<option value='" + id + "'>" + name + "</option>");
+                            })
                         }
                     });
-        }
-        function event_data(){
-            $("[name='event_listing']").change(function (e) {
-                event_days_data();
-            });
-        }
+                }
+
+                function event_data() {
+                    $("[name='event_listing']").change(function(e) {
+                        event_days_data();
+                    });
+                }
                 $(document).ready(function() {
                     event_data();
                     event_days_data();
@@ -257,6 +272,5 @@ $agendafrm->getField('event_listing')->setFieldTagAttribute('id','event_listing'
                 var startTime = '';
                 var endTime = '';
 
-                  // $("[name='event_listing'],[name='event_starting_days']").select2();
-      
+                // $("[name='event_listing'],[name='event_starting_days']").select2();
             </script>
