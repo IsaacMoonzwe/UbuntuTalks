@@ -40,6 +40,24 @@ if ($loggedUserId == $teacher['user_id']) {
     $contactClick = '';
 }
 ?>
+<style>
+    .swal-text {
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .swal-modal {
+        background-color: #fbebcd;
+    }
+
+    button.swal-button.swal-button--confirm {
+        background-color: #006313;
+    }
+
+    button.swal-button.swal-button--confirm:hover {
+        background-color: #ce4400;
+    }
+</style>
 <section class="section section--profile">
     <div class="container container--fixed">
         <div class="profile-cover">
@@ -146,10 +164,10 @@ if ($loggedUserId == $teacher['user_id']) {
                         <?php $i = 1; ?>
                         <?php foreach ($teacherLangPrices as $teachLangId => $teachLangPriceSlabs) { ?>
                             <div <?php echo (($i != 1) ? "style='display:none'" : "") ?> data-lang-id="<?php echo $teachLangId; ?>" class="slider slider--onethird slider--prices slider-onethird-js">
-                                <?php foreach ($teachLangPriceSlabs as $slab => $slabDetails) { 
+                                <?php foreach ($teachLangPriceSlabs as $slab => $slabDetails) {
                                     $title = $slabDetails['title'];
                                     foreach ($slabDetails['langPrices'] as $priceDetails) {
-                                        if($priceDetails['ustelgpr_slot'] == 180){
+                                        if ($priceDetails['ustelgpr_slot'] == 180) {
                                             $title = Label::getLabel('LBL_Crash_Course');
                                         }
                                     }
@@ -370,7 +388,24 @@ if ($loggedUserId == $teacher['user_id']) {
                     ?>
                     <div class="box box--book">
                         <div class="book__actions">
-                            <a href="javascript:void(0);" class="btn btn--primary btn--xlarge btn--block color-white <?php echo $disabledClass; ?>" <?php echo $bookNowOnClickClick; ?>><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
+                            <!-- <a href="javascript:void(0);" class="btn btn--primary btn--xlarge btn--block color-white <?php echo $disabledClass; ?>" <?php echo $bookNowOnClickClick; ?>><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a> -->
+                            <?php
+                            if (UserAuthentication::isUserLogged()) {
+                                if (UserAuthentication::getLoggedUserAttribute('user_first_name') && UserAuthentication::getLoggedUserAttribute('user_last_name') && UserAuthentication::getLoggedUserAttribute('user_gender') && UserAuthentication::getLoggedUserAttribute('user_phone') && UserAuthentication::getLoggedUserAttribute('user_country_id') && UserAuthentication::getLoggedUserAttribute('user_timezone')) {
+                            ?>
+                                    <a href="javascript:void(0);" class="btn btn--primary btn--xlarge btn--block color-white <?php echo $disabledClass; ?>" <?php echo $bookNowOnClickClick; ?>><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
+                                <?php
+                                } else {
+                                ?>
+                                    <a href="javascript:void(0);" onclick="swal({title: 'Ubuntu Talks Says',text: 'Please Complete Your Account Profile..!',}).then(function() {window.location.href = '/dashboard/account/profile-info'});" class="btn btn--primary color-white btn--block"><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
+                                <?php
+                                }
+                            } else {
+                                ?>
+                                <a href="javascript:void(0);" class="btn btn--primary btn--xlarge btn--block color-white <?php echo $disabledClass; ?>" <?php echo $bookNowOnClickClick; ?>><?php echo Label::getLabel('LBL_Book_Now', $siteLangId); ?></a>
+                            <?php
+                            }
+                            ?>
                             <?php
                             if ($teacher['isFreeTrialEnabled']) {
                                 $onclick = "";
@@ -393,14 +428,14 @@ if ($loggedUserId == $teacher['user_id']) {
                                     <span><?php echo Label::getLabel($btnText, $siteLangId); ?></span>
                                 </a>
                                 <div class="-gap"></div>
-                            <div class="-gap"></div>
-                                 <a href="javascript:void(0);" <?php echo $contactClick; ?> class="btn btn--bordered btn--xlarge btn--block btn--contact color-primary <?php echo $disabledClass; ?>">
-                                <svg class="icon icon--envelope">
-                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#envelope'; ?>"></use>
-                                </svg>
-                                <?php echo Label::getLabel('LBL_Contact', $siteLangId); ?>
-                            </a>
-                            <a href="#availbility" class="color-primary btn--link scroll"><?php echo Label::getLabel('LBL_View_Full_Availbility', $siteLangId); ?></a>
+                                <div class="-gap"></div>
+                                <a href="javascript:void(0);" <?php echo $contactClick; ?> class="btn btn--bordered btn--xlarge btn--block btn--contact color-primary <?php echo $disabledClass; ?>">
+                                    <svg class="icon icon--envelope">
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#envelope'; ?>"></use>
+                                    </svg>
+                                    <?php echo Label::getLabel('LBL_Contact', $siteLangId); ?>
+                                </a>
+                                <a href="#availbility" class="color-primary btn--link scroll"><?php echo Label::getLabel('LBL_View_Full_Availbility', $siteLangId); ?></a>
                                 <p><?php echo Label::getLabel('LBL_Trial_Lesson_One_Time', $siteLangId); ?></p>
                             <?php } ?>
                         </div>
@@ -410,6 +445,7 @@ if ($loggedUserId == $teacher['user_id']) {
         </div>
     </div>
 </section>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         searchQualifications(<?php echo $teacher['user_id']; ?>);

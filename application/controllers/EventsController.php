@@ -68,10 +68,10 @@ class EventsController extends MyEventAppController
         $EventsList = FatApp::getDb()->fetchAll($events_categories);
         $srch_agenda_details = new SearchBase('tbl_agenda');
         $srch_agenda_details->addCondition('agenda_deleted', '=', 0);
-        $srch_agenda_details->addGroupBy('DATE(agenda_start_time)');    
+        $srch_agenda_details->addGroupBy('DATE(agenda_start_time)');
         $agenda_categories = $srch_agenda_details->getResultSet();
         $AgendaCategoriesList = FatApp::getDb()->fetchAll($agenda_categories);
-    
+
         $AgendaEventsrecods = FatApp::getDb()->fetchAll($agenda_categories);
         foreach ($AgendaCategoriesList as $key => $value) {
             $srch_agends_events_details = new SearchBase('tbl_three_reasons');
@@ -95,7 +95,7 @@ class EventsController extends MyEventAppController
         $srch_full_agenda_details->addOrder('agenda_start_time');
         $full_agenda_categories = $srch_full_agenda_details->getResultSet();
         $FullAgendaCategoriesList = FatApp::getDb()->fetchAll($full_agenda_categories);
-       
+
         $srch_sponsorship = new SearchBase('tbl_sponsorship');
         $srch_sponsorship->addCondition('sponsorship_deleted', '=', 0);
         $srch_sponsorship->addCondition('sponsorship_active', '=', 1);
@@ -349,7 +349,7 @@ class EventsController extends MyEventAppController
         }
         FatApp::redirectUser(CommonHelper::generateUrl('events'));
     }
-    
+
     private function contactUsForm(int $langId)
     {
         $frm = new Form('frmContact');

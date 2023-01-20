@@ -276,6 +276,7 @@ class EmailHandler extends FatModel
         }
         return false;
     }
+    
 
     public function sendForgotPasswordLinkEmail($langId, $data)
     {

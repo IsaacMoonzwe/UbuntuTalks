@@ -38,7 +38,7 @@ class DashboardEventVisitorController extends MyEventAppController
             $OrderDatass->addCondition('order_id', '=', $OrderProductsResults['op_order_id']);
             $OrderDatass->addCondition('order_is_paid', '=', 1);
             $OrderResultss = FatApp::getDb()->fetch($OrderDatass->getResultSet());
-            
+
             $value['order_data'] = $OrderProductsResults;
             $value['coupon_code'] = $OrderResults['order_discount_coupon_code'];
             $value['plan_name'] = $EventsTicketsplanResult['registration_plan_title'];
@@ -146,7 +146,7 @@ class DashboardEventVisitorController extends MyEventAppController
                     $sponserPlan = new SearchBase('tbl_sponsorshipcategories');
                     $sponserPlan->addCondition('sponsorshipcategories_id', '=', $tempKey);
                     $sponserPlanResult = FatApp::getDb()->fetch($sponserPlan->getResultSet());
-                    $plan_name = $plan_name . " " . $sponserPlanResult['sponsorshipcategories_name'] . " - " . $allValues[$qty_index] .",";
+                    $plan_name = $plan_name . " " . $sponserPlanResult['sponsorshipcategories_name'] . " - " . $allValues[$qty_index] . ",";
                     $plan_qty = $plan_qty . " " . $allValues[$qty_index] . ",";
                     $qty_plan = $allValues[$qty_index];
                     $total_qty = $total_qty + $qty_plan;
@@ -256,7 +256,7 @@ class DashboardEventVisitorController extends MyEventAppController
         $BenefitConcertplanData->addCondition('event_user_id', '=', $userId);
         $BenefitConcertplanData->addOrder('event_concert_ticket_plan_id', 'DESC');
         $BenefitConcertplanResult = FatApp::getDb()->fetchAll($BenefitConcertplanData->getResultSet());
-       
+
         foreach ($BenefitConcertplanResult as $key => $value) {
             $OrderProductData = new SearchBase('tbl_order_products');
             $OrderProductData->addCondition('op_grpcls_id', '=', $value['event_concert_ticket_plan_id']);
@@ -267,7 +267,7 @@ class DashboardEventVisitorController extends MyEventAppController
             $OrderData->addCondition('order_id', '=', $OrderProductsResult['op_order_id']);
             $OrderData->addCondition('order_is_paid', '=', 1);
             $OrderResult = FatApp::getDb()->fetch($OrderData->getResultSet());
-           
+
             $value['order_data'] = $OrderProductsResult;
             $value['coupon_code'] = $OrderResult['order_discount_coupon_code'];
             $value['plan_name'] = $BenefitConcertTicketsplanResult['benefit_concert_plan_title'];

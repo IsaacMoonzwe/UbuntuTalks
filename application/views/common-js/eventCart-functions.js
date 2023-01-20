@@ -17,6 +17,7 @@ var eventCart = {
     becomesponserPlan: {},
     donationAmount: 1,
     countOfTickets: 1,
+    tickets_plan: 1,
     becomeSponserPlanQty: {},
     checkEventUserLogged: 0,
     selectSponserEventPlan: null,
@@ -223,11 +224,11 @@ var eventCart = {
   },
   confirmOrder: function (orderType) {
     $.loader.show();
-    if (isEventUserLogged() == 0) {
-      $.loader.hide();
-      EventLogInFormPopUp('purchasePlan');
-      return false;
-    }
+    // if (isEventUserLogged() == 0) {
+    //   $.loader.hide();
+    //   EventLogInFormPopUp('purchasePlan');
+    //   return false;
+    // }
     // if(eventCart.isWalletSelect>0){
     //   eventCart.paymentMethodId=0;
     // }

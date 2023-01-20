@@ -77,13 +77,14 @@ class StripePayController extends PaymentController
         ]);
         $orderRs = $orderSrch->getResultSet();
         $orderInfo = FatApp::getDb()->fetch($orderRs);
+        $customer_email = strtolower(trim($orderInfo['customer_email']));
         if (!$orderInfo['order_id']) {
 
             FatUtility::exitWithErrorCode(404);
         } elseif ($orderInfo && $orderInfo["order_is_paid"] == Order::ORDER_IS_PENDING) {
             try {
                 $session = \Stripe\Checkout\Session::create([
-                    'customer_email' => $orderInfo['customer_email'],
+                    'customer_email' => $customer_email,
                     'payment_method_types' => ['card'],
                     'metadata' => [
                         'order_id' => $orderId

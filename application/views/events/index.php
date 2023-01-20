@@ -214,7 +214,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                      <div class="Registration-table">
                         <div class="registration_card">
                            <div class="row">
-                              <?php foreach ($RegistrationPlanDetailsList as  $value) {  ?>
+                              <?php foreach ($RegistrationPlanDetailsList as  $value) { ?>
                                  <div class="col-lg-4">
                                     <div class="card-list">
                                        <div class="ticket-card-header">
@@ -244,7 +244,11 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                       <?php
                                                       } else {
                                                       ?>
-                                                         <a href="javascript:void(0)" onclick="GetEventPlan();" class="btn btn--primary events-buttons"><?php echo Label::getLabel('LBL_Purchase_Now'); ?></a>
+                                                         <!-- <a href="javascript:void(0)" onclick="GetEventPlan();" class="btn btn--primary events-buttons"><?php echo Label::getLabel('LBL_Register_Now'); ?></a> -->
+
+                                                         <a href="<?php echo CommonHelper::generateUrl('EventUser', 'Event', [CommonHelper::htmlEntitiesDecode($value['registration_plan_slug']), $value['three_reasons_id']]); ?>" class="btn btn--primary events-buttons">
+                                                            <?php echo Label::getLabel('LBL_Register_Now'); ?>
+                                                         </a>
                                                       <?php
                                                       }
                                                       ?>
@@ -1042,9 +1046,9 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                 $Starting_date_title = $value['agenda_starting_days'];
                                                 $Agenda_Title = $Starting_date_title;
                                                 $splitTimeStamp = explode(" ", $value['agenda_start_time'])[0];
-                                                $tab=explode('-',$splitTimeStamp);
-                                                $tabClickId=join('',$tab);
-                                               
+                                                $tab = explode('-', $splitTimeStamp);
+                                                $tabClickId = join('', $tab);
+
                                           ?>
                                                 <li class="nav-item">
                                                    <a class="nav-link <?php echo $activeClass; ?>" id="<?php echo "agenda" . $tabClickId . "-tab"; ?>" data-toggle="tab" onclick="tabClick(<?php echo $tabClickId; ?>);" href="#<?php echo $tabClickId; ?>" role="tab" aria-controls="agendaOne" aria-selected="true">
@@ -1069,8 +1073,8 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                  $duration = '';
                                  $splitTimeStamp = explode(" ", $value['agenda_start_time']);
                                  // $splitTimeStamp = explode(" ", $value['agenda_start_time'])[0];
-                                 $tab=explode('-',$splitTimeStamp[0]);
-                                 $tabClickId=join('',$tab);
+                                 $tab = explode('-', $splitTimeStamp[0]);
+                                 $tabClickId = join('', $tab);
                                  $StartTime = $splitTimeStamp[1];
                                  $splitTimeStampEndTime = explode(" ", $value['agenda_end_time']);
                                  $EndTime = $splitTimeStampEndTime[1];
@@ -1096,8 +1100,8 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                  if ($duration == '' || $value['agenda_end_time'] == 0) {
                                     $duration = "- - -";
                                  }
-                                 
-                              
+
+
                               ?>
                                  <div class="tab-pane tab_agenda fade show" id="<?php echo $tabClickId; ?>" role="tabpanel" aria-labelledby="<?php echo "agenda" . $tabClickId . "-tab"; ?>">
                                     <div class="timeline-item">
@@ -1612,7 +1616,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
    function tabClick(id) {
       console.log("id--", id);
       var list = document.getElementsByClassName("tab_agenda");
-      console.log("tab_id--",list);
+      console.log("tab_id--", list);
       for (var i = 0; i < list.length; i++) {
          var tab_id = list[i].getAttribute("id");
          console.log("ii", tab_id);

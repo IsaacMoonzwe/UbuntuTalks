@@ -267,31 +267,31 @@ class EventUserController extends MyEventAppController
                 'plan' => $planTitle,
             ];
 
-            $phonenumber = $userRow['user_phone_code'] . "" . $userRow['user_phone'];
-            $donation_msg = "*Welcome to UbuntuTalks* %0a%0aThanks *" . $userRow['user_first_name'] . " " . $userRow['user_last_name'] . "* for connecting in our team %0aYou booked the *Sponsorship plan " . $planTitle . "%0a%0a*Thank for connecting* %0a*UbuntuTalks*";
+            // $phonenumber = $userRow['user_phone_code'] . "" . $userRow['user_phone'];
+            // $donation_msg = "*Welcome to UbuntuTalks* %0a%0aThanks *" . $userRow['user_first_name'] . " " . $userRow['user_last_name'] . "* for connecting in our team %0aYou booked the *Sponsorship plan " . $planTitle . "%0a%0a*Thank for connecting* %0a*UbuntuTalks*";
 
-            $curl = curl_init();
+            // $curl = curl_init();
 
-            /* Whatsapp Notification */
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => "https://api.ultramsg.com/" . $InstanceId . "/messages/image",
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => "",
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_SSL_VERIFYHOST => 0,
-                CURLOPT_SSL_VERIFYPEER => 0,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => "POST",
-                CURLOPT_POSTFIELDS => "token=" . $WhatsappToken . "&to=" . $phonenumber . "&image=https://ubuntutalks.com/image/editor-image/1659933871-450.png&caption=" . $donation_msg . "&referenceId=&nocache=",
-                CURLOPT_HTTPHEADER => array(
-                    "content-type: application/x-www-form-urlencoded"
-                ),
-            ));
+            // /* Whatsapp Notification */
+            // curl_setopt_array($curl, array(
+            //     CURLOPT_URL => "https://api.ultramsg.com/" . $InstanceId . "/messages/image",
+            //     CURLOPT_RETURNTRANSFER => true,
+            //     CURLOPT_ENCODING => "",
+            //     CURLOPT_MAXREDIRS => 10,
+            //     CURLOPT_TIMEOUT => 30,
+            //     CURLOPT_SSL_VERIFYHOST => 0,
+            //     CURLOPT_SSL_VERIFYPEER => 0,
+            //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            //     CURLOPT_CUSTOMREQUEST => "POST",
+            //     CURLOPT_POSTFIELDS => "token=" . $WhatsappToken . "&to=" . $phonenumber . "&image=https://ubuntutalks.com/image/editor-image/1659933871-450.png&caption=" . $donation_msg . "&referenceId=&nocache=",
+            //     CURLOPT_HTTPHEADER => array(
+            //         "content-type: application/x-www-form-urlencoded"
+            //     ),
+            // ));
 
-            $response = curl_exec($curl);
-            $err = curl_error($curl);
-            curl_close($curl);
+            // $response = curl_exec($curl);
+            // $err = curl_error($curl);
+            // curl_close($curl);
             $email = new EmailHandler();
             if (true !== $email->sendSponsorshipplanEmail($this->siteLangId, $data)) {
                 return false;
@@ -336,30 +336,30 @@ class EventUserController extends MyEventAppController
                     'file_upload' => $_SESSION['donationUrl'],
                 ];
 
-                $phonenumber = $userRow['user_phone_code'] . "" . $userRow['user_phone'];
-                $donation_msg = "*Welcome to UbuntuTalks* %0a%0aThanks *" . $userRow['user_first_name'] . " " . $userRow['user_last_name'] . "* for connecting in our team %0ayour donation amount is : " . $paymentAmount . "%0a%0a*Note:* Download the ticket from dashboard %0ahttps://ubuntutalks.com/dashboard-event-visitor %0a%0a*Thanks for connecting*%0a*UbuntuTalks*";
-                $curl = curl_init();
+                // $phonenumber = $userRow['user_phone_code'] . "" . $userRow['user_phone'];
+                // $donation_msg = "*Welcome to UbuntuTalks* %0a%0aThanks *" . $userRow['user_first_name'] . " " . $userRow['user_last_name'] . "* for connecting in our team %0ayour donation amount is : " . $paymentAmount . "%0a%0a*Note:* Download the ticket from dashboard %0ahttps://ubuntutalks.com/dashboard-event-visitor %0a%0a*Thanks for connecting*%0a*UbuntuTalks*";
+                // $curl = curl_init();
 
-                /* Whatsapp Notification */
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => "https://api.ultramsg.com/" . $InstanceId . "/messages/image",
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => "",
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 30,
-                    CURLOPT_SSL_VERIFYHOST => 0,
-                    CURLOPT_SSL_VERIFYPEER => 0,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => "POST",
-                    CURLOPT_POSTFIELDS => "token=" . $WhatsappToken . "&to=" . $phonenumber . "&image=https://ubuntutalks.com/image/editor-image/1659933871-450.png&caption=" . $donation_msg . "&referenceId=&nocache=",
-                    CURLOPT_HTTPHEADER => array(
-                        "content-type: application/x-www-form-urlencoded"
-                    ),
-                ));
+                // /* Whatsapp Notification */
+                // curl_setopt_array($curl, array(
+                //     CURLOPT_URL => "https://api.ultramsg.com/" . $InstanceId . "/messages/image",
+                //     CURLOPT_RETURNTRANSFER => true,
+                //     CURLOPT_ENCODING => "",
+                //     CURLOPT_MAXREDIRS => 10,
+                //     CURLOPT_TIMEOUT => 30,
+                //     CURLOPT_SSL_VERIFYHOST => 0,
+                //     CURLOPT_SSL_VERIFYPEER => 0,
+                //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                //     CURLOPT_CUSTOMREQUEST => "POST",
+                //     CURLOPT_POSTFIELDS => "token=" . $WhatsappToken . "&to=" . $phonenumber . "&image=https://ubuntutalks.com/image/editor-image/1659933871-450.png&caption=" . $donation_msg . "&referenceId=&nocache=",
+                //     CURLOPT_HTTPHEADER => array(
+                //         "content-type: application/x-www-form-urlencoded"
+                //     ),
+                // ));
 
-                $response = curl_exec($curl);
-                $err = curl_error($curl);
-                curl_close($curl);
+                // $response = curl_exec($curl);
+                // $err = curl_error($curl);
+                // curl_close($curl);
 
                 $email = new EmailHandler();
                 if (true !== $email->sendDonationEmail($this->siteLangId, $data)) {
@@ -384,7 +384,7 @@ class EventUserController extends MyEventAppController
             $title_message = Label::getLabel('LBL_Thank_You_For_Purchase_Ticket');
             $message =  Label::getLabel('LBL_Ticket_Has_Been_Genrated_Please_Check_In_Your_Email!');
             $record = new TableRecord('tbl_event_user_ticket_plan');
-            $record->assignValues(['event_user_id' => EventUserAuthentication::getLoggedUserId(), 'event_user_ticket_count' => $_SESSION['ticket_count'], 'event_user_ticket_pay_status' => EventUser::EVENT_DONATION_SUCCESS]);
+            $record->assignValues(['event_user_id' => $userId, 'event_user_ticket_count' => $_SESSION['ticket_count'], 'event_user_ticket_pay_status' => EventUser::EVENT_DONATION_SUCCESS]);
             if (isset($_SESSION['ticketUrl']) && isset($_SESSION['ticketDownloadUrl'])) {
                 $ticket_generate_url = $_SESSION['ticketUrl'];
                 $ticket_download = $_SESSION['ticketDownloadUrl'];
@@ -392,7 +392,7 @@ class EventUserController extends MyEventAppController
             if (!$record->update(['smt' => 'event_user_ticket_plan_id = ?', 'vals' => [$orderResult['op_grpcls_id']]])) {
                 FatUtility::dieJsonError(Label::getLabel('LBL_SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN'));
             }
-            $userRow = EventUser::getAttributesById(EventUserAuthentication::getLoggedUserId(), array(
+            $userRow = EventUser::getAttributesById($userId, array(
                 'user_id', 'user_url_name', 'user_first_name', 'user_last_name',
                 'user_gender', 'user_phone', 'user_phone_code', 'user_country_id',
                 'user_is_teacher', 'user_timezone', 'user_profile_info', 'user_sponsorship_plan', 'user_become_sponsership_plan',
@@ -418,31 +418,31 @@ class EventUserController extends MyEventAppController
                     'file_upload' => $_SESSION['ticketUrl'],
                 ];
 
-                $phonenumber = $userRow['user_phone_code'] . "" . $userRow['user_phone'];
-                $donation_msg = "*Welcome to UbuntuTalks* %0a%0aThanks *" . $userRow['user_first_name'] . " " . $userRow['user_last_name'] . "* for connecting in our team %0aYou booked the ticket for *Benefit Concert* the plan category is *" . $_SESSION['planSelected'] . "* and Total Number of Tickets : *" . $_SESSION['ticket_count'] . "*%0a%0a*Note:* Download the ticket from dashboard %0ahttps://ubuntutalks.com/dashboard-event-visitor* %0a%0a*Thank for connecting* %0a*UbuntuTalks*";
+                // $phonenumber = $userRow['user_phone_code'] . "" . $userRow['user_phone'];
+                // $donation_msg = "*Welcome to UbuntuTalks* %0a%0aThanks *" . $userRow['user_first_name'] . " " . $userRow['user_last_name'] . "* for connecting in our team %0aYou booked the ticket for *Benefit Concert* the plan category is *" . $_SESSION['planSelected'] . "* and Total Number of Tickets : *" . $_SESSION['ticket_count'] . "*%0a%0a*Note:* Download the ticket from dashboard %0ahttps://ubuntutalks.com/dashboard-event-visitor* %0a%0a*Thank for connecting* %0a*UbuntuTalks*";
 
-                $curl = curl_init();
+                // $curl = curl_init();
 
-                /* Whatsapp Notification */
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => "https://api.ultramsg.com/" . $InstanceId . "/messages/image",
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => "",
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 30,
-                    CURLOPT_SSL_VERIFYHOST => 0,
-                    CURLOPT_SSL_VERIFYPEER => 0,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => "POST",
-                    CURLOPT_POSTFIELDS => "token=" . $WhatsappToken . "&to=" . $phonenumber . "&image=https://ubuntutalks.com/image/editor-image/1659933871-450.png&caption=" . $donation_msg . "&referenceId=&nocache=",
-                    CURLOPT_HTTPHEADER => array(
-                        "content-type: application/x-www-form-urlencoded"
-                    ),
-                ));
+                // /* Whatsapp Notification */
+                // curl_setopt_array($curl, array(
+                //     CURLOPT_URL => "https://api.ultramsg.com/" . $InstanceId . "/messages/image",
+                //     CURLOPT_RETURNTRANSFER => true,
+                //     CURLOPT_ENCODING => "",
+                //     CURLOPT_MAXREDIRS => 10,
+                //     CURLOPT_TIMEOUT => 30,
+                //     CURLOPT_SSL_VERIFYHOST => 0,
+                //     CURLOPT_SSL_VERIFYPEER => 0,
+                //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                //     CURLOPT_CUSTOMREQUEST => "POST",
+                //     CURLOPT_POSTFIELDS => "token=" . $WhatsappToken . "&to=" . $phonenumber . "&image=https://ubuntutalks.com/image/editor-image/1659933871-450.png&caption=" . $donation_msg . "&referenceId=&nocache=",
+                //     CURLOPT_HTTPHEADER => array(
+                //         "content-type: application/x-www-form-urlencoded"
+                //     ),
+                // ));
 
-                $response = curl_exec($curl);
-                $err = curl_error($curl);
-                curl_close($curl);
+                // $response = curl_exec($curl);
+                // $err = curl_error($curl);
+                // curl_close($curl);
 
 
                 $email = new EmailHandler();
@@ -504,31 +504,31 @@ class EventUserController extends MyEventAppController
                     'file_upload' => $_SESSION['concertUrl'],
                     'concert_ticket' => $_SESSION['concert_ticket'],
                 ];
-                $phonenumber = $userRow['user_phone_code'] . "" . $userRow['user_phone'];
-                $donation_msg = "*Welcome to UbuntuTalks* %0a%0aThanks *" . $userRow['user_first_name'] . " " . $userRow['user_last_name'] . "* for connecting in our team %0aYou booked the ticket for *Benefit Concert* the plan category is *" . $_SESSION['concertPlan'] . "* and Total Number of Tickets : *" . $_SESSION['concert_ticket'] . "*%0a%0a*Note:* Download the ticket from dashboard %0ahttps://ubuntutalks.com/dashboard-event-visitor* %0a%0a*Thank for connecting* %0a*UbuntuTalks*";
+                // $phonenumber = $userRow['user_phone_code'] . "" . $userRow['user_phone'];
+                // $donation_msg = "*Welcome to UbuntuTalks* %0a%0aThanks *" . $userRow['user_first_name'] . " " . $userRow['user_last_name'] . "* for connecting in our team %0aYou booked the ticket for *Benefit Concert* the plan category is *" . $_SESSION['concertPlan'] . "* and Total Number of Tickets : *" . $_SESSION['concert_ticket'] . "*%0a%0a*Note:* Download the ticket from dashboard %0ahttps://ubuntutalks.com/dashboard-event-visitor* %0a%0a*Thank for connecting* %0a*UbuntuTalks*";
 
-                $curl = curl_init();
+                // $curl = curl_init();
 
-                /* Whatsapp Notification */
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => "https://api.ultramsg.com/" . $InstanceId . "/messages/image",
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => "",
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 30,
-                    CURLOPT_SSL_VERIFYHOST => 0,
-                    CURLOPT_SSL_VERIFYPEER => 0,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => "POST",
-                    CURLOPT_POSTFIELDS => "token=" . $WhatsappToken . "&to=" . $phonenumber . "&image=https://ubuntutalks.com/image/editor-image/1659933871-450.png&caption=" . $donation_msg . "&referenceId=&nocache=",
-                    CURLOPT_HTTPHEADER => array(
-                        "content-type: application/x-www-form-urlencoded"
-                    ),
-                ));
+                // /* Whatsapp Notification */
+                // curl_setopt_array($curl, array(
+                //     CURLOPT_URL => "https://api.ultramsg.com/" . $InstanceId . "/messages/image",
+                //     CURLOPT_RETURNTRANSFER => true,
+                //     CURLOPT_ENCODING => "",
+                //     CURLOPT_MAXREDIRS => 10,
+                //     CURLOPT_TIMEOUT => 30,
+                //     CURLOPT_SSL_VERIFYHOST => 0,
+                //     CURLOPT_SSL_VERIFYPEER => 0,
+                //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                //     CURLOPT_CUSTOMREQUEST => "POST",
+                //     CURLOPT_POSTFIELDS => "token=" . $WhatsappToken . "&to=" . $phonenumber . "&image=https://ubuntutalks.com/image/editor-image/1659933871-450.png&caption=" . $donation_msg . "&referenceId=&nocache=",
+                //     CURLOPT_HTTPHEADER => array(
+                //         "content-type: application/x-www-form-urlencoded"
+                //     ),
+                // ));
 
-                $response = curl_exec($curl);
-                $err = curl_error($curl);
-                curl_close($curl);
+                // $response = curl_exec($curl);
+                // $err = curl_error($curl);
+                // curl_close($curl);
 
                 $email = new EmailHandler();
                 if (true !== $email->sendConcertplanEmail($this->siteLangId, $data)) {
@@ -587,31 +587,31 @@ class EventUserController extends MyEventAppController
                     'file_upload' => $_SESSION['symposiumUrl'],
                 ];
 
-                $phonenumber = $userRow['user_phone_code'] . "" . $userRow['user_phone'];
-                $donation_msg = "*Welcome to UbuntuTalks* %0a%0aThanks *" . $userRow['user_first_name'] . " " . $userRow['user_last_name'] . "* for connecting in our team %0aYou booked the ticket for *Pre-Symposium Dinner* the plan category is *" . $_SESSION['symposiumPlan'] . "* and Total Number of Tickets : *" . $_SESSION['symposium_ticket'] . "*%0a%0a*Note:* Download the ticket from dashboard %0ahttps://ubuntutalks.com/dashboard-event-visitor* %0a%0a*Thank for connecting* %0a*UbuntuTalks*";
+                // $phonenumber = $userRow['user_phone_code'] . "" . $userRow['user_phone'];
+                // $donation_msg = "*Welcome to UbuntuTalks* %0a%0aThanks *" . $userRow['user_first_name'] . " " . $userRow['user_last_name'] . "* for connecting in our team %0aYou booked the ticket for *Pre-Symposium Dinner* the plan category is *" . $_SESSION['symposiumPlan'] . "* and Total Number of Tickets : *" . $_SESSION['symposium_ticket'] . "*%0a%0a*Note:* Download the ticket from dashboard %0ahttps://ubuntutalks.com/dashboard-event-visitor* %0a%0a*Thank for connecting* %0a*UbuntuTalks*";
 
-                $curl = curl_init();
+                // $curl = curl_init();
 
-                /* Whatsapp Notification */
-                curl_setopt_array($curl, array(
-                    CURLOPT_URL => "https://api.ultramsg.com/" . $InstanceId . "/messages/image",
-                    CURLOPT_RETURNTRANSFER => true,
-                    CURLOPT_ENCODING => "",
-                    CURLOPT_MAXREDIRS => 10,
-                    CURLOPT_TIMEOUT => 30,
-                    CURLOPT_SSL_VERIFYHOST => 0,
-                    CURLOPT_SSL_VERIFYPEER => 0,
-                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                    CURLOPT_CUSTOMREQUEST => "POST",
-                    CURLOPT_POSTFIELDS => "token=" . $WhatsappToken . "&to=" . $phonenumber . "&image=https://ubuntutalks.com/image/editor-image/1659933871-450.png&caption=" . $donation_msg . "&referenceId=&nocache=",
-                    CURLOPT_HTTPHEADER => array(
-                        "content-type: application/x-www-form-urlencoded"
-                    ),
-                ));
+                // /* Whatsapp Notification */
+                // curl_setopt_array($curl, array(
+                //     CURLOPT_URL => "https://api.ultramsg.com/" . $InstanceId . "/messages/image",
+                //     CURLOPT_RETURNTRANSFER => true,
+                //     CURLOPT_ENCODING => "",
+                //     CURLOPT_MAXREDIRS => 10,
+                //     CURLOPT_TIMEOUT => 30,
+                //     CURLOPT_SSL_VERIFYHOST => 0,
+                //     CURLOPT_SSL_VERIFYPEER => 0,
+                //     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                //     CURLOPT_CUSTOMREQUEST => "POST",
+                //     CURLOPT_POSTFIELDS => "token=" . $WhatsappToken . "&to=" . $phonenumber . "&image=https://ubuntutalks.com/image/editor-image/1659933871-450.png&caption=" . $donation_msg . "&referenceId=&nocache=",
+                //     CURLOPT_HTTPHEADER => array(
+                //         "content-type: application/x-www-form-urlencoded"
+                //     ),
+                // ));
 
-                $response = curl_exec($curl);
-                $err = curl_error($curl);
-                curl_close($curl);
+                // $response = curl_exec($curl);
+                // $err = curl_error($curl);
+                // curl_close($curl);
 
 
                 $email = new EmailHandler();
@@ -673,6 +673,7 @@ class EventUserController extends MyEventAppController
         $_SESSION['event'] = 'start';
         $user_id = $_SESSION['Event_userId'];
         $cartData = $_SESSION['cart'];
+
         if (isset($_SESSION['summary'])) {
             // echo "<pre>" ;
             // print_r($cartData);
@@ -691,6 +692,10 @@ class EventUserController extends MyEventAppController
         $referralName = FatApp::getPostedData('referralName', FatUtility::VAR_STRING, '');
         $currency = FatApp::getPostedData('currency', FatUtility::VAR_STRING, 'USD');
         $currencyCode = FatApp::getPostedData('currencyCode', FatUtility::VAR_STRING, '$');
+        if ($currency == 'undefined' || $currencyCode == 'undefined') {
+            $currency = 'USD';
+            $currencyCode = '$';
+        }
         if ($pmethodId > 0) {
             $pmSrch = PaymentMethods::getSearchObject($this->siteLangId);
             $pmSrch->doNotCalculateRecords();
@@ -1123,7 +1128,7 @@ class EventUserController extends MyEventAppController
             $this->set('userData', $userRow);
         }
         $planData = new SearchBase('tbl_three_reasons');
-        $planData->addCondition('registration_plan_title', '=', $method);
+        $planData->addCondition('registration_plan_title', '=', $method . '.');
         $planResult = FatApp::getDb()->fetch($planData->getResultSet());
 
         //  foreach ($sponsorshipList as $key => $value) {
@@ -1442,7 +1447,7 @@ class EventUserController extends MyEventAppController
         $userObj = new EventUser();
         $userRow = EventUser::getAttributesById($userId);
         $planData = new SearchBase('tbl_three_reasons');
-        $planData->addCondition('registration_plan_title', '=', $method);
+        $planData->addCondition('registration_plan_title', '=', $method . '.');
         $planResult = FatApp::getDb()->fetch($planData->getResultSet());
         $grpclsId = $planResult['three_reasons_id'];
         $key = $userId . '_' . $grpclsId;
@@ -1512,6 +1517,541 @@ class EventUserController extends MyEventAppController
         $this->set('userData', $userRow);
         $this->_template->render(false, false);
     }
+
+    public function Event($registration_plan_slug, $three_reasons_id)
+    {
+        unset($_SESSION['checkoutCart']);
+        unset($_SESSION['cart']);
+        unset($_SESSION['Event_userId']);
+        $EventsDetails = new SearchBase('tbl_three_reasons');
+        $EventsDetails->addCondition('three_reasons_id', '=', $three_reasons_id);
+        $EventsDetails->addCondition('three_reasons_deleted', '=', 0);
+        $EventsDetails->addCondition('three_reasons_active', '=', 1);
+        $EventsCategories = $EventsDetails->getResultSet();
+        $EventsList = FatApp::getDb()->fetch($EventsCategories);
+        $this->set('EventsList', $EventsList);
+        $this->set('planId', $three_reasons_id);
+        $this->_template->addJs('css/assets/js/bootstrap.min.js');
+        $this->_template->addJs('css/assets/js/custom.js');
+        $this->_template->addJs('css/assets/js/jquery-3.5.1.slim.min.js');
+        $this->_template->addJs('css/assets/js/popper.min.js');
+        $this->_template->addCss('css/assets/css/bootstrap.css');
+        $this->_template->addCss('css/assets/css/responsive.css');
+        $this->_template->addCss('css/assets/css/style.css');
+        $this->_template->render();
+    }
+    public function goToCart()
+    {
+        $post = FatApp::getPostedData();
+        if ($post['loggIn'] == 0) {
+            $_SESSION['Event_userId'] = EventUserAuthentication::getLoggedUserId();
+        }
+        $checkoutCart = [];
+        $checkoutCart['ticketQty'] = $post['ticketCount'];
+        $checkoutCart['plan'] = $post['planId'];
+
+        $_SESSION['checkoutCart'] = $checkoutCart;
+        $message = Label::getLabel('MSG_CART_ADDED', $this->siteLangId);
+        $redirectUrl = CommonHelper::generateUrl('EventUser', 'Cart');
+        FatUtility::dieJsonSuccess(['url' => $redirectUrl, 'msg' => $message]);
+    }
+
+    public function cart()
+    {
+
+        $post = FatApp::getPostedData();
+        if (isset($_SESSION['checkoutCart'])) {
+            $checkoutCart = $_SESSION['checkoutCart'];
+
+            $ticketQty = $checkoutCart['ticketQty'];
+            $plan = $checkoutCart['plan'];
+            $checkoutCart['ticketQty'] = $ticketQty;
+            $checkoutCart['plan'] = $checkoutCart['plan'];
+
+            $EventsDetails = new SearchBase('tbl_three_reasons');
+            $EventsDetails->addCondition('three_reasons_id', '=', $plan);
+            $EventsDetails->addCondition('three_reasons_deleted', '=', 0);
+            $EventsDetails->addCondition('three_reasons_active', '=', 1);
+            $EventsCategories = $EventsDetails->getResultSet();
+            $EventsList = FatApp::getDb()->fetch($EventsCategories);
+            $EventsList['itemNetPrice'] = $ticketQty * $EventsList['registration_plan_price'];
+            $this->set('EventsList', $EventsList);
+            $this->set('ticketCount', $ticketQty);
+            $this->set('planId', $plan);
+            $checkoutCart['itemNetPrice'] = $EventsList['itemNetPrice'];
+            $_SESSION['checkoutCart'] = $checkoutCart;
+        }
+        $this->_template->addJs('css/assets/js/bootstrap.min.js');
+        $this->_template->addJs('css/assets/js/custom.js');
+        $this->_template->addJs('css/assets/js/jquery-3.5.1.slim.min.js');
+        $this->_template->addJs('css/assets/js/popper.min.js');
+        $this->_template->addCss('css/assets/css/bootstrap.css');
+        $this->_template->addCss('css/assets/css/responsive.css');
+        $this->_template->addCss('css/assets/css/style.css');
+        $redirectUrl = CommonHelper::generateUrl('EventUser', 'cart');
+        //   FatApp::redirectUser(CommonHelper::generateUrl('EventUser', 'Cart'));
+        // die(json_encode($post));
+        $this->_template->render();
+    }
+    public function removeItemFromCart($plan = 0)
+    {
+        $checkoutCart = $_SESSION['checkoutCart'];
+
+        if ($checkoutCart['plan'] == $plan) {
+
+            unset($_SESSION['checkoutCart']);
+        }
+        $message = Label::getLabel('MSG_Cart_Updated_SUCCESSFULLY', $this->siteLangId);
+        $redirectUrl = CommonHelper::generateUrl('EventUser', 'cart');
+        FatUtility::dieJsonSuccess(['url' => $redirectUrl, 'msg' => $message]);
+    }
+    public function updateCart($ticketQty = 0)
+    {
+        $post = FatApp::getPostedData();
+        $this->set('ticketCount', $ticketQty);
+        $this->set('planId', $plan);
+        $checkoutCart = $_SESSION['checkoutCart'];
+        $checkoutCart['ticketQty'] = $ticketQty;
+        $EventsDetails = new SearchBase('tbl_three_reasons');
+        $EventsDetails->addCondition('three_reasons_id', '=', $checkoutCart['plan']);
+        $EventsDetails->addCondition('three_reasons_deleted', '=', 0);
+        $EventsDetails->addCondition('three_reasons_active', '=', 1);
+        $EventsCategories = $EventsDetails->getResultSet();
+        $EventsList = FatApp::getDb()->fetch($EventsCategories);
+        $EventsList['itemNetPrice'] = $ticketQty * $EventsList['registration_plan_price'];
+        $this->set('EventsList', $EventsList);
+        $this->set('ticketCount', $ticketQty);
+        $this->set('planId', $plan);
+        $checkoutCart['itemNetPrice'] = $EventsList['itemNetPrice'];
+        $_SESSION['checkoutCart'] = $checkoutCart;
+        $message = Label::getLabel('MSG_CART_ADDED', $this->siteLangId);
+        $this->_template->addJs('css/assets/js/bootstrap.min.js');
+        $this->_template->addJs('css/assets/js/custom.js');
+        $this->_template->addJs('css/assets/js/jquery-3.5.1.slim.min.js');
+        $this->_template->addJs('css/assets/js/popper.min.js');
+        $this->_template->addCss('css/assets/css/bootstrap.css');
+        $this->_template->addCss('css/assets/css/responsive.css');
+        $this->_template->addCss('css/assets/css/style.css');
+        $message = Label::getLabel('MSG_Cart_Updated_SUCCESSFULLY', $this->siteLangId);
+        $redirectUrl = CommonHelper::generateUrl('EventUser', 'payment');
+        FatUtility::dieJsonSuccess(['msg' => $message, 'data' => $EventsList['itemNetPrice'], 'plan' => $checkoutCart['plan']]);
+    }
+    public function checkout()
+    {
+        $post = FatApp::getPostedData();
+        if (isset($_SESSION['Event_userId'])) {
+
+            $userId = $_SESSION['Event_userId'];
+            $userObj = new EventUser($userId);
+            $userRow = EventUser::getAttributesById($userId);
+            $userCredData = $userObj->getUserInfo([
+                'credential_email',
+                'credential_password',
+                'user_first_name',
+                'user_last_name',
+                'credential_active'
+            ], false);
+            $this->set('userData', $userRow);
+            $this->set('userCrendentialData', $userCredData);
+        }
+        $checkoutCart = $_SESSION['checkoutCart'];
+        $ticketQty = $checkoutCart['ticketQty'];
+        $EventsDetails = new SearchBase('tbl_three_reasons');
+        $EventsDetails->addCondition('three_reasons_id', '=', $checkoutCart['plan']);
+        $EventsDetails->addCondition('three_reasons_deleted', '=', 0);
+        $EventsDetails->addCondition('three_reasons_active', '=', 1);
+        $EventsCategories = $EventsDetails->getResultSet();
+        $EventsList = FatApp::getDb()->fetch($EventsCategories);
+        $EventsList['itemNetPrice'] = $ticketQty * $EventsList['registration_plan_price'];
+        // Get all conuntry
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.first.org/data/v1/countries',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+        ));
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $listing = json_decode($response);
+        $country_options = array();
+        foreach ($listing as $country_option) {
+            foreach ($country_option as $key => $value) {
+                $country_options[$value->country] = $value->country;
+            }
+        }
+        $this->set('country_options', $country_options);
+        $this->set('EventsList', $EventsList);
+        $this->_template->addJs('css/assets/js/bootstrap.min.js');
+        $this->_template->addJs('css/assets/js/custom.js');
+        $this->_template->addJs('js/jquery.form.js');
+        $this->_template->addJs('css/assets/js/jquery-3.5.1.slim.min.js');
+        $this->_template->addJs('css/assets/js/popper.min.js');
+        $this->_template->addCss('css/assets/css/bootstrap.css');
+        $this->_template->addCss('css/assets/css/responsive.css');
+        $this->_template->addCss('css/assets/css/style.css');
+        $this->_template->render();
+    }
+
+    public function addAttendeeDetails()
+    {
+        $post = FatApp::getPostedData();
+        if (!isset($_SESSION['Event_userId'])) {
+            if (isset($post['login']) && $post['login'] == 'login') {
+                $post['user_email'] = $post['user_email'];
+                $post['user_password'] = $post['user_password'];
+                $authentication = new EventUserAuthentication();
+
+                if (true !== $authentication->login($post['user_email'], $post['user_password'], CommonHelper::getClientIp())) {
+                    FatUtility::dieWithError(Label::getLabel($authentication->getError()));
+                }
+                $userId = EventUserAuthentication::getLoggedUserId();
+                $_SESSION['Event_userId'] = $userId;
+            } else {
+                $post['user_first_name'] = $post['firstName'];
+                $post['user_last_name'] = $post['lastName'];
+                $post['user_email'] = $post['email-address'];
+                $post['user_password'] = $post['password'];
+                $post['user_billing_country'] = $post['stateCounty'];
+                $post['user_zip'] = $post['postcode'];
+                $post['user_address1'] = $post['cityTown1'];
+                $post['user_address2'] = $post['cityTown2'];
+                $post['user_phone'] = $post['phone'];
+                $post['user_company'] = $post['companyName'];
+                if (!isset($post['user_first_name'])) {
+                    $post['user_first_name'] = strstr($post['user_email'], '@', true);
+                }
+                $sponserShip = $post['sponsership'];
+                if ($post == false) {
+                    Message::addErrorMessage(Label::getLabel('MSG_ERROR'));
+                    $this->set('msg', Label::getLabel('MSG_ERROR'));
+                    if (FatUtility::isAjaxCall()) {
+                        FatUtility::dieWithError(Message::getHtml());
+                    }
+                    FatApp::redirectUser(CommonHelper::generateUrl('EventUser', 'registrationForm'));
+                }
+                if (true !== CommonHelper::validateUsername($post['user_first_name'])) {
+                    $this->set('msg', Label::getLabel('MSG_USER_NAME_MUST_BE_THREE_CHARATERS_LONG'));
+                    Message::addErrorMessage(Label::getLabel('MSG_USER_NAME_MUST_BE_THREE_CHARATERS_LONG'));
+                    if (FatUtility::isAjaxCall()) {
+                        FatUtility::dieWithError(Message::getHtml());
+                    }
+                    $this->RegisterDonationEventUserData($donation, 0, $checkLogged);
+                    return;
+                }
+                if (!CommonHelper::isValidEmail($post['user_email'])) {
+                    $this->set('msg', Label::getLabel('MSG_EMAIL_MUST_BE_IN_VALID_FORMAT'));
+                    Message::addErrorMessage(Label::getLabel('MSG_EMAIL_MUST_BE_IN_VALID_FORMAT'));
+                    if (FatUtility::isAjaxCall()) {
+                        FatUtility::dieWithError(Message::getHtml());
+                    }
+                    $this->RegisterDonationEventUserData($donation, 0, $checkLogged);
+                    return;
+                }
+                if (true !== CommonHelper::validatePassword($post['user_password'])) {
+                    $this->set('msg', Label::getLabel('MSG_PASSWORD_MUST_BE_EIGHT_CHARACTERS_LONG_AND_ALPHANUMERIC'));
+                    Message::addErrorMessage(Label::getLabel('MSG_PASSWORD_MUST_BE_EIGHT_CHARACTERS_LONG_AND_ALPHANUMERIC'));
+                    if (FatUtility::isAjaxCall()) {
+                        FatUtility::dieWithError(Message::getHtml());
+                    }
+                    $this->RegisterDonationEventUserData($donation, 0, $checkLogged);
+                    return;
+                }
+                if ($post['user_password'] !== $post['conf_new_password']) {
+                    $this->set('msg', Label::getLabel('MSG_CONFIRM_PASSWORD_MUST_BE_SAME_AS_PASSWORD'));
+                    Message::addErrorMessage(Label::getLabel('MSG_CONFIRM_PASSWORD_MUST_BE_SAME_AS_PASSWORD'));
+                    if (FatUtility::isAjaxCall()) {
+                        FatUtility::dieWithError(Message::getHtml());
+                    }
+                    // $this->RegisterDonationEventUserData($donation, 0, $checkLogged);
+                    return;
+                }
+
+                $db = FatApp::getDb();
+                $db->startTransaction();
+                $user = new EventUser();
+                /* saving user data[ */
+                $post['user_is_learner'] = 1;
+                $user_preferred_dashboard = EventUser::USER_LEARNER_DASHBOARD;
+                $user_registered_initially_for = EventUser::USER_TYPE_LEANER;
+                $posted_user_preferred_dashboard = FatApp::getPostedData('user_preferred_dashboard', FatUtility::VAR_INT, 0);
+                if ($posted_user_preferred_dashboard == EventUser::USER_TEACHER_DASHBOARD) {
+                    $user_preferred_dashboard = EventUser::USER_TEACHER_DASHBOARD;
+                    $user_registered_initially_for = EventUser::USER_TYPE_TEACHER;
+                }
+
+                $post['user_timezone'] = $_COOKIE['user_timezone'] ?? MyDate::getTimeZone();;
+                $post['user_preferred_dashboard'] = $user_preferred_dashboard;
+                $post['user_registered_initially_for'] = $user_registered_initially_for;
+                $post['credential_verified'] = applicationConstants::YES;
+                $user->assignValues($post);
+                $user->setUserInfo($post);
+                if (true !== $user->save()) {
+                    $db->rollbackTransaction();
+                    $this->set('msg', Label::getLabel("MSG_USER_COULD_NOT_BE_SET") . $user->getError());
+                    Message::addErrorMessage(Label::getLabel("MSG_USER_COULD_NOT_BE_SET") . $user->getError());
+                    // if (FatUtility::isAjaxCall()) {
+                    //     FatUtility::dieWithError(Message::getHtml());
+                    // }
+                    // $this->RegisterDonationEventUserData($donation, 0, $checkLogged);
+                    return;
+                }
+                $record = new TableRecord('tbl_event_users');
+                $arrFlds = [
+                    'user_first_name' => $post['user_first_name'],
+                    'user_email' => $post['user_email'],
+
+                ];
+                $record->assignValues($arrFlds);
+                if (!$record->addNew([], $arrFlds)) {
+                }
+                $active = FatApp::getConfig('CONF_ADMIN_APPROVAL_REGISTRATION', FatUtility::VAR_INT, 1) ? 1 : 1;
+                $verify = FatApp::getConfig('CONF_EMAIL_VERIFICATION_REGISTRATION', FatUtility::VAR_INT, 1) ? 1 : 1;
+                if (true !== $user->setLoginCredentials($post['user_email'], $post['user_email'], $post['user_password'], $active, $verify)) {
+                    // Message::addErrorMessage(Label::getLabel("MSG_LOGIN_CREDENTIALS_COULD_NOT_BE_SET") . $user->getError());
+                    $this->set('msg', Label::getLabel("MSG_USER_COULD_NOT_BE_SET") . $user->getError());
+                    $db->rollbackTransaction();
+                    // if (FatUtility::isAjaxCall()) {
+                    //     FatUtility::dieWithError(Message::getHtml());
+                    // }
+                    // $this->RegisterDonationEventUserData($donation, 0, $checkLogged);
+                    return;
+                }
+                /* ] */
+                $db->commitTransaction();
+                $_SESSION['Event_userId'] = $user->getMainTableRecordId();
+                $authentication = new EventUserAuthentication();
+
+                // if (true !== $authentication->login($post['user_email'], $post['user_password'], CommonHelper::getClientIp())) {
+                //     FatUtility::dieWithError(Label::getLabel($authentication->getError()));
+                // }
+                // $userId = EventUserAuthentication::getLoggedUserId();
+                // $_SESSION['Event_userId'] = $userId;
+            }
+        }
+        $checkoutCart = $_SESSION['checkoutCart'];
+
+        $planRecord = new TableRecord('tbl_event_user_ticket_plan');
+        $data = [];
+        $data['event_user_plan_id'] = explode('/', $checkoutCart['plan'])[0];
+        $data['event_user_ticket_count'] = $checkoutCart['ticketQty'];
+        $_SESSION['ticket_count'] = $checkoutCart['ticketQty'];
+
+        $data['event_user_id'] = $_SESSION['Event_userId'];
+        $checkoutCart['plan'] = explode('/', $checkoutCart['plan'])[0];
+        $planRecord->assignValues($data);
+        if (!$planRecord->addNew([])) {
+            Message::addErrorMessage($record->getError());
+            throw new Exception('');
+        }
+        $ticketSrch = new SearchBase('tbl_event_user_ticket_plan');
+        $ticketSrch->addCondition('event_user_plan_id', '=', $checkoutCart['plan']);
+        $ticketData = FatApp::getDb()->fetchAll($ticketSrch->getResultSet());
+        $lastRecord = end($ticketData);
+        $checkoutCart['ticket_key'] = $lastRecord['event_user_ticket_plan_id'];
+        $_SESSION['checkoutCart'] = $checkoutCart;
+        foreach ($post['attendeeName'] as $key => $value) {
+            $record = new TableRecord('tbl_three_reason_tickets_attendee_details');
+            $newData = [];
+            $newData['attendee_full_name'] = $value;
+            $newData['attendee_email'] = $post['attendeeEmail'][$key];
+            $newData['attendee_phone'] = $post['phoneNumber'][$key];
+            $newData['attendee_gender'] = $post['gender'][$key];
+            $newData['attendee_church'] = $post['church'][$key];
+            $newData['attendee_food'] = $post['Food'][$key];
+            $newData['event_user_ticket_plan'] = $lastRecord['event_user_ticket_plan_id'];
+            $record->assignValues($newData);
+            if (!$record->addNew([])) {
+                Message::addErrorMessage($record->getError());
+                throw new Exception('');
+            }
+        }
+        $message = Label::getLabel('MSG_Cart_Updated_SUCCESSFULLY', $this->siteLangId);
+        $redirectUrl = CommonHelper::generateUrl('EventUser', 'payment');
+        FatUtility::dieJsonSuccess(['url' => $redirectUrl, 'msg' => $message]);
+    }
+
+    public function payment()
+    {
+
+        $checkoutCart = $_SESSION['checkoutCart'];
+        //event plan ticket Summary
+        $ticketCount = $checkoutCart['ticketQty'];
+        $plan = $checkoutCart['plan'];
+
+        $userId = $_SESSION['Event_userId'];
+        $userObj = new EventUser($userId);
+        $userRow = EventUser::getAttributesById($userId);
+        $userCredData = $userObj->getUserInfo([
+            'credential_email',
+            'credential_password',
+            'user_first_name',
+            'user_last_name',
+            'credential_active'
+        ], false);
+        $this->set('userData', $userRow);
+        $this->set('userCrendentialData', $userCredData);
+
+        $planData = new SearchBase('tbl_three_reasons');
+        $planData->addCondition('three_reasons_id', '=', $plan);
+        $planResult = FatApp::getDb()->fetch($planData->getResultSet());
+        // echo "<pre>";
+        // print_r($planResult['registration_plan_title']);
+
+        //  foreach ($sponsorshipList as $key => $value) {
+        $testimonialImages = AttachedFile::getMultipleAttachments(AttachedFile::FILETYPE_EVENT_PLAN_IMAGE, $planResult['three_reasons_id'], 0, -1);
+        $planResult['plan_image'] = $testimonialImages;
+        $_SESSION['planSelected'] = $planResult['registration_plan_title'];
+        //       $Sponsershiprecords[$key] = $value;
+        //}
+
+        $grpclsId = $checkoutCart['ticket_key'];
+        $key = $userId . '_' . $grpclsId;
+        // echo "<pre>";
+        // print_r($planResult);
+        $cartTotal = $planResult['registration_plan_price'] * $ticketCount;
+        $planPrice = $planResult['registration_plan_price'];
+        if ($currency == 'ZMW' || $currency == 'zmw') {
+            $cartTotal = $planResult['registration_plan_zk_price'] * $ticketCount;
+
+            $planPrice = $planResult['registration_plan_zk_price'];
+        }
+        $cart['cart'][$key] = [
+            'teacherId' => $userId,
+            'grpclsId' => $grpclsId,
+            'startDateTime' => date('Y-m-d H:i:s'),
+            'endDateTime' => date('Y-m-d H:i:s'),
+            'isFreeTrial' => applicationConstants::NO,
+            'lessonQty' => 1,
+        ];
+        $record = new TableRecord('tbl_user_cart');
+        $cart_arr = $cart['cart'];
+        $cart_arr = serialize($cart_arr);
+        $record->assignValues([
+            "usercart_user_id" => $userId,
+            "usercart_type" => 4,
+            "usercart_details" => $cart_arr,
+            "usercart_added_date" => date('Y-m-d H:i:s')
+        ]);
+        if (!$record->addNew([], ['usercart_details' => $cart_arr, "usercart_added_date" => date('Y-m-d H:i:s')])) {
+            Message::addErrorMessage($record->getError());
+            throw new Exception('');
+        }
+        $cartData = [];
+        $cartData['key'] = $key;
+        $cartData['grpclsId'] = $grpclsId;
+        $cartData['teacherId'] = $userId;
+        $cartData['user_id'] = $userId;
+        $cartData['isFreeTrial'] = applicationConstants::NO;
+        $cartData['lessonQty'] = 1;
+        $cartData['languageId'] = $this->siteLangId;
+        $cartData['lessonDuration'] = 60;
+        $cartData['lpackage_is_free_trial'] = applicationConstants::NO;
+        $cartData['lpackage_lessons'] = 1;
+        $cartData['startDateTime'] = date('Y-m-d H:i:s');
+        $cartData['endDateTime'] = date('Y-m-d H:i:s');
+        $cartData['startDateTime'] = date('Y-m-d H:i:s');
+        $cartData['endDateTime'] = date('Y-m-d H:i:s');
+        $cartData['itemName'] = $planResult['registration_plan_title'];
+        $cartData['itemId'] = $planResult['three_reasons_id'];
+        $cartData['itemPrice'] = $planPrice;
+        $cartData['cartTotal'] = $cartTotal;
+        $cartData['orderPaymentGatewayCharges'] = 1;
+        $cartData['orderNetAmount'] = $cartTotal;
+        $cartData['total'] = $cartTotal;
+        $_SESSION['cart'] = $cartData;
+
+        $userWalletBalance = EventUser::getUserBalance($userId);
+
+        $paymentMethods = [];
+        /* Payment Methods[ */
+        $pmSrch = PaymentMethods::getSearchObject($this->siteLangId);
+        $pmSrch->doNotCalculateRecords();
+        $pmSrch->doNotLimitRecords();
+        $pmSrch->addMultipleFields([
+            'pmethod_id',
+            'IFNULL(pmethod_name, pmethod_identifier) as pmethod_name',
+            'pmethod_code',
+            'pmethod_description'
+        ]);
+        $pmSrch->addCondition('pmethod_type', '=', PaymentMethods::TYPE_PAYMENT_METHOD);
+        $pmRs = $pmSrch->getResultSet();
+        $paymentMethods = FatApp::getDb()->fetchAll($pmRs);
+        $orderId = isset($_SESSION['order_id']) ? $_SESSION['order_id'] : '';
+        $EventTicketsCouponCodeListing = new SearchBase('tbl_coupons');
+        $EventTicketsCouponCodeListing->addCondition('coupon_identifier', '=', 'EventRegistration');
+        $EventTicketsCCListing = $EventTicketsCouponCodeListing->getResultSet();
+        $EventTicketsCouponCodeFinalListing = FatApp::getDb()->fetchAll($EventTicketsCCListing);
+        $currencySwitcherData = new SearchBase('tbl_currencies_switcher');
+        $currencySwitcherData->addCondition('currencies_switcher_active', '=', '1');
+        $currencySwitcherData->addOrder('currencies_switcher_display_order', 'ASC');
+        $currencySwitcherResultData = FatApp::getDb()->fetchall($currencySwitcherData->getResultSet());
+        $selectedPlan = $cartData['itemId'];
+        $registrationPlanData = new SearchBase('tbl_three_reasons');
+        $registrationPlanData->addCondition('three_reasons_id', '=', $selectedPlan);
+        $registrationPlanData->addCondition('three_reasons_active', '=', '1');
+        $registrationPlanData->addCondition('three_reasons_deleted', '=', '0');
+        $registrationPlanResultData = FatApp::getDb()->fetch($registrationPlanData->getResultSet());
+        $EventUserDetails = new SearchBase('tbl_event_users');
+        $EventUserDetails->addCondition('user_id', '=', $userId);
+        $EventUserListingDetails = FatApp::getDb()->fetch($EventUserDetails->getResultSet());
+        $this->set('EventUserListingDetails', $EventUserListingDetails);
+        $this->set('registrationPlanResultData', $registrationPlanResultData);
+        $this->set('currencySwitcherResultData', $currencySwitcherResultData);
+        $this->set('EventTicketsCouponCodeFinalListing', $EventTicketsCouponCodeFinalListing);
+        $this->set('planResult', $planResult);
+        $this->set('tickets', $_SESSION['ticket_count']);
+        $this->set('planSelected', $method);
+        $this->set('paymentMethods', $paymentMethods);
+        $this->set('cartData', $cartData);
+        $this->set('userWalletBalance', $userWalletBalance);
+        $this->set('userType', EventUser::USER_TYPE_LEANER);
+        $this->set('userId', $userId);
+        //   $this->_template->render(false, false);
+        $this->_template->addJs('css/assets/js/bootstrap.min.js');
+        $this->_template->addJs('css/assets/js/custom.js');
+        $this->_template->addJs('css/assets/js/jquery-3.5.1.slim.min.js');
+        $this->_template->addJs('css/assets/js/popper.min.js');
+        $this->_template->addCss('css/assets/css/bootstrap.css');
+        $this->_template->addCss('css/assets/css/responsive.css');
+        $this->_template->addCss('css/assets/css/style.css');
+        $this->_template->render();
+    }
+
+    public function currencySwitcher($currency)
+    {
+        $checkoutCart = $_SESSION['checkoutCart'];
+        //event plan ticket Summary
+        $ticketCount = $checkoutCart['ticketQty'];
+        $plan = $checkoutCart['plan'];
+
+        $cartData = $_SESSION['cart'];
+        $planData = new SearchBase('tbl_three_reasons');
+        $planData->addCondition('three_reasons_id', '=', $plan);
+        $planResult = FatApp::getDb()->fetch($planData->getResultSet());
+
+        $cartTotal = $planResult['registration_plan_price'] * $ticketCount;
+        $planPrice = $planResult['registration_plan_price'];
+        if ($currency == 'ZMW' || $currency == 'zmw') {
+            $cartTotal = $planResult['registration_plan_zk_price'] * $ticketCount;
+
+            $planPrice = $planResult['registration_plan_zk_price'];
+        }
+        $cartData['itemPrice'] = $planPrice;
+        $cartData['cartTotal'] = $cartTotal;
+        $cartData['orderPaymentGatewayCharges'] = 1;
+        $cartData['orderNetAmount'] = $cartTotal;
+        $cartData['total'] = $cartTotal;
+
+        $_SESSION['cart'] = $cartData;
+        $message = Label::getLabel('MSG_Cart_Updated_SUCCESSFULLY', $this->siteLangId);
+
+        FatUtility::dieJsonSuccess(['msg' => $message, 'data' => $cartData,]);
+    }
     public function EventLogInFormPopUp($data = '')
     {
         if (EventUserAuthentication::isUserLogged()) {
@@ -1531,6 +2071,8 @@ class EventUserController extends MyEventAppController
         $userName = FatApp::getPostedData('username', FatUtility::VAR_STRING, '');
         $user_email = FatApp::getPostedData('user_email', FatUtility::VAR_STRING, '');
         $password = FatApp::getPostedData('password', FatUtility::VAR_STRING, '');
+        $userName = trim($userName);
+        $user_email = trim($user_email);
         if ($username == '') {
             $username = $user_email;
         }
@@ -1654,6 +2196,7 @@ class EventUserController extends MyEventAppController
     {
         $frm = $this->getSignUpForm();
         $post = FatApp::getPostedData();
+        $post['user_email'] = strtolower(trim($post['user_email']));
         if (!isset($post['user_first_name'])) {
             $post['user_first_name'] = strstr($post['user_email'], '@', true);
         }
@@ -3026,7 +3569,8 @@ class EventUserController extends MyEventAppController
     //Event Ticcket sponser sponsership list
     public function GetEventTickets($planSelected = '', $checked = 1, $fromPlan = 0, $ticketCount = 1)
     {
-        $_SESSION['planSelected'] = $planSelected;
+
+
         $this->set('planSelected', $planSelected);
         if ($fromPlan <= 0) {
             unset($_SESSION['ticket_count']);

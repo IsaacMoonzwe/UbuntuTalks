@@ -28,17 +28,17 @@ class GuestUserController extends MyAppController
         $this->_template->render(false, false);
     }
 
-    public function setUpLogin($checked=0)
+    public function setUpLogin($checked = 0)
     {
         $authentication = new UserAuthentication();
         $userName = FatApp::getPostedData('username', FatUtility::VAR_STRING, '');
         $password = FatApp::getPostedData('password', FatUtility::VAR_STRING, '');
-
+        $userName = trim($userName);
         // if($checked==0){
         if (true !== $authentication->login($userName, $password, CommonHelper::getClientIp())) {
             FatUtility::dieWithError(Label::getLabel($authentication->getError()));
         }
-      
+
         $userId = UserAuthentication::getLoggedUserId();
         $rememberme = FatApp::getPostedData('remember_me', FatUtility::VAR_INT, 0);
         if ($rememberme == applicationConstants::YES) {
@@ -136,6 +136,7 @@ class GuestUserController extends MyAppController
     {
         $frm = $this->getSignUpForm();
         $post = FatApp::getPostedData();
+        $post['user_email'] = strtolower(trim($post['user_email']));
         if (!isset($post['user_first_name'])) {
             $post['user_first_name'] = strstr($post['user_email'], '@', true);
         }
@@ -237,7 +238,9 @@ class GuestUserController extends MyAppController
         $confAutoLoginRegisteration = FatApp::getConfig('CONF_AUTO_LOGIN_REGISTRATION', FatUtility::VAR_INT, 1);
         if (1 === $confAutoLoginRegisteration && (0 === FatApp::getConfig('CONF_ADMIN_APPROVAL_REGISTRATION', FatUtility::VAR_INT, 1))) {
             $authentication = new UserAuthentication();
-            if (true != $authentication->login(FatApp::getPostedData('user_email'), FatApp::getPostedData('user_password'), $_SERVER['REMOTE_ADDR'])) {
+            $email = FatApp::getPostedData('user_email');
+            $user_email = strtolower(trim($email));
+            if (true != $authentication->login($user_email, FatApp::getPostedData('user_password'), $_SERVER['REMOTE_ADDR'])) {
                 Message::addErrorMessage(Label::getLabel($authentication->getError()));
                 if (FatUtility::isAjaxCall()) {
                     FatUtility::dieWithError(Message::getHtml());
@@ -902,11 +905,11 @@ class GuestUserController extends MyAppController
             FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
         }
         $userAuthObj = new UserAuthentication();
-        if (!$userAuthObj->checkResetLink($userId, trim($token),$credential_email, 'form')) {
+        if (!$userAuthObj->checkResetLink($userId, trim($token), $credential_email, 'form')) {
             Message::addErrorMessage($userAuthObj->getError());
             FatApp::redirectUser(CommonHelper::generateUrl('GuestUser', 'loginForm'));
         }
-        $frm = $this->getResetPwdForm($userId, trim($token),$credential_email);
+        $frm = $this->getResetPwdForm($userId, trim($token), $credential_email);
         $this->set('frm', $frm);
         $this->_template->render();
     }
@@ -923,11 +926,11 @@ class GuestUserController extends MyAppController
         return $frm;
     }
 
-    private function getResetPwdForm($uId, $token,$credential_email)
+    private function getResetPwdForm($uId, $token, $credential_email)
     {
         $siteLangId = $this->siteLangId;
         $frm = new Form('frmResetPwd');
-        $_SESSION['email']=$credential_email;
+        $_SESSION['email'] = $credential_email;
         $fld_np = $frm->addPasswordField(Label::getLabel('LBL_NEW_PASSWORD', $siteLangId), 'new_pwd');
         $fld_np->requirements()->setRequired();
         $fld_np->requirements()->setRegularExpressionToValidate(applicationConstants::PASSWORD_REGEX);
@@ -937,14 +940,14 @@ class GuestUserController extends MyAppController
         $fld_cp->requirements()->setCompareWith('new_pwd', 'eq', '');
         $frm->addHiddenField('', 'user_id', $uId, ['id' => 'user_id']);
         $frm->addHiddenField('', 'token', $token, ['id' => 'token']);
-        $frm->addHiddenField('', 'credential_email', $credential_email, ['name'=>'credential_email','id' => 'credential_email']);
+        $frm->addHiddenField('', 'credential_email', $credential_email, ['name' => 'credential_email', 'id' => 'credential_email']);
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_RESET_PASSWORD', $siteLangId));
         return $frm;
     }
 
     public function resetPasswordSetup()
     {
-        
+
         $newPwd = FatApp::getPostedData('new_pwd');
         $confirmPwd = FatApp::getPostedData('confirm_pwd');
         $userId = FatApp::getPostedData('user_id', FatUtility::VAR_INT);
@@ -954,7 +957,7 @@ class GuestUserController extends MyAppController
             Message::addErrorMessage(Label::getLabel('MSG_REQUEST_IS_INVALID_OR_EXPIRED'));
             FatUtility::dieJsonError(Message::getHtml());
         }
-        $frm = $this->getResetPwdForm($userId, $token,$credential_email);
+        $frm = $this->getResetPwdForm($userId, $token, $credential_email);
         $frm->addTextBox(Label::getLabel('LBL_Email', $credential_email), 'keyword', '', ['id' => 'keyword', 'autocomplete' => 'off']);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if ($post == false) {
@@ -966,7 +969,7 @@ class GuestUserController extends MyAppController
             FatUtility::dieJsonError(Message::getHtml());
         }
         $userAuthObj = new UserAuthentication();
-        if (!$userAuthObj->checkResetLink($userId, trim($token),$credential_email, 'submit')) {
+        if (!$userAuthObj->checkResetLink($userId, trim($token), $credential_email, 'submit')) {
             Message::addErrorMessage($userAuthObj->getError());
             FatUtility::dieJsonError(Message::getHtml());
         }

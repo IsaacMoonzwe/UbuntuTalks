@@ -1,4 +1,7 @@
 /*** LTR ***/
+a.color-primary.btn--link.slide-toggle-coupon-js {
+  display: none;
+}
 .box-foot {
   text-align: end;
   display: block !important;

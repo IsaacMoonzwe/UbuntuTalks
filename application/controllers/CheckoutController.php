@@ -11,6 +11,15 @@ class CheckoutController extends LoggedUserController
         $fromKids = FatApp::getPostedData('fromKids', FatUtility::VAR_INT, 0);
         $this->cartObj = new Cart(UserAuthentication::getLoggedUserId());
     }
+    public function removePromoCode()
+    {
+        $cartObj = new Cart();
+        if (!$cartObj->removeCartDiscountCoupon()) {
+            FatUtility::dieJsonSuccess(Label::getLabel("LBL_Action_Trying_Perform_Not_Valid", $this->siteLangId));
+        }
+        $cartObj->removeUsedRewardPoints();
+        FatUtility::dieJsonSuccess(Label::getLabel("MSG_cart_discount_coupon_removed", $this->siteLangId));
+    }
 
     public function index()
     {
