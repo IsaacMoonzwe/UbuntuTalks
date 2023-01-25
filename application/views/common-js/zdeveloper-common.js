@@ -510,7 +510,6 @@ $(document).ready(function () {
     if (isEventUserLogged() == 0) {
       checkLogged = 0;
     }
-    console.log("check--", checkLogged);
     // var data="method="+eventCart.props.sponsershipPlan;
     fcom.ajax(
       fcom.makeUrl("EventUser", "RegisterDonationEventUserData", [fromEvent, fromBack, checkLogged]),
@@ -530,7 +529,6 @@ $(document).ready(function () {
   };
 
   EventSignUpFormPopUp = function (signUpType) {
-    console.log("si", signUpType);
     var data = "signUpType=" + signUpType;
     fcom.updateWithAjax(
       fcom.makeUrl("EventUser", "EventSignUpFormPopUp"),
@@ -622,7 +620,6 @@ $(document).ready(function () {
     );
   };
   addEventSponserShip = function (data) {
-    console.log("kfhkf");
     $.loader.show();
     if (isEventUserLogged() == 0) {
       $.loader.hide();
@@ -632,11 +629,9 @@ $(document).ready(function () {
     localStorage.setItem("fromKids", data.fromKids);
     localStorage.setItem("isSkipped", data.isSkipped);
 
-    // console.log('add',data);
     // if(data.isSkipped){
     // data=data+"&isSkipped="+data.isSkipped
     // }
-    console.log(data);
     fcom.ajax(
       fcom.makeUrl("EventUser", "EventSignUpFormPopUp"),
       data,
@@ -705,11 +700,11 @@ $(document).ready(function () {
       function (res) {
         try {
           let data = JSON.parse(res);
-          console.log("update==", data);
+
 
           // $.loader.hide();
           $.mbsmessage(data.msg, true, "alert alert--success");
-          // console.log("test--", data);
+
           $('#total_cart').val(data.data.orderNetAmount);
           // $('#subtotal-itemPrice').text('USD' + data.data);
           // $('#total-itemPrice').text('USD' + data.data);
@@ -724,7 +719,6 @@ $(document).ready(function () {
     return (false);
   }
   removeFromCart = function (plan) {
-    console.log("cart remove==", plan);
 
     fcom.ajax(
       fcom.makeUrl("EventUser", "removeItemFromCart", [plan]),
@@ -732,7 +726,7 @@ $(document).ready(function () {
       function (res) {
         try {
           let data = JSON.parse(res);
-          console.log("cart remove==", data);
+
           $.loader.hide();
           $.mbsmessage(data.msg, true, "alert alert--success");
           window.location.href = data.url;
@@ -747,7 +741,6 @@ $(document).ready(function () {
   UpdateCart = function () {
     var qty = $('#cartTickets').val();
 
-    console.log("eventCart.props.countOfTickets==", qty);
     eventCart.props.countOfTickets = qty;
     fcom.ajax(
       fcom.makeUrl("EventUser", "updateCart", [qty]),
@@ -755,14 +748,19 @@ $(document).ready(function () {
       function (res) {
         try {
           let data = JSON.parse(res);
-          console.log("update==", data);
+          console.log("data", data);
           $.loader.hide();
           $.mbsmessage(data.msg, true, "alert alert--success");
-          console.log("test--", data);
+
           $('#update_cart').addClass('cart-empty');
-          $('#itemPrice').text('USD' + data.data);
-          $('#subtotal-itemPrice').text('USD' + data.data);
-          $('#total-itemPrice').text('USD' + data.data);
+          $("#update_cart").off('click');
+          $("#coupon_data").load(location.href + " #coupon_data");
+          $("#pay_total_box").load(location.href + " #pay_total_box");
+          $("#cartTotal").load(location.href + " #cartTotal");
+          
+          $('#itemPrice').text(data.currencyCode + ' ' + data.data);
+          $('#subtotal-itemPrice').text(data.currencyCode + ' ' + data.data);
+          $('#total-itemPrice').text(data.currencyCode + ' ' + data.data);
 
           //  window.location.href = data.url;
         } catch (exc) {
@@ -789,7 +787,7 @@ $(document).ready(function () {
           let data = JSON.parse(res);
           $.loader.hide();
           $.mbsmessage(data.msg, true, "alert alert--success");
-          console.log("test--", data);
+
           window.location.href = data.url;
         } catch (exc) {
           $.facebox(res, "");
@@ -799,14 +797,70 @@ $(document).ready(function () {
     $.loader.hide();
     return (false);
   }
+  eventPlanApplyPromoCode = function (code) {
+    eventCart.couponCode = code.toString();
+    if (eventCart.couponCode == "") {
+      return;
+    }
+    data = "coupon_code=" + eventCart.couponCode + "&fromSelector=registrationPlan";
+    $.loader.show();
+    fcom.updateWithAjax(
+      fcom.makeUrl("EventUser", "eventPlanApplyPromoCode"),
+      data,
+      function (res) {
+        console.log("ress", res);
+        try {
+
+          $.loader.hide();
+          $.mbsmessage(res.msg, true, "alert alert--success");
+          $("#coupon_data").load(location.href + " #coupon_data");
+          $("#pay_total_box").load(location.href + " #pay_total_box");
+          $("#cartTotal").load(location.href + " #cartTotal");
+          // location.reload(true);
+          // $("#cart_payment_data").load(location.href + " #cart_payment_data");
+          // eventCart.checkoutStep("getPaymentSummary", "");
+        }
+        catch (exc) {
+
+          $.mbsmessage(res, true, "alert alert--danger");
+          // $.facebox(res, "");
+        }
+      }
+    );
+    $.loader.hide();
+    return (false);
+  };
+  eventPlanRemovePromoCode = function (fromSelector = '') {
+    fcom.updateWithAjax(
+      fcom.makeUrl("EventUser", "eventPlanremovePromoCode"),
+      "",
+      function (res) {
+        try {
+          $.loader.hide();
+          $.mbsmessage(res.msg, true, "alert alert--success");
+          $("#coupon_data").load(location.href + " #coupon_data");
+          $("#pay_total_box").load(location.href + " #pay_total_box");
+          $("#cartTotal").load(location.href + " #cartTotal");
+        }
+        catch (exc) {
+
+          $.mbsmessage(res, true, "alert alert--danger");
+          // $.facebox(res, "");
+        }
+
+      }
+    );
+    $.loader.hide();
+    return (false);
+  };
+
 
   AddAttendeeDetails = function (check) {
-   if(check=='inValid'){
-    $.loader.hide();
-    $.mbsmessage("Please fill the form details", true, "alert alert--danger");
-    return false;
-   }
-    console.log("hello");
+    if (check == 'inValid') {
+      $.loader.hide();
+      $.mbsmessage("Please fill the form details", true, "alert alert--danger");
+      return false;
+    }
     var data = fcom.frmData(document.checkout);
     var billing = fcom.frmData(document.billing);
     data = data + billing;
@@ -816,15 +870,15 @@ $(document).ready(function () {
       data,
       function (res) {
         try {
-          console.log("error===", res);
+
           let data = JSON.parse(res);
           $.loader.hide();
 
           $.mbsmessage(data.msg, true, "alert alert--success");
-          console.log("test--", data);
+
           window.location.href = data.url;
         } catch (exc) {
-          console.log("error", exc);
+
           $.mbsmessage(res, true, "alert alert--danger");
           // $.facebox(res, "");
         }
@@ -843,7 +897,6 @@ $(document).ready(function () {
     //   return false;
     // }
     var data = fcom.frmData(document.plan);
-    console.log("data", data);
     fcom.ajax(
       fcom.makeUrl("EventUser", "GetSymposiumPlan", [fromBack]),
       data,
@@ -875,7 +928,6 @@ $(document).ready(function () {
     }
     var data = fcom.frmData(document.plan);
     ticketCount = eventCart.props.symposiumTicket;
-    console.log("plan", method);
     fcom.ajax(
       fcom.makeUrl("EventUser", "GetSymposiumTickets", [method, checkLogged, fromPlan, ticketCount]),
       data,
@@ -915,7 +967,7 @@ $(document).ready(function () {
     }
     fcom.updateWithAjax(fcom.makeUrl('EventUser', 'RegisterForEvents', [plan, checkLogged, userStatus]), data, function (t) {
       $.loader.hide();
-      console.log(t);
+
       try {
         if (t.userId > 0) {
           eventCart.props.eventUserSelectedStaus = 'Registration';
@@ -923,7 +975,7 @@ $(document).ready(function () {
           return;
         }
       } catch (exc) {
-        console.log("error", exc);
+
         if (t.msg != '') {
           $.mbsmessage(t.msg, true, "alert alert--danger")
         }
@@ -959,8 +1011,6 @@ $(document).ready(function () {
   };
   GetEventSymposiumTicketsPaymentSummary = function (plan, ticketCount) {
     $.loader.show();
-    console.log(plan);
-    console.log("ticketCount", ticketCount);
     if (plan == "" || ticketCount <= 0) {
       $.loader.hide();
       $.mbsmessage("Please Select Plan", true, "alert alert--danger");
@@ -992,7 +1042,6 @@ $(document).ready(function () {
     $.loader.hide();
   };
   eventSymposiumApplyPromoCode = function (code) {
-    console.log("code", code);
     eventCart.couponCode = code.toString();
     if (eventCart.couponCode == "") {
       return;
@@ -1043,6 +1092,10 @@ $(document).ready(function () {
           GetEventSymposiumTicketsPaymentSummary(eventCart.props.symposiumPlan, eventCart.props.symposiumTicket);
         }
         else {
+          $("#coupon_data").load(location.href + " #coupon_data");
+          $("#extra_pay_method").load(location.href + " #extra_pay_method");
+
+          $("#pay_total_box").load(location.href + " #pay_total_box");
           //  window.location.href=window.location.href;
           //  return false;
         }
@@ -1092,7 +1145,6 @@ $(document).ready(function () {
     }
     var data = fcom.frmData(document.plan);
     ticketCount = eventCart.props.concertTicket;
-    console.log("plan", method);
     fcom.ajax(
       fcom.makeUrl("EventUser", "GetConcertTickets", [method, checkLogged, fromPlan, ticketCount]),
       data,
@@ -1132,7 +1184,7 @@ $(document).ready(function () {
     }
     fcom.updateWithAjax(fcom.makeUrl('EventUser', 'RegisterForEvents', [plan, checkLogged, userStatus]), data, function (t) {
       $.loader.hide();
-      console.log(t);
+
       try {
         if (t.userId > 0) {
           eventCart.props.eventUserSelectedStaus = 'Registration';
@@ -1140,7 +1192,7 @@ $(document).ready(function () {
           return;
         }
       } catch (exc) {
-        console.log("error", exc);
+
         if (t.msg != '') {
           $.mbsmessage(t.msg, true, "alert alert--danger")
         }
@@ -1176,8 +1228,6 @@ $(document).ready(function () {
   };
   GetEventConcertTicketsPaymentSummary = function (plan, ticketCount) {
     $.loader.show();
-    console.log(plan);
-    console.log("ticketCount", ticketCount);
     if (plan == "" || ticketCount <= 0) {
       $.loader.hide();
       $.mbsmessage("Please Select Plan", true, "alert alert--danger");
@@ -1249,7 +1299,6 @@ $(document).ready(function () {
     }
     var data = fcom.frmData(document.plan);
     ticketCount = eventCart.props.countOfTickets;
-    console.log("plan", method);
     fcom.ajax(
       fcom.makeUrl("EventUser", "GetEventTickets", [method, checkLogged, fromPlan, ticketCount]),
       data,
@@ -1291,7 +1340,7 @@ $(document).ready(function () {
     }
     fcom.updateWithAjax(fcom.makeUrl('EventUser', 'RegisterForEvents', [plan, checkLogged, userStatus]), data, function (t) {
       $.loader.hide();
-      console.log(t);
+
       try {
         if (t.userId > 0) {
           eventCart.props.eventUserSelectedStaus = 'Registration';
@@ -1299,7 +1348,7 @@ $(document).ready(function () {
           return;
         }
       } catch (exc) {
-        console.log("error", exc);
+
         if (t.msg != '') {
           $.mbsmessage(t.msg, true, "alert alert--danger")
         }
@@ -1385,7 +1434,6 @@ $(document).ready(function () {
     }
     // var data="sponsershipPlan="+eventCart.props.sponsershipPlan;
     var data = 'sponsershipPlan="' + eventCart.props.sponsershipPlan + '"';
-    console.log("data", data);
     fcom.ajax(
       fcom.makeUrl("EventUser", "GetEventPaymentSummary", [method]),
       "",
@@ -1411,13 +1459,11 @@ $(document).ready(function () {
     //   EventLogInFormPopUp();
     //   return false;
     // }
-    console.log("donationAmount", donationAmount);
     var checkLogged = 1;
     if (isEventUserLogged() == 0) {
       checkLogged = 0;
     }
     var data = fcom.frmData(document.plan);
-    console.log("plan", data);
     fcom.ajax(
       fcom.makeUrl("EventUser", "GetEventDonation", [fromPayment, checkLogged, donationAmount]),
       data,
@@ -1467,7 +1513,7 @@ $(document).ready(function () {
     }
     fcom.updateWithAjax(fcom.makeUrl('EventUser', 'RegisterForEvents', [donation, checkLogged, userStatus]), data, function (t) {
       $.loader.hide();
-      console.log(t);
+
       try {
         if (t.userId > 0) {
           eventCart.props.eventUserSelectedStaus = "Login";
@@ -1475,7 +1521,7 @@ $(document).ready(function () {
           return;
         }
       } catch (exc) {
-        console.log("error", exc);
+
         if (t.msg != '') {
           $.mbsmessage(t.msg, true, "alert alert--danger")
         }
@@ -1501,15 +1547,15 @@ $(document).ready(function () {
     }
     fcom.ajax(fcom.makeUrl('EventUser', 'GetEventDonationPaymentSummary', [donation, checkLogged]), '', function (t) {
       $.loader.hide();
-      console.log(t);
+
       try {
-        console.log("success", t);
+
         let data = JSON.parse(t);
         !data.status
           ? $.mbsmessage(data.msg, true, "alert alert--danger")
           : void 0;
       } catch (exc) {
-        console.log("error", exc);
+
         $.facebox(t, "");
       }
     }
@@ -1521,7 +1567,6 @@ $(document).ready(function () {
   GetEventBecomeSponserPlan = function (fromback = 0) {
     $.loader.show();
     var plan = eventCart.props.selectSponserEventPlan;
-    console.log("plan", plan);
     if (plan == null) {
       $.loader.hide();
       $.mbsmessage("Please Select Event", true, "alert alert--danger");
@@ -1618,7 +1663,7 @@ $(document).ready(function () {
     }
     fcom.updateWithAjax(fcom.makeUrl('EventUser', 'RegisterForEvents', [method, checkLogged, userStatus]), data, function (t) {
       $.loader.hide();
-      console.log(t);
+
       try {
         if (t.userId > 0) {
           var qty = eventCart.props.becomeSponserPlanQty;
@@ -1627,7 +1672,7 @@ $(document).ready(function () {
           return;
         }
       } catch (exc) {
-        console.log("error", exc);
+
         if (t.msg != '') {
           $.mbsmessage(t.msg, true, "alert alert--danger")
         }
@@ -1639,7 +1684,6 @@ $(document).ready(function () {
   };
 
   eventDonationApplyPromoCode = function (code) {
-    console.log("code", code);
     eventCart.couponCode = code.toString();
     if (eventCart.couponCode == "") {
       return;
@@ -1658,13 +1702,14 @@ $(document).ready(function () {
 
 
 
+
+
+
   eventApplyPromoCode = function (code, fromSelector = '') {
-    console.log("code", code);
     eventCart.couponCode = code.toString();
     if (eventCart.couponCode == "") {
       return;
     }
-    console.log('fromSelector', fromSelector);
     data = "coupon_code=" + eventCart.couponCode + "&fromSelector=" + fromSelector;
     fcom.updateWithAjax(
       fcom.makeUrl("EventUser", "eventApplyPromoCode"),
@@ -1773,14 +1818,13 @@ $(document).ready(function () {
     if (!$(frm).validate()) {
       return;
     }
-    console.log("cart==", cart.props.isPrivateClass);
     var checkAdmin = cart.props.isPrivateClass;
     $.loader.show();
     fcom.ajax(
       fcom.makeUrl("GuestUser", "setUpLogin", [checkAdmin]),
       fcom.frmData(frm),
       function (res) {
-        console.log("err", res);
+
         if (res.status == 1 && res.redirectUrl) {
           window.location.href = res.redirectUrl;
           return;
@@ -1953,8 +1997,7 @@ $(document).ready(function () {
   // /* if(user==''){
   // return false;
   // } */
-  // //$(document).trigger('closeMsg.systemMessage');
-  // console.log(username + " is heare");
+  // //$(document).trigger('closeMsg.systemMessage')
   // $.systemMessage.close();
   // /* $.mbsmessage(langLbl.processing,false,'alert--process alert');
   // fcom.updateWithAjax( fcom.makeUrl('GuestUser','resendVerification',[username]),'',function(ans){

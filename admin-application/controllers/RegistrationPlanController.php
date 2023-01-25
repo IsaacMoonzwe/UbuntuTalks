@@ -60,6 +60,7 @@ class RegistrationPlanController extends AdminBaseController
                 'registration_starting_days',
                 'registration_starting_date',
                 'registration_ending_date',
+                'registration_booking_endiing_date',
                 'registration_plan_note',
                 'registration_plan_combo_events'
             ]);
@@ -323,6 +324,9 @@ class RegistrationPlanController extends AdminBaseController
         $frm->addRequiredField(Label::getLabel('LBL_Registration_Plan_Title', $this->adminLangId), 'registration_plan_title');
         $frm->addRequiredField(Label::getLabel('LBL_Registration_Starting_Days_(Date)'), 'registration_starting_date', '', ['id' => 'registration_starting_date', 'autocomplete' => 'off']);
         $frm->addRequiredField(Label::getLabel('LBL_Registration_Ending_Days_(Date)'), 'registration_ending_date', '', ['id' => 'registration_ending_date', 'autocomplete' => 'off']);
+        $frm->addRequiredField(Label::getLabel('LBL_Registration_Booking_Ending_Date'), 'registration_booking_endiing_date', '', ['id' => 'registration_booking_endiing_date', 'autocomplete' => 'off']);
+
+
         // $frm->addRequiredField(Label::getLabel('LBL_Registration_Starting_Days_(Title)', $this->adminLangId), 'registration_starting_days');
         // $fld =  $frm->addRequiredField(Label::getLabel('LBL_Number_Of_Days', $this->adminLangId), 'registration_number_of_days');
         //$fld->requirements()->setRequired(false);

@@ -6,6 +6,7 @@ $frm->developerTags['colClassPrefix'] = 'col-md-';
 $frm->developerTags['fld_default_col'] = 12;
 $frm->getField('registration_starting_date')->setFieldTagAttribute('data-fatdatetimeformat', $dateformat . ' ' . $timeformat);
 $frm->getField('registration_ending_date')->setFieldTagAttribute('data-fatdatetimeformat', $dateformat . ' ' . $timeformat);
+$frm->getField('registration_booking_endiing_date')->setFieldTagAttribute('data-fatdatetimeformat', $dateformat . ' ' . $timeformat);
 ?>
 <section class="section">
     <div class="sectionhead">

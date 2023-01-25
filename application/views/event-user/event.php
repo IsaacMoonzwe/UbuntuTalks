@@ -27,8 +27,13 @@
                     </div>
                     <form name="event_selection">
                         <div class="row">
-
                             <div class="col-lg-8">
+                                <!-- <a href="javascript:history.go(-1)" class="btn btn--bordered color-black btn--back">
+                                    <svg class="icon icon--back">
+                                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
+                                    </svg>
+                                    <?php echo Label::getLabel('LBL_BACK'); ?>
+                                </a> -->
                                 <div class="equip-left">
                                     <div class="equip-title-box">
                                         <h5><?php echo $EventsList['registration_plan_title']; ?></h5>
@@ -56,8 +61,30 @@
                                                 <input type="hidden" id="planId" name="planId" value=<?php echo $planId; ?> />
                                             </div>
                                         </div>
+                                        <div>
+
+                                            <div class="selection-title currencySwitcher">
+                                                <p><?php echo Label::getLabel('LBL_Currency_Switcher'); ?></p>
+                                            </div>
+                                            <input type="hidden" name="code" id="code" />
+                                            <select name="event_currencyswitchers" id="event_currencyswitchers">
+                                                <?php foreach ($currencySwitcherResultData as $value) { ?>
+                                                    <option data-curr=<?php echo $value['currencies_switcher_symbol_left']; ?> value="<?php echo $value['currencies_switcher_code']; ?>"><?php echo "(" . $value['currencies_switcher_symbol_left'] . ") " . $value['currencies_switcher_code']; ?></option>
+                                                <?php } ?>
+                                            </select>
+
+
+                                        </div>
+                                        <?php
+                                        $date = $EventsList['registration_booking_endiing_date'];
+                                        $current = date("Y-m-d");
+                                        $endingDate = explode(" ", $date);
+                                        $End = $endingDate[0];
+                                        ?>
                                         <div class="btn-box">
-                                            <a onclick="GotToCart();" class="btn-green"><?php echo Label::getLabel('LBL_Order_Now'); ?></a>
+                                            <?php if ($End > $current) { ?>
+                                                <a onclick="GotToCart();" class="btn-green"><?php echo Label::getLabel('LBL_Order_Now'); ?></a>
+                                            <?php } ?>
                                         </div>
                                         <!-- <div class="alert alert-warning" role="alert">
                                         This is a warning alert—check it out!
@@ -72,23 +99,30 @@
                                 <div class="equip-right">
                                     <div>
                                         <h3><?php echo Label::getLabel('LBL_Date_And_Time'); ?></h3>
-                                        <p><?php echo $EventsList['registration_starting_date']; ?></p>
-                                        <p>To</p>
-                                        <p><?php echo $EventsList['registration_ending_date']; ?></p>
+                                        <p><?php echo $EventsList['registration_starting_date']; ?> To <br><?php echo $EventsList['registration_ending_date']; ?></p>
+                                        <!-- <p></p>
+                                        <p></p> -->
                                     </div>
                                     <div>
                                         <h3><?php echo Label::getLabel('LBL_Registration_End_Date'); ?></h3>
-                                        <p>1<?php echo $EventsList['registration_ending_date']; ?></p>
+                                        <p>
+                                            <?php
+                                            $date = $EventsList['registration_booking_endiing_date'];
+                                            $endingDate = explode(" ", $date);
+                                            $End = $endingDate[0];
+                                            echo $End;
+                                            ?>
+                                        </p>
                                     </div>
                                     <div>
                                         <h3><?php echo Label::getLabel('LBL_Location'); ?></h3>
                                         <a href="https://goo.gl/maps/uhUBqLm44vcMoCMN9">
-                                            <p>LUSAKA'S PREMIER CONFERENCECENTRE</p>
+                                            <p>Mulungushi International Conference Centre. Lusaka, Zambia</p>
                                         </a>
                                     </div>
                                     <div>
                                         <h3><?php echo Label::getLabel('LBL_Event_Types'); ?></h3>
-                                        <span class="wpem-event-type-text">Leadership Conference</span>
+                                        <p class="wpem-event-type-text">Ubuntu Talks Symposium & Benfit Concert</p>
                                     </div>
                                     <div>
                                         <h3><?php echo Label::getLabel('LBL_Share_With_Friends'); ?></h3>
@@ -129,10 +163,59 @@
     function GoToEventCart() {
         //eventCart.props.sponsershipPlan,eventCart.props.countOfTickets
         console.log("eventCart.props.countOfTickets==", parseInt(eventCart.props.countOfTickets));
-        window.location.href = fcom.makeUrl('EventUser', 'goToCart', [parseInt(eventCart.props.countOfTickets), selectedPlan]);
+        window.location.href = fcom.makeUrl('EventUser', 'goToCart', [parseInt(eventCart.props.countOfTickets), selectedPlan, eventCart.props.currencyCode, eventCart.props.currency]);
         var data = "plan=" + eventCart.props.sponsershipPlan + "&ticketQty=" + eventCart.props.countOfTickets;
 
     }
+    $(document).ready(function() {
+        eventCart.props.currency = 'USD';
+        eventCart.props.currencyCode = '$';
+        $('#code').val('$');
+
+        console.log("curr==", eventCart.props.currency);
+        $('#code').val(eventCart.props.currencyCode);
+        $('#event_currencyswitchers option').each(function() {
+            var symbols = $(this).val();
+            if (symbols == eventCart.props.currency) {
+                $(this).attr("selected", "selected");
+                var value = $('.cur_symbol').text();
+                var symbol = $('option:selected').data('curr');
+                console.log("old--", $('option:selected').data('curr'));
+                var oldsymbol = symbol;
+                eventCart.props.currencyCode = oldsymbol;
+                $('.cur_symbol').text(oldsymbol);
+            }
+        })
+
+    });
+    $("#event_currencyswitchers").change(function() {
+        var data = $(this).val();
+
+        $.loader.show();
+
+        if (data == 'ZMW') {
+            console.log("data", data);
+            $('#paypal-payment').parents('label').addClass('hide-section');
+            $('#google-pay').parents('label').addClass('hide-section');
+            $('.wallet-section').addClass('hide-section');
+            eventCart.props.currencyCode = 'ZK';
+            $('#code').val('ZK');
+
+        } else {
+            $('#paypal-payment').parents('label').removeClass('hide-section');
+            $('#google-pay').parents('label').removeClass('hide-section');
+            $('.wallet-section').removeClass('hide-section');
+            $('#code').val('$');
+            eventCart.props.currencyCode = '$';
+
+        }
+        $.loader.hide();
+        console.log("currSymbol==", $(this).data('curr'))
+        eventCart.props.currency = $(this).val();
+        // updateCurrency(eventCart.props.currency);
+        // window.location.href=window.location.href;
+        // GetPlanTicketsPaymentSummary(eventCart.props.sponsershipPlan, eventCart.props.countOfTickets);
+    });
 </script>
 
 </html>

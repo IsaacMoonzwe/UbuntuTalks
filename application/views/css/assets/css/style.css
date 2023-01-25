@@ -392,6 +392,7 @@ td.product-thumbnail a img {
 }
 
 td.product-remove .remove {
+    border: 1px solid red !important;
     display: block;
     font-size: 20px;
     text-align: center;
@@ -501,10 +502,10 @@ a.checkout-button.btn-green.cart-empty {
 /* checkout */
 
 .checkout-details h3 {
-    font-weight: 600;
+    font-weight: 400;
     line-height: 1.35;
     margin: 15px 0;
-    font-size: 32px;
+    font-size: 27px;
 }
 
 .checkout-details input,
@@ -512,7 +513,7 @@ a.checkout-button.btn-green.cart-empty {
 .checkout-details textarea {
     height: auto !important;
     background: transparent !important;
-    border: 2px solid #000 !important;
+    border: 1px solid #d3d3d3 !important;
     border-radius: 5px;
     color: #000 !important;
     padding: 11px;
@@ -522,7 +523,7 @@ a.checkout-button.btn-green.cart-empty {
 .checkout-details label {
     margin-bottom: 0.7rem;
     font-size: 20px;
-    font-weight: 500;
+    font-weight: 400;
     color: #000;
 }
 
@@ -850,6 +851,7 @@ a.edit-btn {
 }
 
 .bottom-payment-box {
+    margin-top: 15px;
     display: flex;
     flex-direction: column;
     padding: 16px 24px 32px 24px;
@@ -973,15 +975,100 @@ a.event-design {
     font-weight: 600;
 }
 
+span.Price-amount.amount {
+    font-weight: 700;
+}
+
+.selection-title.currencySwitcher {
+    font-size: 15px;
+    margin-top: 12px !important;
+    color: #000;
+    font-weight: 600 !important;
+}
+
+a.btn.btn--bordered.color-black.btn--back.Cartbackbtn {
+    margin-bottom: 20px;
+}
+
+a.btn.btn--bordered.color-black.btn--back.paymentcartbtn {
+    margin-bottom: 15px !important;
+}
+
+.paymentcoupon {
+    width: 50%;
+    background-color: #fff !important;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    /* padding: 20px; */
+    display: block;
+    margin-left: auto;
+}
+
+.coupon_data .payment__row {
+    border-bottom: 3px dashed #000;
+    font-size: 17px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px !important;
+    border-bottom-style: dotted;
+}
+
+b.color-primary {
+    font-size: 17px;
+}
+
+select#event_currencyswitchers {
+    cursor: pointer;
+}
+
+b.ccode {
+    font-size: 19px;
+    font-weight: 700;
+}
+
 @media (max-width: 1199px) {}
 
 @media (max-width: 991px) {}
 
 @media (max-width: 768px) {
-    .cart-form .table-box tbody, .shop_table tbody{
+    table.shop_table.shop_table_responsive.cartMobile th {
+        width: 50% !important;
+    }
+
+    select#event_currencyswitchers {
+        width: 100% !important;
+    }
+
+    .selection-title p {
+        font-size: 17px;
+    }
+
+    input#total_cart {
+        height: 44px;
+    }
+
+    /* table.shop_table.checkout-review-order-table tr, th, td {
+        width: 191px !important;
+    } */
+
+    body table.shop_table.checkout-review-order-table.checkout tr,
+    th,
+    td {
+        width: 170px !important;
+    }
+
+    form.cart-form table tr,
+    th,
+    td {
+        width: 100% !important;
+    }
+
+    .cart-form .table-box tbody,
+    .shop_table tbody {
         display: inline-table;
         width: 100%;
     }
+
     .cart-form table thead {
         display: none;
     }
@@ -993,7 +1080,9 @@ a.event-design {
         justify-content: space-between;
         height: inherit;
     }
-    #itemPrice{
+
+    #itemPrice {
+        font-size: 17px;
         margin-bottom: 0;
     }
 
@@ -1001,7 +1090,11 @@ a.event-design {
     dl.variation,
     table.shop_table.shop_table_responsive tbody tr th,
     table.shop_table.shop_table_responsive tbody tr td {
-        font-size: 16px;
+        font-size: 18px;
+    }
+
+    span.amount p {
+        font-size: 18px;
     }
 
     .cart_totals h2 {
@@ -1086,14 +1179,21 @@ a.event-design {
         text-align: center;
 
     }
-    .cart_item dl.variation{
+
+    .cart_item dl.variation {
         justify-content: flex-end;
         margin: 0;
     }
-    dd.variation-Event p{
+
+    tr.cart-form__cart-item.cart_item td {
+        font-size: 18px !important;
+    }
+
+    dd.variation-Event p {
+        font-size: 17px;
         text-align: right;
-    line-height: normal;
-    max-width: 250px;
+        line-height: normal;
+        max-width: 250px;
 
     }
 }

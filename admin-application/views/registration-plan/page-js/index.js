@@ -50,7 +50,7 @@ $(document).ready(function(){
 			fcom.ajax(fcom.makeUrl('RegistrationPlan', 'agendaForm', [testimonialId]), '', function(t) {
 				//$.facebox(t,'faceboxWidth');
 				fcom.updateFaceboxContent(t);
-				jQuery('#registration_starting_date,#registration_ending_date').each(function () {
+				jQuery('#registration_starting_date,#registration_ending_date,#registration_booking_endiing_date').each(function () {
 					$(this).datetimepicker({
 						format: 'Y-m-d H:i',
 						
@@ -65,7 +65,7 @@ $(document).ready(function(){
 			fcom.ajax(fcom.makeUrl('RegistrationPlan', 'form', [id]), '', function(t) {
 				//$.facebox(t,'faceboxWidth');
 				fcom.updateFaceboxContent(t);
-				jQuery('#registration_starting_date,#registration_ending_date').each(function () {
+				jQuery('#registration_starting_date,#registration_ending_date,#registration_booking_endiing_date').each(function () {
 					$(this).datetimepicker({
 						format: 'Y-m-d H:i',
 						
@@ -85,7 +85,7 @@ $(document).ready(function(){
 			fcom.ajax(fcom.makeUrl('RegistrationPlan', 'form', [testimonialId]), '', function(t) {
 				//$.facebox(t,'faceboxWidth');
 				fcom.updateFaceboxContent(t);
-				jQuery('#registration_starting_date,#registration_ending_date').each(function () {
+				jQuery('#registration_starting_date,#registration_ending_date,#registration_booking_endiing_date').each(function () {
 					$(this).datetimepicker({
 						format: 'Y-m-d H:i',
 						

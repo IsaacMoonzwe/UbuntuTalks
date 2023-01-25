@@ -1,9 +1,20 @@
 <?php
 $checkoutCart = $_SESSION['checkoutCart'];
+$currencyCode = $checkoutCart['currencyCode'];
+
 $loggedIn = false;
 if (isset($userData)) {
     $loggedIn = true;
 }
+$cartData = $_SESSION['cart'];
+// if (isset($_SESSION['summary'])) {
+//     $cartData = $_SESSION['summary'];
+//     // $_SESSION['cart']=$_SESSION['summary'];
+// } elseif (isset($_SESSION['removeCoupon'])) {
+//     $cartData = $_SESSION['removeCoupon'];
+//     // $_SESSION['cart']=$_SESSION['removeCoupon'];
+// }
+
 ?>
 <style>
     .hide-form {
@@ -26,11 +37,28 @@ if (isset($userData)) {
         border: 2px solid #4CAF50;
         color: green;
     }
+
+    @media (max-width: 768px) {
+
+        body table.shop_table.checkout-review-order-table.checkout tr,
+        th,
+        td {
+            width: 173px !important;
+        }
+    }
 </style>
 <section class="checkout-details section">
+
     <div class="container container--narrow">
+
         <div class="row">
             <div class="col-lg-8 ticket-information">
+                <a href="javascript:history.go(-1)" class="btn btn--bordered color-black btn--back">
+                    <svg class="icon icon--back">
+                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
+                    </svg>
+                    <?php echo Label::getLabel('LBL_BACK'); ?>
+                </a>
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="billing-details-box">
@@ -102,9 +130,16 @@ if (isset($userData)) {
                                                                                                                     if (isset($loggedIn)) {
                                                                                                                         echo $userData['user_billing_country'];
                                                                                                                     } ?>">
-                                                <?php foreach ($country_options as $key => $value) { ?>
+                                                <?php
+                                                foreach ($CountryListing as $value) {
+                                                ?>
+                                                    <option value="<?php echo $value['country_name']; ?>"><?php echo $value['country_name']; ?></option>
+                                                <?php
+                                                }
+                                                ?>
+                                                <!-- <?php foreach ($country_options as $key => $value) { ?>
                                                     <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
-                                                <?php } ?>
+                                                <?php } ?> -->
 
 
                                             </select>
@@ -131,23 +166,24 @@ if (isset($userData)) {
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="email-address">Email address <span style="color:red;">*</span></label>
-                                            <input type="email" class="form-control" name="email-address" id="email-address" aria-describedby="" placeholder="" value="<?php
-                                                                                                                                                                        if (isset($loggedIn)) {
-                                                                                                                                                                            echo $userCrendentialData['credential_email'];
-                                                                                                                                                                        } ?>">
+                                            <input type="email" class="form-control" name="email-address" id="email-address" aria-describedby="" <?php if ($loggedIn == true) {
+                                                                                                                                                        echo "readOnly ";
+                                                                                                                                                    } ?>placeholder="" value="<?php if (isset($loggedIn)) {
+                                                                                                                                                                                    echo $userCrendentialData['credential_email'];
+                                                                                                                                                                                } ?>">
                                         </div>
                                     </div>
                                     <?php if (!isset($_SESSION['Event_userId'])) {
                                     ?>
                                         <div class="col-lg-12">
                                             <div class="form-group">
-                                                <label for="email-address">Password address <span style="color:red;">*</span></label>
+                                                <label for="email-address">Password<span style="color:red;">*</span></label>
                                                 <input type="password" class="form-control" name="password" id="password" aria-describedby="" placeholder="">
                                             </div>
                                         </div>
                                         <div class="col-lg-12">
                                             <div class="form-group">
-                                                <label for="email-address">confirm password <span style="color:red;">*</span></label>
+                                                <label for="email-address">Confirm password <span style="color:red;">*</span></label>
                                                 <input type="password" class="form-control" name="conf_new_password" id="conf_new_password" aria-describedby="" placeholder="">
                                             </div>
                                         </div>
@@ -183,7 +219,7 @@ if (isset($userData)) {
                     </div>
                     <div class="col-lg-6">
                         <div class="additional-information">
-                            <h3>Additional information</h3>
+                            <!-- <h3>Additional information</h3>
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="form-group">
@@ -191,7 +227,7 @@ if (isset($userData)) {
                                         <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <form id="checkout" name="checkout" action="" method="post">
                                 <!-- <button type="submit" class="btn btn-primary ml-3">Place</button> -->
 
@@ -207,7 +243,7 @@ if (isset($userData)) {
                                 for ($i = 0; $i < $checkoutCart['ticketQty']; $i++) {
                                 ?>
                                     <div class="Ticket-Form">
-                                        <h3>Ticket <?php echo $ticket; ?>: <br>Early Registration</h3>
+                                        <h3>Ticket <?php echo $ticket; ?>: <br><?php echo $EventsList['registration_plan_title']; ?></h3>
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="form-group">
@@ -238,7 +274,7 @@ if (isset($userData)) {
                                             </div>
                                             <div class="col-lg-12">
                                                 <div class="form-group">
-                                                    <label for="church">Oraganizer <span style="color:red;">*</span></label>
+                                                    <label for="church">Organization <span style="color:red;">*</span></label>
                                                     <input required type="text" class="form-control" id="church[]" name="church[]" aria-describedby="" placeholder="">
                                                 </div>
                                             </div>
@@ -246,8 +282,9 @@ if (isset($userData)) {
                                                 <div class="form-group">
                                                     <label for="church">Food Option <span style="color:red;">*</span></label>
                                                     <select required class="form-control" id="Food[]" name="Food[]">
-                                                        <option>1</option>
-                                                        <option>2</option>
+                                                        <option>Chiken</option>
+                                                        <option>Beef</option>
+                                                        <option>Vegetarian</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -272,7 +309,7 @@ if (isset($userData)) {
                     <h3>Your order</h3>
                 </div>
                 <div class="order_review">
-                    <table class="shop_table checkout-review-order-table">
+                    <table class="shop_table checkout-review-order-table checkout">
                         <thead>
                             <tr>
                                 <th class="product-name">Product</th>
@@ -294,34 +331,55 @@ if (isset($userData)) {
                                     <span class="Price-amount amount"><bdi><span class="Price-currencySymbol_count">ZK</span> <?php echo $EventsList['itemNetPrice']; ?></bdi></span>
                                 </td>
                             </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr class="cart-subtotal">
-                                <th>Subtotal</th>
-                                <td><span class="Price-amount amount"><bdi><span class="Price-currencySymbol_sub">ZK</span><?php echo $EventsList['itemNetPrice']; ?></bdi></span>
-                                </td>
-                            </tr>
-                            <tr class="order-total">
-                                <th>Total</th>
-                                <td><strong><span class="Price-amount amount"><bdi><span class="Price-currencySymbol_total">ZK</span><?php echo $EventsList['itemNetPrice']; ?></bdi></span></strong>
-                                </td>
-                            </tr>
-                        </tfoot>
-                    </table>
+
+
+                            <?php if (!empty($cartData['cartDiscounts'])) { ?>
+                                <tr>
+                                    <td>
+                                        <div class="payment__row">
+                                            <div>
+                                                <b class="ccode"><?php echo Label::getLabel('LBL_COUPON_DISCOUNT'); ?></b>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <b><?php echo '-' .  $cartData['currencyCode'] . ' ' . $cartData['cartDiscounts']['coupon_discount_total']; ?></b>
+                                        </div>
                 </div>
-                <div class="checkout-payment">
-                    <!-- <div class="box-top">
+                </td>
+                </tr>
+            <?php
+                            }
+            ?>
+            </tbody>
+            <tfoot>
+                <tr class="cart-subtotal">
+                    <th>Subtotal</th>
+                    <td><span class="Price-amount amount"><bdi><span class="Price-currencySymbol_sub">ZK</span><?php echo $cartData['cartTotal']; ?></bdi></span>
+                    </td>
+                </tr>
+                <tr class="order-total">
+                    <th>Total</th>
+                    <td><strong><span class="Price-amount amount"><bdi><span class="Price-currencySymbol_total">ZK</span><?php echo  $cartData['orderNetAmount']; ?></bdi></span></strong>
+                    </td>
+                </tr>
+            </tfoot>
+            </table>
+            </div>
+            <div class="checkout-payment">
+                <!-- <div class="box-top">
                         <h4>DPO Group</h4>
                         <p>Pay via DPO Group</p>
                     </div> -->
-                    <div class="box-bottom">
-                        <p>Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our <a href="#">privacy policy</a>.</p>
-                        <a href="javascript:void(0)" onClick="formData();" class="btn-green">Place order</a>
-                    </div>
+                <div class="box-bottom">
+                    <p>Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our <a href="#">privacy policy</a>.</p>
+                    <a href="javascript:void(0)" onClick="formData();" class="btn-green">Place order</a>
                 </div>
             </div>
         </div>
-        </form>
+    </div>
+    </form>
     </div>
 </section>
 
@@ -376,8 +434,8 @@ if (isset($userData)) {
         }
 
     }
-    $('.Price-currencySymbol_count').text(eventCart.props.currencyCode);
-    $('.Price-currencySymbol_sub').text(eventCart.props.currencyCode);
-    $('.Price-currencySymbol_total').text(eventCart.props.currencyCode);
+    $('.Price-currencySymbol_count').text('<?php echo $currencyCode; ?>');
+    $('.Price-currencySymbol_sub').text('<?php echo $currencyCode; ?>');
+    $('.Price-currencySymbol_total').text('<?php echo $currencyCode; ?>');
     //eventCart.props.currencyCode
 </script>
