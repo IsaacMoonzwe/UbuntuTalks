@@ -47,42 +47,75 @@ $cartData = $_SESSION['cart'];
         }
     }
 </style>
+<!-- icon -->
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 <section class="checkout-details section">
 
     <div class="container container--narrow">
 
         <div class="row">
             <div class="col-lg-8 ticket-information">
-                <a href="javascript:history.go(-1)" class="btn btn--bordered color-black btn--back">
-                    <svg class="icon icon--back">
-                        <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
-                    </svg>
-                    <?php echo Label::getLabel('LBL_BACK'); ?>
-                </a>
+                <div class="cart-top-div">
+                    <div class="backbtn">
+                        <a href="javascript:history.go(-1)" class="btn btn--bordered color-black btn--back Cartbackbtn">
+                            <svg class="icon icon--back">
+                                <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
+                            </svg>
+                            <?php echo Label::getLabel('LBL_BACK'); ?>
+                        </a>
+                    </div>
+                    <?php if (EventUserAuthentication::isUserLogged()) {
+                        $fullName = $userDetails['user_full_name'];
+                    ?>
+                        <div class="user-information">
+                            <div class="username">
+                                <p><i class='fas fa-user-alt'></i></p>
+                                <p><?php echo $fullName ?></p>
+                            </div>
+                            <div class="logout">
+                                <p><i class="fa fa-sign-out"></i></p>
+                                <p><a href="<?php echo CommonHelper::generateUrl('EventUser', 'logout'); ?>">Logout</a></p>
+                            </div>
+                        </div>
+                    <?php } ?>
+                </div>
+
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 info_form_div">
                         <div class="billing-details-box">
                             <form id="billing" name="billing" action="#">
-                                <h3>Billing details</h3>
+                                <h3 class="form_head">Billing details</h3>
                                 <div class="row Registration-Form">
                                     <?php if (isset($loggedIn) && $loggedIn == false) { ?>
-                                        <!-- <div class="login-registration">
+                                        <div class="login-registration">
                                             <h6>
                                                 <div class="login-design">Already Have Account ? <span class="click-btn">Login</span></div>
-                                               
+
                                             </h6>
-                                        </div> -->
+                                        </div>
                                     <?php } ?>
-                                    <div class="col-lg-6">
+                                    <?php  //echo "<pre>";print_r($userData); 
+                                    ?>
+                                    <div class="col-lg-6" style="display: none;">
                                         <div class="form-group">
-                                            <label for="firstName">First name <span style="color:red;">*</span></label>
-                                            <input type="hidden" value="reg" />
-                                            <input type="text" id="firstName" name="firstName" class="form-control" value="<?php
-                                                                                                                            if (isset($loggedIn)) {
-                                                                                                                                echo $userData['user_first_name'];
-                                                                                                                            } ?>" aria-describedby="" placeholder="">
+                                            <label for="first_Name">First name <span style="color:red;">*</span></label>
+                                            <input type="text" class="form-control" name="firstName" id="firstName" aria-describedby="" placeholder="" value="<?php
+                                                                                                                                                                if (isset($loggedIn)) {
+                                                                                                                                                                    echo $userData['user_first_name'];
+                                                                                                                                                                } ?>">
                                         </div>
                                     </div>
+
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label for="lastName">First name <span style="color:red;">*</span></label>
+                                            <input type="text" class="form-control" name="middleName" id="middleName" aria-describedby="" placeholder="" value="<?php
+                                                                                                                                                                if (isset($loggedIn)) {
+                                                                                                                                                                    echo $userData['user_first_name'];
+                                                                                                                                                                } ?>">
+                                        </div>
+                                    </div>
+
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label for="lastName">Last name <span style="color:red;">*</span></label>
@@ -92,12 +125,14 @@ $cartData = $_SESSION['cart'];
                                                                                                                                                             } ?>">
                                         </div>
                                     </div>
+
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="companyName">Company name (optional)</label>
                                             <input type="text" class="form-control" name="companyName" id="companyName" aria-describedby="" placeholder="">
                                         </div>
                                     </div>
+
                                     <div class="col-lg-12">
                                         <div class="form-group address">
                                             <label for="citeyTown">Town / City <span style="color:red;">*</span></label>
@@ -111,18 +146,7 @@ $cartData = $_SESSION['cart'];
                                                                                                                                                                                                         } ?>">
                                         </div>
                                     </div>
-                                    <div class="col-lg-12">
-                                        <div class="form-group">
-                                            <label for="phoneNumber">Gender <span style="color:red;">*</span></label>
-                                            <select required class="form-control" id="user_gender" name="user_gender" value="<?php
-                                                                                                                                if (isset($loggedIn)) {
-                                                                                                                                    echo $userData['user_gender'];
-                                                                                                                                } ?>">
-                                                <option value=1>Male</option>
-                                                <option value=2>Female</option>
-                                            </select>
-                                        </div>
-                                    </div>
+
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="stateCounty">Country <span style="color:red;">*</span></label>
@@ -130,9 +154,12 @@ $cartData = $_SESSION['cart'];
                                                                                                                     if (isset($loggedIn)) {
                                                                                                                         echo $userData['user_billing_country'];
                                                                                                                     } ?>">
+
                                                 <?php
+
                                                 foreach ($CountryListing as $value) {
                                                 ?>
+
                                                     <option value="<?php echo $value['country_name']; ?>"><?php echo $value['country_name']; ?></option>
                                                 <?php
                                                 }
@@ -145,6 +172,7 @@ $cartData = $_SESSION['cart'];
                                             </select>
                                         </div>
                                     </div>
+
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="postcode">Postcode / ZIP <span style="color:red;">*</span></label>
@@ -154,6 +182,7 @@ $cartData = $_SESSION['cart'];
                                                                                                                                                             } ?>">
                                         </div>
                                     </div>
+
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="phone">Phone <span style="color:red;">*</span></label>
@@ -163,6 +192,7 @@ $cartData = $_SESSION['cart'];
                                                                                                                                                         } ?>">
                                         </div>
                                     </div>
+
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="email-address">Email address <span style="color:red;">*</span></label>
@@ -177,7 +207,7 @@ $cartData = $_SESSION['cart'];
                                     ?>
                                         <div class="col-lg-12">
                                             <div class="form-group">
-                                                <label for="email-address">Password<span style="color:red;">*</span></label>
+                                                <label for="email-address">Create Password<span style="color:red;">*</span></label>
                                                 <input type="password" class="form-control" name="password" id="password" aria-describedby="" placeholder="">
                                             </div>
                                         </div>
@@ -195,29 +225,35 @@ $cartData = $_SESSION['cart'];
                                     <div class="col-lg-12">
                                         <input type="hidden" value="reg" name="login" id="login" />
                                         <div class="form-group">
-                                            <label for="email-address">Email address <span style="color:red;">*</span></label>
+                                            <label for="email-address">Email / Username <span style="color:red;">*</span></label>
                                             <input type="email" class="form-control" name="user_email" id="user_email" aria-describedby="" placeholder="">
                                         </div>
                                     </div>
 
                                     <div class="col-lg-12">
                                         <div class="form-group">
-                                            <label for="email-address">Password address <span style="color:red;">*</span></label>
+                                            <label for="email-address">Password<span style="color:red;">*</span></label>
                                             <input type="password" class="form-control" name="user_password" id="user_password" aria-describedby="" placeholder="">
                                         </div>
                                     </div>
+                                    <div class="col-lg-12">
+                                        <div class="box-bottom">
+                                            <button type="button" onclick="submitForm();" class="btn-green submit-order">Submit</button>
+
+                                        </div>
+                                    </div>
                                     <?php if (isset($loggedIn) && $loggedIn == false) { ?>
-                                        <!-- <div class="login-registration">
+                                        <div class="login-registration">
                                             <h6>
-                                                <div class="registration-details">Create a new account <span class="reg-btn">Registration</span></div>
+                                                <div class="registration-details">Create a new account <span class="reg-btn">Register</span></div>
                                             </h6>
-                                        </div> -->
+                                        </div>
                                     <?php } ?>
                                 </div>
                             </form>
                         </div>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-6 additional_info_div">
                         <div class="additional-information">
                             <!-- <h3>Additional information</h3>
                             <div class="row">
@@ -241,6 +277,7 @@ $cartData = $_SESSION['cart'];
                                 $Food = 1;
                                 $ticket = 1;
                                 for ($i = 0; $i < $checkoutCart['ticketQty']; $i++) {
+
                                 ?>
                                     <div class="Ticket-Form">
                                         <h3>Ticket <?php echo $ticket; ?>: <br><?php echo $EventsList['registration_plan_title']; ?></h3>
@@ -374,7 +411,7 @@ $cartData = $_SESSION['cart'];
                     </div> -->
                 <div class="box-bottom">
                     <p>Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our <a href="#">privacy policy</a>.</p>
-                    <a href="javascript:void(0)" onClick="formData();" class="btn-green">Place order</a>
+                    <a href="javascript:void(0)" onClick="formData();" class="btn-green submit-order">Place order</a>
                 </div>
             </div>
         </div>
@@ -391,13 +428,35 @@ $cartData = $_SESSION['cart'];
     jQuery(document).on('click', '.click-btn', function() {
         $(".Registration-Form").addClass("hide-form");
         $(".Login-Form").removeClass("hide-form");
+        $('.form_head').html('Login Details');
+        $(".additional_info_div").addClass("hide-form");
         $('#login').val('login');
     });
     jQuery(document).on('click', '.reg-btn', function() {
         $(".Registration-Form").removeClass("hide-form");
+        $(".additional_info_div").removeClass("hide-form");
         $(".Login-Form").addClass("hide-form");
+        $('.form_head').html('Billing Details');
         $('#login').val('reg');
     });
+
+    function submitForm() {
+        // $(".Registration-Form").removeClass("hide-form");
+        ValidateLogin();
+        // $(".additional_info_div").removeClass("hide-form");
+        // $(".Login-Form").addClass("hide-form");
+        // $('#login').val('reg');
+    }
+    var fullName = '<?php echo $userDetails['user_full_name']; ?>';
+    // console.log("userr=",document.getElementsByName('attendeeName[]')[0]);
+
+    if (fullName != null) {
+        document.getElementsByName('attendeeName[]')[0].value = fullName;
+        document.getElementsByName('attendeeEmail[]')[0].value = '<?php echo $userCrendentialData['credential_email']; ?>';
+        document.getElementsByName('phoneNumber[]')[0].value = '<?php echo $userDetails['user_phone']; ?>';
+        document.getElementsByName('gender[]')[0].selected = '<?php echo $userDetails['user_gender']; ?>';
+
+    }
 </script>
 <script>
     function formData() {
@@ -425,10 +484,10 @@ $cartData = $_SESSION['cart'];
         //check if the form is valid 
         if ($form.valid()) {
             //form is valid
-            console.log("hi");
+
             AddAttendeeDetails('valid');
         } else {
-            console.log("Hellnoooooo");
+
             AddAttendeeDetails('inValid');
 
         }

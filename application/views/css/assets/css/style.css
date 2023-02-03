@@ -1026,11 +1026,45 @@ b.ccode {
     font-weight: 700;
 }
 
+p.location-title {
+    margin-top: 20px;
+}
+
+.location-title {
+    margin-top: 20px;
+}
+
+.user-information {
+    gap: 15px;
+    display: flex;
+    justify-content: end;
+}
+.username , .logout {
+    font-size: 15px;
+}
+.cart-top-div{
+    display: flex;
+    justify-content: space-between;
+}
+
+section.equip.section .ticket-information .cart-top-div{
+    padding: 20px 0px 0px 0px !important;
+}
+
+
+
 @media (max-width: 1199px) {}
 
 @media (max-width: 991px) {}
 
 @media (max-width: 768px) {
+    .username p, .logout p{
+        font-size: 16px !important;
+    }
+    .paymentcoupon {
+        width: 100% !important;
+    }
+
     table.shop_table.shop_table_responsive.cartMobile th {
         width: 50% !important;
     }

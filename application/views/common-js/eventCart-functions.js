@@ -21,6 +21,8 @@ var eventCart = {
     becomeSponserPlanQty: {},
     checkEventUserLogged: 0,
     selectSponserEventPlan: null,
+    selectCorporateEventPlan: null,
+    selectCorporateTicket:null,
     becomeSponserSelectedPlan: {},
     eventUserSelectedStaus: 'Login',
     concertPlan: '',
@@ -288,6 +290,7 @@ $(document).bind("afterClose.facebox", function () {
     isCompany: 0,
     becomeSponserSelectedPlan: {},
     selectSponserEventPlan: null,
+    selectCorporateEventPlan: null,
   };
   eventCart.couponCode = "";
   eventCart.isWalletSelect = 0;

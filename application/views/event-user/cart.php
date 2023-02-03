@@ -31,8 +31,11 @@ if ($userWalletBalance >= 0) {
 }
 
 if (isset($_SESSION['summary'])) {
-    $cartData = $_SESSION['summary'];
+       
     $_SESSION['cart'] = $_SESSION['summary'];
+    $_SESSION['cart']['cartDiscounts'] = $_SESSION['summary']['cartDiscounts'];
+    $_SESSION['checkoutCart']['cart']['cartDiscounts']=$_SESSION['summary']['cartDiscounts'];
+    $cartData = $_SESSION['cart'];
 } elseif (isset($_SESSION['removeCoupon'])) {
     $cartData = $_SESSION['cart'];
     // echo "<pre>";
@@ -69,6 +72,11 @@ if (!empty($planResult['plan_image'])) {
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
 
 </head>
+<style>
+    .hide-total-block {
+        display: none !important;
+    }
+</style>
 
 <body>
     <section class="cart section">
@@ -76,12 +84,32 @@ if (!empty($planResult['plan_image'])) {
 
             <div class="row">
                 <div class="col-lg-8 col-md-12 ticket-information">
-                    <a href="javascript:history.go(-1)" class="btn btn--bordered color-black btn--back Cartbackbtn">
-                        <svg class="icon icon--back">
-                            <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
-                        </svg>
-                        <?php echo Label::getLabel('LBL_BACK'); ?>
-                    </a>
+                    <div class="cart-top-div">
+                        <div class="backbtn">
+                            <a href="javascript:history.go(-1)" class="btn btn--bordered color-black btn--back Cartbackbtn">
+                                <svg class="icon icon--back">
+                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
+                                </svg>
+                                <?php echo Label::getLabel('LBL_BACK'); ?>
+                            </a>
+                        </div>
+
+                        <?php if (EventUserAuthentication::isUserLogged()) {
+                            $fullName = $userDetails['user_full_name'];
+                        ?>
+                            <div class="user-information">
+                                <div class="username">
+                                    <p><i class='fas fa-user-alt'></i></p>
+                                    <p><?php echo $fullName ?></p>
+                                </div>
+                                <div class="logout">
+                                    <p><i class="fa fa-sign-out"></i></p>
+                                    <p><a href="<?php echo CommonHelper::generateUrl('EventUser', 'logout'); ?>">Logout</a></p>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
+
                     <form class="cart-form" method="post" name="cart_form">
                         <div class="table-box">
 
@@ -132,7 +160,7 @@ if (!empty($planResult['plan_image'])) {
                                             <td class="subtotal-amount" data-title="Subtotal">
                                                 <!-- <span class="amount"><bdi><span class="">ZK</span>50.00</bdi></span> -->
                                                 <span class="amount"><bdi>
-                                                        <p id="itemPrice"><?php echo $currencyCode . " " . $EventsList['itemNetPrice']; ?></p>
+                                                        <p id="itemPrice"><?php echo $currencyCode . $EventsList['itemNetPrice']; ?></p>
                                                     </bdi></span>
                                             </td>
                                         </tr>
@@ -202,7 +230,7 @@ if (!empty($planResult['plan_image'])) {
                                             </div>
                                         </div>
                                     <?php } ?>
-                                    <div class="payment__row">
+                                    <div class="payment__row hide-total-block">
                                         <div>
                                             <b class="color-primary"><?php echo Label::getLabel('LBL_Total'); ?></b>
                                         </div>
@@ -279,7 +307,7 @@ if (!empty($planResult['plan_image'])) {
                                                 <bdi><span class="Price-currencySymbol"></span>
                                                     <?php
                                                     $amount = ($cartData['orderNetAmount'] - $walletDeduction);
-                                                    echo number_format((float)$amount, 2, '.', '');
+                                                    echo $currencyCode .number_format((float)$amount, 2, '.', '');
                                                     ?>
                                                     <!-- <?php if (isset($EventsList)) { ?>
                                                     <p id="subtotal-itemPrice"><?php echo $currencyCode . " " . $EventsList['itemNetPrice']; ?></p>
@@ -298,7 +326,7 @@ if (!empty($planResult['plan_image'])) {
                                                     <bdi><span class="Price-currencySymbol"></span>
                                                         <?php
                                                         $amount = ($cartData['orderNetAmount'] - $walletDeduction);
-                                                        echo number_format((float)$amount, 2, '.', '');
+                                                        echo $currencyCode . number_format((float)$amount, 2, '.', '');
                                                         ?>
                                                         <!-- <?php if (isset($EventsList)) { ?>
                                                         <p id="total-itemPrice"><?php echo $currencyCode . "" . $EventsList['itemNetPrice']; ?></p>

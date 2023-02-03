@@ -352,9 +352,9 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                         <thead>
                                                             <tr>
                                                                 <th><?php echo Label::getLabel('LBL_Events'); ?></th>
-                                                                <th><?php echo Label::getLabel('LBL_Stating_Date'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Starting_Date'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Ending_Date'); ?></th>
-                                                                <th><?php echo Label::getLabel('LBL_No_Of_Tickets'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_No_of_Tickets'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Price'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Coupon_Code'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Tickets'); ?></th>
@@ -422,7 +422,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                         <thead>
                                                             <tr>
                                                                 <th><?php echo Label::getLabel('LBL_Events_(Sponsor)'); ?></th>
-                                                                <th><?php echo Label::getLabel('LBL_Sponsorship_Plan'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Date'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Sponsorship_Plan'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Coupon_Code'); ?></th>
                                                             </tr>
@@ -476,9 +476,9 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                         <thead>
                                                             <tr>
                                                                 <th><?php echo Label::getLabel('LBL_Concert_Tickets_Category'); ?></th>
-                                                                <th><?php echo Label::getLabel('LBL_Stating_Date'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Starting_Date'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Ending_Date'); ?></th>
-                                                                <th><?php echo Label::getLabel('LBL_No_Of_Tickets'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_No_of_Tickets'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Price'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Coupon_Code'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Tickets'); ?></th>
@@ -546,9 +546,9 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                         <thead>
                                                             <tr>
                                                                 <th><?php echo Label::getLabel('LBL_Concert_Tickets_Category'); ?></th>
-                                                                <th><?php echo Label::getLabel('LBL_Stating_Date'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Starting_Date'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Ending_Date'); ?></th>
-                                                                <th><?php echo Label::getLabel('LBL_No_Of_Tickets'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_No_of_Tickets'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Price'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Coupon_Code'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Tickets'); ?></th>
@@ -607,6 +607,52 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                 </div>
                                             </div>
 
+                                            <!-- Corporate Ticket Listing -->
+                                            <div class="row events-tickets-section" id="event-listing">
+                                                <div class="col-lg-12">
+                                                    <div>
+                                                        <h4 class="events-head-title"><?php echo Label::getLabel('LBL_Active_Corporate_Ticket_Listing'); ?></h4>
+                                                    </div>
+                                                    <table id="corporate" class="table event-listing table-striped table-bordered donation-table display nowrap" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th><?php echo Label::getLabel('LBL_Corporate_Type'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Number_of_Tickets'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Price'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Discount'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Paid_Amount'); ?></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php
+                                                            $sr_no = 1;
+                                                            if (!empty($CorportePlanDataResult)) {
+                                                                foreach ($CorportePlanDataResult as $key => $value) {
+                                                                $Qty = $value['event_user_sponsership_qty'];
+                                                                $Ticket_Price = $value['price'];
+                                                                $Discount = $value['discount'];
+                                                                $Total =  $Qty * $Ticket_Price;
+                                                                $DiscountAmount = $Total * $Discount / 100;
+                                                                $TotalAmount = $Total - $DiscountAmount;
+                                                            ?>
+                                                                    <tr>
+                                                                        <td><?php echo $value['type']; ?></td>
+                                                                        <td><?php echo $value['event_user_sponsership_qty']; ?></td>
+                                                                        <td><?php echo $value['price']; ?></td>
+                                                                        <td><?php echo $value['discount'].'%'; ?></td>
+                                                                        <td><?php echo '$'.$TotalAmount; ?></td>
+                                                                    </tr>
+                                                            <?php
+                                                                    $sr_no++;
+                                                                }
+                                                            } else {
+                                                                echo Label::getLabel('LBL_No_Records');
+                                                            }
+                                                            ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -673,6 +719,11 @@ $contactFrm->developerTags['fld_default_col'] = 12;
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script>
     $(document).ready(function() {
+        var table = $('#corporate').DataTable({
+            pageLength: 10,
+            scrollY: 300,
+            responsive: true
+        });
         var table = $('#example').DataTable({
             pageLength: 10,
             scrollY: 200,

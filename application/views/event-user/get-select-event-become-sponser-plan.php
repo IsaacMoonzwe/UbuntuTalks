@@ -5,6 +5,10 @@
         border-radius: 5px;
         box-shadow: rgb(0 0 0 / 10%) 0px 0px 8px;
     }
+
+    .corporate-title h3.sponsorship-title {
+        text-align: center;
+    }
 </style>
 <div class="box box--checkout">
     <div class="box__head">
@@ -46,8 +50,29 @@
                     </div> -->
                 </label>
             <?php } ?>
-
-
+        </div>
+        <div class="corporate-title">
+            <h3 class="sponsorship-title">Corporate Ticket Sponsor</h3>
+        </div>
+        <div class="selection-tabs selection--checkout selection--duration selection--onehalf sponsorship-tabs">
+            <?php 
+            foreach ($CorporateplanResult as $value) {
+                $label=explode(" ",$value['corporate_ticket_category_type']);
+            ?>
+                <label class="selection-tabs__label">
+                    <input type="radio" onchange="onCorporateChange('<?php echo $value['corporate_ticket_category_type']; ?>');" class="selection-tabs__input" value="<?php echo $value['corporate_ticket_category_type']; ?>" <?php echo ($method == $value['corporate_ticket_id']) ? 'checked' : ''; ?> name="corporate_type" id="<?php echo $value['corporate_ticket_category_type']; ?>">
+                    <div class="selection-tabs__title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+                            <g>
+                                <path d="M12,22A10,10,0,1,1,22,12,10,10,0,0,1,12,22Zm-1-6,7.07-7.071L16.659,7.515,11,13.172,8.174,10.343,6.76,11.757Z" transform="translate(-2 -2)" />
+                            </g>
+                        </svg>
+                        <span>
+                            <?php echo $value['corporate_ticket_category_type']; ?>
+                        </span>
+                    </div>
+                </label>
+            <?php } ?>
         </div>
     </div>
     <div class="box-foot">
@@ -61,11 +86,16 @@
     </div>
 </div>
 <script>
-    var selected = eventCart.props.selectSponserEventPlan;
+    var selected = eventCart.props.selectCorporateEventPlan;
     if (selected != null) {
-        console.log("selectSponserEventPlan", selected);
+      
         var check = parseInt(selected);
-        document.getElementById("plan" + check).checked = true;
+        document.getElementById(selected).checked = true;
+    }
+    function onCorporateChange(value){
+        console.log("valu==",value);
+        eventCart.props.selectCorporateEventPlan=value;
+        eventCart.props.selectCorporateTicket=null;
     }
     //     let entries = Object.entries(eventCart.props.becomeSponserSelectedPlan);
 

@@ -52,12 +52,24 @@ if (!empty($planResult['plan_image'])) {
     <style>
         .selection-tabs__title {
             cursor: pointer;
-            width: 189px;
+            width: 100%;
             height: 70px;
         }
 
         .hide-section {
             display: none !important;
+        }
+
+        .wallet-credits {
+            width: 100%;
+        }
+
+        label.selection-tabs__label.selection--wallet.wallet-section {
+            width: 100%;
+        }
+
+        label.selection-tabs__label.payment-method-js {
+            width: 100%;
         }
     </style>
 </head>
@@ -70,7 +82,7 @@ if (!empty($planResult['plan_image'])) {
         }
     }
     // echo "<pre>";
-    // print_r($EventUserListingDetails);
+    // print_r($_SESSION['cart']);
     ?>
     <section class="payment-details" id="paymentData">
         <div class="container">
@@ -80,12 +92,31 @@ if (!empty($planResult['plan_image'])) {
                         <div class="col-lg-6">
                             <div class="personal-details">
                                 <div class="payment_block_title-item">
-                                    <a href="javascript:history.go(-1)" class="btn btn--bordered color-black btn--back paymentcartbtn">
-                                        <svg class="icon icon--back">
-                                            <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
-                                        </svg>
-                                        <?php echo Label::getLabel('LBL_BACK'); ?>
-                                    </a>
+                                    <div class="cart-top-div">
+                                        <div class="backbtn">
+                                            <a href="javascript:history.go(-1)" class="btn btn--bordered color-black btn--back Cartbackbtn">
+                                                <svg class="icon icon--back">
+                                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
+                                                </svg>
+                                                <?php echo Label::getLabel('LBL_BACK'); ?>
+                                            </a>
+                                        </div>
+                                        <?php if (EventUserAuthentication::isUserLogged()) {
+                                            $fullName = $userDetails['user_full_name'];
+                                        ?>
+                                            <div class="user-information">
+                                                <div class="username">
+                                                    <p><i class='fas fa-user-alt'></i></p>
+                                                    <p><?php echo $fullName ?></p>
+                                                </div>
+                                                <div class="logout">
+                                                    <p><i class="fa fa-sign-out"></i></p>
+                                                    <p><a href="<?php echo CommonHelper::generateUrl('EventUser', 'logout'); ?>">Logout</a></p>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
                                         <label class="form-check-label" for="exampleRadios1">Personal Details</label>
@@ -115,7 +146,7 @@ if (!empty($planResult['plan_image'])) {
                                                     <input type="" class="form-control" id="" aria-describedby="" placeholder="City" value="<?php echo $EventUserListingDetails['user_address2']; ?>" readonly>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-6">
+                                            <!-- <div class="col-lg-6">
                                                 <div class="form-group">
                                                     <input type="" class="form-control" id="" aria-describedby="" placeholder="gender" value="<?php if ($EventUserListingDetails['user_gender'] == 1) {
                                                                                                                                                     echo 'Male';
@@ -124,7 +155,7 @@ if (!empty($planResult['plan_image'])) {
                                                                                                                                                 } //echo $EventUserListingDetails['user_city']; 
                                                                                                                                                 ?>" readonly>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div class="col-lg-6">
                                                 <div class="form-group">
                                                     <input type="" class="form-control" id="" aria-describedby="" placeholder="Country" value="<?php echo $EventUserListingDetails['user_billing_country']; ?>" readonly>
@@ -353,7 +384,6 @@ if (!empty($planResult['plan_image'])) {
                                                                 <label class="form-check-label" for="defaultCheck1">
                                                                     I agree to DPO’s <a href="#">terms and
                                                                         conditions</a>
-
                                                                 </label>
                                                             </div>
                                                         </div>
@@ -379,22 +409,25 @@ if (!empty($planResult['plan_image'])) {
                                         <div class="card-header" id="church-accordian">
                                             <h5 class="mb-0">
                                                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                    <p>
-                                                        <span>LUSAKA'S PREMIER CONFERENCECENTRE</span>
+                                                    <p class="location-title">
+                                                        <span>Mulungushi International Conference Centre. <br>Lusaka, Zambia</span>
                                                         <i class="fas fa-chevron-down"></i>
                                                     </p>
                                                 </button>
                                             </h5>
+                                            <div class="location-title">
+                                                <span>Website:&nbsp;&nbsp;</span><a href="#">https://www.micc.co.zm</a>
+                                            </div>
                                         </div>
 
                                         <div id="collapseOne" class="collapse show" aria-labelledby="church-accordian" data-parent="#accordion">
                                             <div class="card-body">
                                                 <p>Events Ticketing - <?php echo $cartData['itemName']; ?></p>
                                                 <div>
-                                                    <span>WEBSITE</span><a href="#">https://www.micc.co.zm/</a>
+                                                    <span>WEBSITE</span><a href="#">https://ubuntutalks.com</a>
                                                 </div>
                                                 <div>
-                                                    <span>E-MAIL</span><a href="#">reservations@micc.co.zm</a>
+                                                    <span>E-MAIL</span><a href="#">admin@ubuntutalks.com</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -541,7 +574,7 @@ if (!empty($planResult['plan_image'])) {
 
                                 </div>
                             </div>
-                            <span class="dccTitle">Choose your preferred currency </span>
+                            <!-- <span class="dccTitle">Choose your preferred currency </span> -->
                         </div>
                     </div>
                 </div>

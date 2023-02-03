@@ -152,10 +152,21 @@
         <div class="row justify-content-center">
           <div class="col-xl-6 col-lg-8 col-md-10">
             <div class="box -padding-30 -skin">
-              <div class="header__logo">
-                <a href="/">
-                  <img src="https://ubuntutalks.com/image/site-logo/1" alt="Ubuntu Talks logo">
-                </a>
+              <div class="stipe-top-div">
+                <div class="stipe-back-btn">
+                  <a href="javascript:history.go(-1)" class="btn btn--bordered color-black btn--back Cartbackbtn">
+                    <svg class="icon icon--back">
+                      <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
+                    </svg>
+                    <?php //echo Label::getLabel('LBL_BACK'); 
+                    ?>
+                  </a>
+                </div>
+                <div class="header__logo">
+                  <a href="/">
+                    <img src="https://ubuntutalks.com/image/site-logo/1" alt="Ubuntu Talks logo">
+                  </a>
+                </div>
               </div>
               <div class="box__data">
               </div>
@@ -190,9 +201,9 @@
 </script>
 <script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript">
-// const stripe = Stripe("pk_live_51JwGHMEBydRe3lMmmahLFCh1YNTKub0lzgFJjhXDlDYD5Jt0LadbEhxKJ2vQKoRptpyXyVXt4Sax6C2gTlkPudQn00zyBXlhX3");
+  //const stripe = Stripe("pk_live_51JwGHMEBydRe3lMmmahLFCh1YNTKub0lzgFJjhXDlDYD5Jt0LadbEhxKJ2vQKoRptpyXyVXt4Sax6C2gTlkPudQn00zyBXlhX3");
 
-const stripe = Stripe("pk_test_51JwGHMEBydRe3lMmSMnKBfxpsc6QoqlBI7vQMsj53qfdPSNNq97yVUHEpUaoeckkrFIx2aFVTH8YZdYpxQSrGcya00je6gTKLD");
+  const stripe = Stripe("pk_test_51JwGHMEBydRe3lMmSMnKBfxpsc6QoqlBI7vQMsj53qfdPSNNq97yVUHEpUaoeckkrFIx2aFVTH8YZdYpxQSrGcya00je6gTKLD");
 
   // The items the customer wants to buy
   const items = [{

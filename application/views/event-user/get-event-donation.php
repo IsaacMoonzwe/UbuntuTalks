@@ -2,6 +2,7 @@
 ?>
 <style>
     .single_amount_wrapper {
+        justify-content: center;
         display: flex;
     }
 
@@ -32,7 +33,13 @@
 
     .amount_wrapper {
         text-align: center;
-        margin-top: 30px;
+        margin-top: 15px;
+    }
+
+    .other-titles {
+        font-size: 20px;
+        margin-bottom: 5px;
+        font-weight: 600;
     }
 
     input[type="text"],
@@ -66,20 +73,17 @@
             <label class="selection-tabs__label">
                 <div class="donation_wrapper">
                     <div class="single_amount_wrapper">
-                        <div class="single_amount" value="10">10$</div>
-                        <div class="single_amount" value="20">20$</div>
-                        <div class="single_amount" value="30">30$</div>
-                        <div class="single_amount" value="40">40$</div>
                         <div class="single_amount" value="50">50$</div>
-                    </div>
-                    <div class="single_amount_wrapper">
-                        <div class="single_amount" value="60">60$</div>
-                        <div class="single_amount" value="70">70$</div>
-                        <div class="single_amount" value="80">80$</div>
-                        <div class="single_amount" value="90">90$</div>
+                        <div class="single_amount" value="75">75$</div>
                         <div class="single_amount" value="100">100$</div>
                     </div>
+                    <div class="single_amount_wrapper">
+                        <div class="single_amount" value="150">150$</div>
+                        <div class="single_amount" value="250">250$</div>
+                        <div class="single_amount" value="500">500$</div>
+                    </div>
                     <div class="amount_wrapper">
+                        <div class="other-titles">Other</div>
                         <input type="number" class="" required="true" min="10.00" value=<?php echo $donationAmount; ?> id="donationAmount" name="donationAmount" placeholder="$0.00">
                     </div>
                 </div>

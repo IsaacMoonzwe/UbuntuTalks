@@ -26,6 +26,30 @@
                         </a>
                     </div>
                     <form name="event_selection">
+                    <div class="cart-top-div">
+                        <div class="backbtn">
+                            <a href="javascript:history.go(-1)" class="btn btn--bordered color-black btn--back Cartbackbtn">
+                                <svg class="icon icon--back">
+                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
+                                </svg>
+                                <?php echo Label::getLabel('LBL_BACK'); ?>
+                            </a>
+                        </div>
+                        <?php if (EventUserAuthentication::isUserLogged()) {
+                            $fullName = $userDetails['user_full_name'];
+                        ?>
+                            <div class="user-information">
+                                <div class="username">
+                                    <p><i class='fas fa-user-alt'></i></p>
+                                    <p><?php echo $fullName ?></p>
+                                </div>
+                                <div class="logout">
+                                    <p><i class="fa fa-sign-out"></i></p>
+                                    <p><a href="<?php echo CommonHelper::generateUrl('EventUser', 'logout'); ?>">Logout</a></p>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    </div>
                         <div class="row">
                             <div class="col-lg-8">
                                 <!-- <a href="javascript:history.go(-1)" class="btn btn--bordered color-black btn--back">

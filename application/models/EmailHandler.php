@@ -130,12 +130,11 @@ class EmailHandler extends FatModel
         // print_r($extra_headers);
         // if(isset($))
         if (isset($_SESSION['ticketUrl'])) {
-            $newStrting='';
-            if(isset($_SESSION['planSelected'])){
-            $newStrting = explode("Sales", $_SESSION['planSelected'])[0] . '.jpeg';
-            }
-            elseif(isset($_SESSION['concertPlan'])){
-                $newStrting=str_replace(' ', '_', $_SESSION['concertPlan']) . '.jpeg';
+            $newStrting = '';
+            if (isset($_SESSION['planSelected'])) {
+                $newStrting = explode("Sales", $_SESSION['planSelected'])[0] . '.jpeg';
+            } elseif (isset($_SESSION['concertPlan'])) {
+                $newStrting = str_replace(' ', '_', $_SESSION['concertPlan']) . '.jpeg';
             }
             $fileName = $_SESSION['ticketUrl'];
             $img = str_replace('data:image/jpeg;base64,', '', $fileName);
@@ -143,24 +142,24 @@ class EmailHandler extends FatModel
             $data = base64_decode($img);
             $mail->AddStringAttachment($data, $newStrting, 'base64', 'image/jpeg');
         }
-        if(isset($_SESSION['symposiumUrl'])){
-                $newStrting=str_replace(' ', '_', $_SESSION['symposiumPlan']) . '.jpeg';
-            
+        if (isset($_SESSION['symposiumUrl'])) {
+            $newStrting = str_replace(' ', '_', $_SESSION['symposiumPlan']) . '.jpeg';
+
             $fileName = $_SESSION['symposiumUrl'];
             $img = str_replace('data:image/jpeg;base64,', '', $fileName);
             $img = str_replace(' ', '+', $img);
             $data = base64_decode($img);
             $mail->AddStringAttachment($data, $newStrting, 'base64', 'image/jpeg');
         }
-        if(isset($_SESSION['concertUrl'])){
-            $newStrting=str_replace(' ', '_', $_SESSION['concertPlan']) . '.jpeg';
-        
-        $fileName = $_SESSION['concertUrl'];
-        $img = str_replace('data:image/jpeg;base64,', '', $fileName);
-        $img = str_replace(' ', '+', $img);
-        $data = base64_decode($img);
-        $mail->AddStringAttachment($data, $newStrting, 'base64', 'image/jpeg');
-    }
+        if (isset($_SESSION['concertUrl'])) {
+            $newStrting = str_replace(' ', '_', $_SESSION['concertPlan']) . '.jpeg';
+
+            $fileName = $_SESSION['concertUrl'];
+            $img = str_replace('data:image/jpeg;base64,', '', $fileName);
+            $img = str_replace(' ', '+', $img);
+            $data = base64_decode($img);
+            $mail->AddStringAttachment($data, $newStrting, 'base64', 'image/jpeg');
+        }
         if (isset($_SESSION['donationUrl'])) {
             $newStrting = 'donation_receipt.jpeg';
 
@@ -276,7 +275,7 @@ class EmailHandler extends FatModel
         }
         return false;
     }
-    
+
 
     public function sendForgotPasswordLinkEmail($langId, $data)
     {
@@ -437,6 +436,22 @@ class EmailHandler extends FatModel
     }
 
     /* Sponsorship Event Plan */
+    public function CorporateTicketPlanRegistrationEmail($langId, $d)
+    {
+        $tpl = 'corporate_plan_registration';
+        $vars = [
+            '{user_first_name}' => $d['user_first_name'],
+            '{user_last_name}' => $d['user_last_name'],
+            '{user_email}' => $d['user_email'],
+            '{Plan}' => $d['plan'],
+        ];
+        if (self::sendMailTpl($d['user_email'], $tpl, $langId, $vars)) {
+            return true;
+        }
+        return false;
+    }
+
+    /* Sponsorship Event Plan */
     public function sendSponsorshipplanEmail($langId, $d)
     {
         $tpl = 'sponsorship_plan_registration';
@@ -492,25 +507,25 @@ class EmailHandler extends FatModel
         return false;
     }
 
-   /* Symposium Event Plan */
-   public function sendSymposiumplanEmail($langId, $d)
-   {
-       $tpl = 'pre_symposium_dinner';
-       $file_name = basename($d['file_upload']);
-       $vars = [
-           '{user_first_name}' => $d['user_first_name'],
-           '{user_last_name}' => $d['user_last_name'],
-           '{user_email}' => $d['user_email'],
-           '{Plan}' => $d['plan'],
-           '{ticket}' => '<img style="max-width: 160px;" src="' . $d['file_upload'] . '"/>',
-           '{file_name}' => $d['file_upload'],
+    /* Symposium Event Plan */
+    public function sendSymposiumplanEmail($langId, $d)
+    {
+        $tpl = 'pre_symposium_dinner';
+        $file_name = basename($d['file_upload']);
+        $vars = [
+            '{user_first_name}' => $d['user_first_name'],
+            '{user_last_name}' => $d['user_last_name'],
+            '{user_email}' => $d['user_email'],
+            '{Plan}' => $d['plan'],
+            '{ticket}' => '<img style="max-width: 160px;" src="' . $d['file_upload'] . '"/>',
+            '{file_name}' => $d['file_upload'],
 
-       ];
-       if (self::sendMailTpl($d['user_email'], $tpl, $langId, $vars, "", "", "ticketAttach")) {
-           return true;
-       }
-       return false;
-   }
+        ];
+        if (self::sendMailTpl($d['user_email'], $tpl, $langId, $vars, "", "", "ticketAttach")) {
+            return true;
+        }
+        return false;
+    }
 
 
     /* Group Page contact us form */

@@ -45,7 +45,32 @@ $contactFrm->developerTags['fld_default_col'] = 12;
          $first_character = substr($str, 0, 1);
          // echo $first_character;
       ?>
-         <div class="header-dropdown header-dropwown--profile">
+         <div class="header-dropdown header-dropwown--profile Mobile-Profile-View">
+            <a class="header-dropdown__trigger trigger-js" href="#profile-nav">
+               <div class="teacher-profile">
+                  <div class="teacher__media">
+                     <div class="avtar avtar--xsmall events-buttons" data-title="<?php echo $first_character; ?>"></div>
+                  </div>
+                  <div class="teacher__name"><?php echo $userDetails['user_first_name']; ?></div>
+                  <svg class="icon icon--arrow">
+                     <use xlink:href="/images/sprite.yo-coach.svg#arrow-black"></use>
+                  </svg>
+               </div>
+            </a>
+            <div id="profile-nav" class="header-dropdown__target">
+               <div class="dropdown__cover">
+                  <nav class="menu--inline">
+                     <ul>
+                        <li class="menu__item button"><a href="/dashboard-event-visitor">My Dashboard</a></li>
+                        <li class="menu__item button"><a href="<?php echo CommonHelper::generateUrl('EventUser', 'logout'); ?>"><?php echo Label::getLabel('LBL_Logout'); ?></a></li>
+                     </ul>
+                  </nav>
+               </div>
+            </div>
+         </div>
+
+         <!-- header-dropwown--profile -->
+         <div class="header-dropdown Desktop-Profile-View">
             <a class="header-dropdown__trigger trigger-js" href="#profile-nav">
                <div class="teacher-profile">
                   <div class="teacher__media">
@@ -728,10 +753,13 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                               </tr>
                            </table>
                            <div class="sidebar-btns download-flyer-button">
-                              <a href="https://ubuntutalks.com/image/editor-image/1662959770-NewUTSymposium2023SponsorFlyer.jpeg" download="UT_Symposium_2023_ Sponsor_Flyer.jpeg" class="more-info-btn"><?php echo Label::getLabel('LBL_UT_Symposium_Sponsor_Flyer', $adminLangId); ?></a>
+                              <a href="https://ubuntutalks.com/image/editor-image/Update_Sponsership_Flyer.jpeg" download="UT_Symposium_2023_ Sponsor_Flyer.jpeg" class="more-info-btn"><?php echo Label::getLabel('LBL_UT_Symposium_Sponsor_Flyer', $adminLangId); ?></a>
+                           </div>
+                           <div class="sidebar-btns download-flyer-button">
+                              <a href="https://ubuntutalks.com/image/editor-image/UT Symposium Corporate Tickets.jpeg" download="UT_Symposium_2023_ Sponsor_Flyer.jpeg" class="more-info-btn"><?php echo Label::getLabel('LBL_UT_Symposium_Corporate_Tickets', $adminLangId); ?></a>
                            </div>
                            <div class="sponsorpage-button">
-                              <a href="#" onclick="GetSelectEventBecomeSponserPlan();" class="button-more-info-btn"><?php echo Label::getLabel('LBL_Log_In_To_Sponsor', $adminLangId); ?></a>
+                              <a href="#" onclick="GetSelectEventBecomeSponserPlan();" class="button-more-info-btn"><?php echo Label::getLabel('LBL_Sponsor_Now', $adminLangId); ?></a>
                            </div>
                         </div>
                      </div>

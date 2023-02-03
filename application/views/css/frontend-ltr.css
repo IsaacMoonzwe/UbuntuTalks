@@ -2,6 +2,7 @@
 a.color-primary.btn--link.slide-toggle-coupon-js {
   display: none;
 }
+
 .box-foot {
   text-align: end;
   display: block !important;
@@ -146,6 +147,16 @@ nav.menu.nav--primary-offset {
   margin: auto;
 }
 
+.sidebar-btns.download-flyer-button {
+  width: 325px !important;
+}
+
+.header-dropdown .teacher__name {
+  text-transform: capitalize !important;
+}
+
+
+
 @media (min-width: 1499px) {
   .header .container {
     max-width: 1800px;
@@ -154,6 +165,10 @@ nav.menu.nav--primary-offset {
 }
 
 @media (min-width: 992px) {
+  .Mobile-Profile-View{
+    display: none !important;
+  }
+
 
   .row.footer--row .col-lg-3 {
     -webkit-box-flex: 0;
@@ -1073,8 +1088,9 @@ nav.menu.nav--primary-offset {
 
 @media (max-width: 767px) {
   .header-dropwown--profile .teacher__name {
-    font-size: 0;
+    font-size: 13px;
   }
+  .Desktop-Profile-View{display: none !important;}
 }
 
 @media (max-width: 767px) {
@@ -13497,6 +13513,10 @@ body .widget_calendr tbody td .cell-lightgreen-50 {
 }
 
 @media only screen and (max-width: 768px) {
+  .sidebar-btns.download-flyer-button {
+    width: 100% !important;
+  }
+
   .ubuntu_talks_ages p {
     font-size: 17px;
   }

@@ -472,6 +472,37 @@ $(document).ready(function () {
     $.loader.hide();
   };
 
+  RegisterCorporateEventUser = function (fromEvent = '', fromBack = 0) {
+    $.loader.show();
+    var method = eventCart.props.selectCorporateTicket;
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
+    }
+
+    if (method == null) {
+      $.loader.hide();
+      $.mbsmessage("Please Select Plan", true, "alert alert--danger");
+      return false;
+    }
+
+    // var data="method="+eventCart.props.sponsershipPlan;
+    fcom.ajax(
+      fcom.makeUrl("EventUser", "RegisterCorporateUserData", [fromEvent, fromBack, checkLogged]),
+      "",
+      function (res) {
+        try {
+          let data = JSON.parse(res);
+          !data.status
+            ? $.mbsmessage(data.msg, true, "alert alert--danger")
+            : void 0;
+        } catch (exc) {
+          $.facebox(res, "");
+        }
+      }
+    );
+    $.loader.hide();
+  };
   RegisterEventUser = function (fromEvent = '', fromBack = 0) {
     $.loader.show();
     var method = eventCart.props.becomesponserPlan;
@@ -757,7 +788,7 @@ $(document).ready(function () {
           $("#coupon_data").load(location.href + " #coupon_data");
           $("#pay_total_box").load(location.href + " #pay_total_box");
           $("#cartTotal").load(location.href + " #cartTotal");
-          
+
           $('#itemPrice').text(data.currencyCode + ' ' + data.data);
           $('#subtotal-itemPrice').text(data.currencyCode + ' ' + data.data);
           $('#total-itemPrice').text(data.currencyCode + ' ' + data.data);
@@ -810,12 +841,14 @@ $(document).ready(function () {
       function (res) {
         console.log("ress", res);
         try {
-
           $.loader.hide();
           $.mbsmessage(res.msg, true, "alert alert--success");
           $("#coupon_data").load(location.href + " #coupon_data");
           $("#pay_total_box").load(location.href + " #pay_total_box");
           $("#cartTotal").load(location.href + " #cartTotal");
+          setTimeout(function () {
+            $(".payment__row").removeClass("hide-total-block");
+          }, 900);
           // location.reload(true);
           // $("#cart_payment_data").load(location.href + " #cart_payment_data");
           // eventCart.checkoutStep("getPaymentSummary", "");
@@ -854,6 +887,38 @@ $(document).ready(function () {
     return (false);
   };
 
+//validateCheckoutLogin
+
+ValidateLogin=function(){
+
+  var billing = fcom.frmData(document.billing);
+    data =  billing;
+    $.loader.show();
+    fcom.ajax(
+      fcom.makeUrl("EventUser", "validateCheckoutLogin", []),
+      data,
+      function (res) {
+        console.log("res",res);
+        try {
+          
+          let data = JSON.parse(res);
+          console.log("data==",data);
+          $.loader.hide();
+
+          $.mbsmessage(data.msg, true, "alert alert--success");
+          $(".additional_info_div").removeClass("hide-form");
+          $(".info_form_div").addClass("hide-form");
+          window.location.href = data.url;
+        } catch (exc) {
+
+          $.mbsmessage(res, true, "alert alert--danger");
+          // $.facebox(res, "");
+        }
+      }
+    );
+    $.loader.hide();
+    return (false);
+  }
 
   AddAttendeeDetails = function (check) {
     if (check == 'inValid') {
@@ -1566,6 +1631,13 @@ $(document).ready(function () {
 
   GetEventBecomeSponserPlan = function (fromback = 0) {
     $.loader.show();
+    var CorporatePlan = eventCart.props.selectCorporateEventPlan;
+    console.log("CorporatePlan=0", CorporatePlan);
+    if (CorporatePlan != null) {
+      console.log("hi");
+      GetSelectTicketOption();
+      return;
+    }
     var plan = eventCart.props.selectSponserEventPlan;
     if (plan == null) {
       $.loader.hide();
@@ -1603,25 +1675,24 @@ $(document).ready(function () {
     $.loader.hide();
   };
 
-
-  GetSelectEventBecomeSponserPlan = function (fromback = 0) {
+  GetSelectTicketOption = function (fromback = 0) {
     $.loader.show();
-    // if (isEventUserLogged() == 0) {
-    //   $.loader.hide();
-    //   EventLogInFormPopUp();
-    //   return false;
-    // }
-    if (fromback == 0) {
-      eventCart.props.becomeSponserPlanQty = {};
-      eventCart.props.becomesponserPlan = {};
-    }
     var data = fcom.frmData(document.plan);
     var checkLogged = 1;
     if (isEventUserLogged() == 0) {
       checkLogged = 0;
     }
+
+    // var selected=eventCart.props.selectCorporateEventPlan;
+    // var check = parseInt(selected);
+    // var corporatename = document.getElementById(check);
+    var type = eventCart.props.selectCorporateEventPlan;
+    var ticket = eventCart.props.selectCorporateTicket;
+
+    console.log("selectCorporateTicket", ticket);
+    console.log("type==", type);
     fcom.ajax(
-      fcom.makeUrl("EventUser", "GetSelectEventBecomeSponserPlan", [checkLogged]),
+      fcom.makeUrl("EventUser", "GetSelectTicketOption", [type, ticket]),
       data,
       function (res) {
         try {
@@ -1636,6 +1707,86 @@ $(document).ready(function () {
     );
     $.loader.hide();
   };
+
+
+  GetSelectEventBecomeSponserPlan = function (fromback = 0) {
+
+    $.loader.show();
+    if (fromback == 0) {
+      eventCart.props.becomeSponserPlanQty = {};
+      eventCart.props.becomesponserPlan = {};
+    }
+    var data = fcom.frmData(document.plan);
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
+    }
+    fcom.ajax(
+      fcom.makeUrl("EventUser", "GetSelectEventBecomeSponserPlan", [checkLogged]),
+      data,
+      function (res) {
+        try {
+          console.log(eventCart.props);
+          let data = JSON.parse(res);
+          !data.status
+            ? $.mbsmessage(data.msg, true, "alert alert--danger")
+            : GetEventPaymentSummary();
+        } catch (exc) {
+          $.facebox(res, "");
+        }
+      }
+    );
+    $.loader.hide();
+  };
+  GetEventCorporatePaymentSummary = function (method, qty) {
+
+    $.loader.show();
+    if (method == null) {
+      $.loader.hide();
+      $.mbsmessage("Please Select Plan", true, "alert alert--danger");
+      return false;
+    }
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
+    }
+
+
+    var data = fcom.frmData(document.registerForm);
+    var userStatus = '';
+    if (userStatus == '') {
+      userStatus = eventCart.props.eventUserSelectedStaus;
+    }
+    if (userStatus == 'Registration') {
+      data = fcom.frmData(document.registerForm);
+    }
+    else {
+      data = fcom.frmData(document.loginForm);
+    }
+    fcom.updateWithAjax(fcom.makeUrl('EventUser', 'RegisterForEvents', [method, checkLogged, userStatus]), data, function (t) {
+      $.loader.hide();
+
+      try {
+        if (t.userId > 0) {
+          //eventCart.props.selectCorporateEventPlan,eventCart.props.selectCorporateTicket
+          var qty = eventCart.props.selectCorporateTicket;
+          console.log("onCorporateTicketChange==", qty);
+          var method = eventCart.props.selectCorporateEventPlan;
+          GetCorporatePaymentSummary(method, qty);
+          return;
+        }
+      } catch (exc) {
+
+        if (t.msg != '') {
+          $.mbsmessage(t.msg, true, "alert alert--danger")
+        }
+
+      }
+    }
+    );
+    $.loader.hide();
+  };
+
   GetEventBecomeSponserPaymentSummary = function (method, qty) {
 
     $.loader.show();
@@ -1731,6 +1882,14 @@ $(document).ready(function () {
         else if (fromSelector == 'SymposiumDinnerPlan') {
           GetEventSymposiumTicketsPaymentSummary(eventCart.props.symposiumPlan, eventCart.props.symposiumTicket);
         }
+        else if (fromSelector == 'fromCorporateSponser') {
+          var qty = eventCart.props.selectCorporateTicket;
+          console.log("onCorporateTicketChange==", qty);
+          var method = eventCart.props.selectCorporateEventPlan;
+          GetCorporatePaymentSummary(method, qty);
+
+        }
+        // fromCorporateSponser
       }
     );
   };
@@ -1754,13 +1913,20 @@ $(document).ready(function () {
         else if (fromSelector == 'SymposiumDinnerPlan') {
           GetEventSymposiumTicketsPaymentSummary(eventCart.props.symposiumPlan, eventCart.props.symposiumTicket);
         }
+        else if (fromSelector == 'fromCorporateSponser') {
+          var qty = eventCart.props.selectCorporateTicket;
+          console.log("onCorporateTicketChange==", qty);
+          var method = eventCart.props.selectCorporateEventPlan;
+          GetCorporatePaymentSummary(method, qty);
+
+        }
       }
     );
   },
 
-    GetBecomeSponserPaymentSummary = function (method, qty) {
+    GetCorporatePaymentSummary = function (method, qty) {
       $.loader.show();
-      if (Object.keys(method).length <= 0) {
+      if (method == null) {
         $.loader.hide();
         $.mbsmessage("Please Select Plan", true, "alert alert--danger");
         return false;
@@ -1772,28 +1938,74 @@ $(document).ready(function () {
 
       // var sponser_event_plan=eventCart.props.becomeSponserSelectedPlan;
       var sponser_event_plan = eventCart.props.selectSponserEventPlan;
+      var NumerOfTickets = eventCart.props.selectCorporateTicket;
+      console.log('NumerOfTickets',NumerOfTickets);
       // var data="method="+eventCart.props.sponsershipPlan;
       fcom.ajax(
-        fcom.makeUrl("EventUser", "GetEventBecomeSponserPaymentSummary", [
-          JSON.stringify(method),
-          JSON.stringify(qty),
-          sponser_event_plan,
-          checkLogged
+        fcom.makeUrl("EventUser", "GetEventCorporatePaymentSummary", [
+          method,
+          qty,
+          checkLogged,
+          NumerOfTickets
         ]),
         '',
         function (res) {
+         
           try {
-            let data = JSON.parse(res);
-            !data.status
-              ? $.mbsmessage(data.msg, true, "alert alert--danger")
-              : void 0;
-          } catch (exc) {
+            if(!res.includes('<div>')){
+              console.log("data res",res);
+              $.mbsmessage(res, true, "alert alert--danger");
+              return;
+            }
             $.facebox(res, "");
+          } catch (exc) {
+            console.log("exc",exc);
+            
+            // return false;
+            // $.facebox(res, "");
           }
         }
       );
       $.loader.hide();
     };
+
+
+  GetBecomeSponserPaymentSummary = function (method, qty) {
+    $.loader.show();
+    if (Object.keys(method).length <= 0) {
+      $.loader.hide();
+      $.mbsmessage("Please Select Plan", true, "alert alert--danger");
+      return false;
+    }
+    var checkLogged = 1;
+    if (isEventUserLogged() == 0) {
+      checkLogged = 0;
+    }
+
+    // var sponser_event_plan=eventCart.props.becomeSponserSelectedPlan;
+    var sponser_event_plan = eventCart.props.selectSponserEventPlan;
+    // var data="method="+eventCart.props.sponsershipPlan;
+    fcom.ajax(
+      fcom.makeUrl("EventUser", "GetEventBecomeSponserPaymentSummary", [
+        JSON.stringify(method),
+        JSON.stringify(qty),
+        sponser_event_plan,
+        checkLogged
+      ]),
+      '',
+      function (res) {
+        try {
+          let data = JSON.parse(res);
+          !data.status
+            ? $.mbsmessage(data.msg, true, "alert alert--danger")
+            : void 0;
+        } catch (exc) {
+          $.facebox(res, "");
+        }
+      }
+    );
+    $.loader.hide();
+  };
 
   logInEventFormPopUp = function () {
     $.loader.show();

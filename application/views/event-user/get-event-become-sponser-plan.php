@@ -70,7 +70,6 @@
 
     function increment(id = 0) {
         var lessonQtyInput = document.getElementById('planQty' + id);
-
         let qty = parseInt(lessonQtyInput.value);
         if (maxLessonQty > qty) {
             // ++cart.props.lessonQty;

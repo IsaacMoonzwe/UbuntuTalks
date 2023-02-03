@@ -123,7 +123,7 @@
 <script>
     eventCart.props.sponsershipPlan = "<?php echo $planSelected; ?>";
     $('#countOfTickets').change(function() {
-        eventCart.props.countOfTickets = this.value;
+        eventCart.props.selectCorporateTicket = this.value;
     });
 
     (function() {
@@ -148,7 +148,7 @@
                 els.inc.on('click', increment);
 
                 function decrement() {
-                    
+
                     var value = el[0].value;
                     value--;
                     if (!min || value >= min) {
@@ -158,7 +158,7 @@
                 }
 
                 function increment() {
-                    
+
                     var value = el[0].value;
                     value++;
                     if (!max || value <= max) {

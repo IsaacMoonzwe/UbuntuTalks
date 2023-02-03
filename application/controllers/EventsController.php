@@ -95,7 +95,6 @@ class EventsController extends MyEventAppController
         $srch_full_agenda_details->addOrder('agenda_start_time');
         $full_agenda_categories = $srch_full_agenda_details->getResultSet();
         $FullAgendaCategoriesList = FatApp::getDb()->fetchAll($full_agenda_categories);
-
         $srch_sponsorship = new SearchBase('tbl_sponsorship');
         $srch_sponsorship->addCondition('sponsorship_deleted', '=', 0);
         $srch_sponsorship->addCondition('sponsorship_active', '=', 1);

@@ -12,6 +12,10 @@ $otherFoodrestrictionField = $profileFrm->getField('user_other_food_restriction'
 $otherFoodrestrictionField->addFieldTagAttribute('placeholder', $otherFoodrestrictionField->getCaption());
 $lastNameField = $profileFrm->getField('user_last_name');
 $lastNameField->addFieldTagAttribute('placeholder', $lastNameField->getCaption());
+$addressFirstField = $profileFrm->getField('user_address1');
+$addressFirstField->addFieldTagAttribute('placeholder', $addressFirstField->getCaption());
+$addressSecondField = $profileFrm->getField('user_address2');
+$addressSecondField->addFieldTagAttribute('placeholder', $addressSecondField->getCaption());
 $registerPlanField = $profileFrm->getField('user_sponsorship_plan');
 $registerPlanField->addFieldTagAttribute('readonly', true);
 $user_become_sponsership_plan = $profileFrm->getField('user_become_sponsership_plan');
@@ -149,6 +153,32 @@ $profileImageField = $profileImgFrm->getField('user_profile_image');
                                 <div class="field-wraper">
                                     <div class="field_cover">
                                         <?php echo $phoneField->getHTML(); ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="field-set">
+                                <div class="caption-wraper">
+                                    <label class="field_label"><?php echo Label::getLabel('LBL_Address'); ?>
+                                        <?php if ($addressFirstField->requirement->isRequired()) { 
+                                        ?>
+                                        <span class="spn_must_field">*</span>
+                                        <?php } 
+                                        ?>
+                                    </label>
+                                </div>
+                                <div class="field-wraper">
+                                    <div class="field_cover">
+                                        <div class="custom-cols custom-cols--onehal">
+                                            <ul class="event-profile-name">
+                                                <li class="event-first-name"><?php echo $addressFirstField->getHTML('user_address1'); ?></li>
+                                                <li class="event-second-name"><?php echo $addressSecondField->getHTML('user_address2'); ?></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

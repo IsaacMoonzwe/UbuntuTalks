@@ -156,6 +156,9 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                             <li><a href="<?php echo CommonHelper::generateUrl('BenefitConcertArtists'); ?>"><?php echo Label::getLabel('LBL_Benefit_Concert_Artists', $adminLangId); ?></a></li>
                         <?php } ?>
                         <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
+                            <li><a href="<?php echo CommonHelper::generateUrl('CorporateTicketSponsorship'); ?>"><?php echo Label::getLabel('LBL_Corporate_Ticket_Sponsorship', $adminLangId); ?></a></li>
+                        <?php } ?>
+                        <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('SponsorshipProgramGuide'); ?>"><?php echo Label::getLabel('LBL_Sponsorship_Program_Guide', $adminLangId); ?></a></li>
                         <?php } ?>
                         <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>

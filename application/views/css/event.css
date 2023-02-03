@@ -4,12 +4,14 @@ body .section {
 }
 
 div#sponsorship_info,
+div#corporate_info,
 div#benefit-concert_info,
 div#pre-symposium-dinner_info {
 	margin-top: 10px !important;
 	text-align: initial;
 }
 
+div#corporate_paginate,
 div#sponsorship_paginate,
 div#benefit-concert_paginate,
 div#pre-symposium-dinner_paginate {
@@ -17,6 +19,7 @@ div#pre-symposium-dinner_paginate {
 	text-align: end;
 }
 
+div#corporate_length,
 div#sponsorship_length,
 div#benefit-concert_length,
 div#pre-symposium-dinner_length {
@@ -24,6 +27,7 @@ div#pre-symposium-dinner_length {
 	text-align: initial;
 }
 
+div#corporate_filter,
 div#sponsorship_filter,
 div#pre-symposium-dinner_filter {
 	display: none;
