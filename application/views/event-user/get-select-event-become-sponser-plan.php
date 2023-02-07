@@ -15,7 +15,6 @@
         <div class="step-nav">
             <ul>
                 <li class="step-nav_item is-process"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_1'); ?></a><span class="step-icon"></span></li>
-
                 <li class="step-nav_item"><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_2'); ?></a><span class="step-icon"></span></li>
                 <li class="step-nav_item "><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_3'); ?></a></li>
                 <li class="step-nav_item "><a href="javascript:void(0);"><?php echo Label::getLabel('LBL_4'); ?></a></li>
@@ -25,12 +24,11 @@
     <div class="box__body">
         <div class="selection-tabs selection--checkout selection--duration selection--onehalf sponsorship-tabs">
             <h3 class="sponsorship-title">Which event would you like to sponsor ?</h3>
-
             <?php foreach ($slotDurations as $duration) {
                 $newStrting = explode("Sales", $duration['events_sponsorship_categories_plan_title']);
             ?>
                 <label class="selection-tabs__label">
-                    <input type="radio" onchange="eventCart.props.selectSponserEventPlan=<?php echo $duration['events_sponsorship_categories_id']; ?>" class="selection-tabs__input" value="<?php echo $duration['events_sponsorship_categories_id']; ?>" <?php echo ($method == $duration['events_sponsorship_categories_id']) ? 'checked' : ''; ?> name="events_sponsorship_categories_plan_title" id="plan<?php echo $duration['events_sponsorship_categories_id']; ?>">
+                    <input type="radio" onchange="onSponserchange(<?php echo $duration['events_sponsorship_categories_id']; ?>)" class="selection-tabs__input" value="<?php echo $duration['events_sponsorship_categories_id']; ?>" <?php echo ($method == $duration['events_sponsorship_categories_id']) ? 'checked' : ''; ?> name="events_sponsorship_categories_plan_title" id="plan<?php echo $duration['events_sponsorship_categories_id']; ?>">
                     <div class="selection-tabs__title">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
                             <g>
@@ -41,26 +39,19 @@
                             <?php echo sprintf($newStrting[0]); ?>
                         </span>
                     </div>
-                    <!-- <div class="total-price sponsorship-plan" style="display: none;">
-                        <button class="btn btn--count" onclick="decrement(<?php echo $duration['three_reasons_id']; ?>)"><?php echo Label::getLabel('LBL_-'); ?></button>
-                        <input type="text" id="planQty<?php echo $duration['three_reasons_id']; ?>" onchange="changeLessonQty(<?php echo $duration['three_reasons_id']; ?>);" name="<?php echo $duration['three_reasons_id']; ?>" min="1" max="10" value="1">
-                        <button class="btn btn--count" onclick="increment(<?php echo $duration['three_reasons_id']; ?>);"><?php echo Label::getLabel('LBL_+'); ?></button>
-                        <button class="btn btn--primary color-white update-qty" onclick="eventCart.getLessonQtyPrice(document.getElementById('planQty'+<?php echo $duration['three_reasons_id']; ?>).value,<?php echo $duration['three_reasons_id']; ?>);"><?php echo Label::getLabel('LBL_UPDATE_QTY'); ?></button>
-
-                    </div> -->
                 </label>
             <?php } ?>
         </div>
         <div class="corporate-title">
-            <h3 class="sponsorship-title">Corporate Ticket Sponsor</h3>
+            <h3 class="sponsorship-title">Corporates Ticket Sponsor</h3>
         </div>
         <div class="selection-tabs selection--checkout selection--duration selection--onehalf sponsorship-tabs">
-            <?php 
+            <?php
             foreach ($CorporateplanResult as $value) {
-                $label=explode(" ",$value['corporate_ticket_category_type']);
+                $label = explode(" ", $value['corporate_ticket_category_type']);
             ?>
                 <label class="selection-tabs__label">
-                    <input type="radio" onchange="onCorporateChange('<?php echo $value['corporate_ticket_category_type']; ?>');" class="selection-tabs__input" value="<?php echo $value['corporate_ticket_category_type']; ?>" <?php echo ($method == $value['corporate_ticket_id']) ? 'checked' : ''; ?> name="corporate_type" id="<?php echo $value['corporate_ticket_category_type']; ?>">
+                    <input type="radio" onchange="onCorporateChange('<?php echo $value['corporate_ticket_category_type']; ?>');" class="selection-tabs__input" value="<?php echo $value['corporate_ticket_category_type']; ?>" <?php echo ($method == $value['corporate_ticket_id']) ? 'checked' : ''; ?> name="events_sponsorship_categories_plan_title" id="<?php echo $value['corporate_ticket_category_type']; ?>">
                     <div class="selection-tabs__title">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
                             <g>
@@ -76,11 +67,7 @@
         </div>
     </div>
     <div class="box-foot">
-
         <div class="box-foot__right">
-            <!-- <a href="javascript:void(0);" class="btn btn--primary color-white" onclick="GetEventBecomeSponserPaymentSummary(eventCart.props.becomesponserPlan,eventCart.props.becomeSponserPlanQty);"><?php echo Label::getLabel('LBL_NEXT'); ?></a> -->
-
-
             <a href="javascript:void(0);" class="btn btn--primary color-white" onclick="GetEventBecomeSponserPlan();"><?php echo Label::getLabel('LBL_NEXT'); ?></a>
         </div>
     </div>
@@ -88,36 +75,17 @@
 <script>
     var selected = eventCart.props.selectCorporateEventPlan;
     if (selected != null) {
-      
         var check = parseInt(selected);
         document.getElementById(selected).checked = true;
     }
-    function onCorporateChange(value){
-        console.log("valu==",value);
-        eventCart.props.selectCorporateEventPlan=value;
-        eventCart.props.selectCorporateTicket=null;
+
+    function onCorporateChange(value) {
+        eventCart.props.selectCorporateEventPlan = value;
+        eventCart.props.selectCorporateTicket = null;
     }
-    //     let entries = Object.entries(eventCart.props.becomeSponserSelectedPlan);
 
-    //     if (entries.length > 0) {
-
-    //         entries.map(([key, val] = entry) => {
-    //             document.getElementById("plan" + val).checked = true;
-    //             addBecomeSponserSelectedEvent(val);
-    //         });
-    //     }
-
-    //     function addBecomeSponserSelectedEvent(id) {
-    //         const checkbox = document.getElementById("plan" + id);
-
-    //         console.log("chec==", checkbox);
-
-    //         if (checkbox.checked) {
-    //             // qtyBox.parentNode.style.display = 'block';
-    //             cartData = eventCart.props.becomeSponserSelectedPlan;
-    //             cartData[id] = id;
-    //             eventCart.props.becomeSponserSelectedPlan = cartData;
-
-    //     }
-    // }
+    function onSponserchange(value) {
+        eventCart.props.selectSponserEventPlan = value;
+        eventCart.props.selectCorporateEventPlan = null;
+    }
 </script>

@@ -4,8 +4,6 @@ $ticketQty = $checkoutCart['ticketQty'];
 $plan = $checkoutCart['plan'];
 $currency = $checkoutCart['currency'];
 $currencyCode = $checkoutCart['currencyCode'];
-
-
 $remainingWalletBalance = 0;
 $walletCreditLabel = '';
 $walletDeduction = 0;
@@ -24,25 +22,18 @@ if ($userWalletBalance >= 0) {
         }
         if (isset($_SESSION['walletSummary'])) {
             if ($remainingWalletBalance > 0) {
-                //        $paymentMethods = [];
             }
         }
     }
 }
 
 if (isset($_SESSION['summary'])) {
-       
     $_SESSION['cart'] = $_SESSION['summary'];
     $_SESSION['cart']['cartDiscounts'] = $_SESSION['summary']['cartDiscounts'];
-    $_SESSION['checkoutCart']['cart']['cartDiscounts']=$_SESSION['summary']['cartDiscounts'];
+    $_SESSION['checkoutCart']['cart']['cartDiscounts'] = $_SESSION['summary']['cartDiscounts'];
     $cartData = $_SESSION['cart'];
 } elseif (isset($_SESSION['removeCoupon'])) {
     $cartData = $_SESSION['cart'];
-    // echo "<pre>";
-    // print_r($cartData);
-    // $_SESSION['cart']=$_SESSION['removeCoupon'];
-    // unset($cartData['cartDiscounts']);
-    // $_SESSION['cart']=$_SESSION['removeCoupon'];
 }
 
 $cartData['currency'] = $checkoutCart['currency'];
@@ -52,7 +43,6 @@ if (!empty($planResult['plan_image'])) {
         $htmlAfterField = '<img src="' . CommonHelper::generateFullUrl('EventUser', 'image', array($testimonialImg['afile_record_id'], $testimonialImg['afile_lang_id'], 'HIGH')) . '?' . time() . '">';
     }
 }
-
 ?>
 
 <!doctype html>
@@ -81,7 +71,6 @@ if (!empty($planResult['plan_image'])) {
 <body>
     <section class="cart section">
         <div class="container container--narrow">
-
             <div class="row">
                 <div class="col-lg-8 col-md-12 ticket-information">
                     <div class="cart-top-div">
@@ -112,27 +101,20 @@ if (!empty($planResult['plan_image'])) {
 
                     <form class="cart-form" method="post" name="cart_form">
                         <div class="table-box">
-
                             <table class="table" cellspacing="0">
                                 <thead>
                                     <tr>
-                                        <th class="product-remove">
-                                            <!-- <span class="screen-reader-text">Remove item</span> -->
-                                        </th>
-                                        <th class="product-thumbnail">
-                                            <!-- <span class="screen-reader-text">Thumbnail image</span> -->
-                                        </th>
+                                        <th class="product-remove"></th>
+                                        <th class="product-thumbnail"></th>
                                         <th class="product-name"><?php echo Label::getLabel('LBL_Product'); ?></th>
                                         <th class="product-price"><?php echo Label::getLabel('LBL_Price'); ?></th>
                                         <th class="product-quantity"><?php echo Label::getLabel('LBL_Quantity'); ?></th>
                                         <th class="product-subtotal"><?php echo Label::getLabel('LBL_SubTotal'); ?></th>
                                 </thead>
                                 </tr>
-
                                 <tbody>
                                     <?php if (isset($EventsList)) { ?>
                                         <tr class="cart-form__cart-item cart_item">
-
                                             <td class="product-remove">
                                                 <a href="" onclick="removeFromCart(<?php echo $EventsList['three_reasons_id']; ?>)" class="remove" aria-label="Remove this item" data-product_id="265" data-product_sku="">×</a>
                                             </td>
@@ -141,15 +123,12 @@ if (!empty($planResult['plan_image'])) {
                                             </td>
                                             <td class="product-name" data-title="Product">
                                                 <dl class="variation">
-                                                    <!-- <dt class="variation-Event"></dt> -->
                                                     <dd class="variation-Event">
-                                                        <!-- <p>EQUIP 2023</p> -->
                                                         <p><?php echo $EventsList['registration_plan_title']; ?></p>
                                                     </dd>
                                                 </dl>
                                             </td>
                                             <td class="product-price" data-title="Price">
-                                                <!-- <span class=""><bdi><span class="">ZK</span>50.00</bdi></span> -->
                                                 <span class=""><bdi><span class=""></span><?php echo $currencyCode . $EventsList['itemPrice']; ?></bdi></span>
                                             </td>
                                             <td class="quantity-count" data-title="Quantity">
@@ -158,7 +137,6 @@ if (!empty($planResult['plan_image'])) {
                                                 </div>
                                             </td>
                                             <td class="subtotal-amount" data-title="Subtotal">
-                                                <!-- <span class="amount"><bdi><span class="">ZK</span>50.00</bdi></span> -->
                                                 <span class="amount"><bdi>
                                                         <p id="itemPrice"><?php echo $currencyCode . $EventsList['itemNetPrice']; ?></p>
                                                     </bdi></span>
@@ -173,12 +151,9 @@ if (!empty($planResult['plan_image'])) {
                                     <?php } else { ?>
                                         <tr class="cart-form__cart-item cart_item">
                                             <td colspan="6">Cart is empty<br><a href="/events" class="event-design">Return to Event</a></td>
-
                                         </tr>
-
                                     <?php } ?>
                                 </tbody>
-
                             </table>
                             <div class="paymentcoupon">
                                 <div id="coupon_data" class="coupon_data">
@@ -218,7 +193,6 @@ if (!empty($planResult['plan_image'])) {
                                         </div>
                                     <?php
                                     }
-
                                     if ($walletDeduction > 0) {
                                     ?>
                                         <div class="payment__row">
@@ -235,8 +209,8 @@ if (!empty($planResult['plan_image'])) {
                                             <b class="color-primary"><?php echo Label::getLabel('LBL_Total'); ?></b>
                                         </div>
                                         <div>
-                                            <!-- <b class="color-primary NR"><?php echo CommonHelper::displayMoneyFormat($cartData['orderNetAmount'] - $walletDeduction); ?></b> -->
-                                            <b class="color-primary NR">
+                                            <?php echo CommonHelper::displayMoneyFormat($cartData['orderNetAmount'] - $walletDeduction); ?></b> -->
+                                            <b class="color-primary">
                                                 <span class="symbol"><?php echo  $cartData['currencyCode']; ?></span>
                                                 <?php
                                                 $amount = ($cartData['orderNetAmount'] - $walletDeduction);
@@ -292,7 +266,6 @@ if (!empty($planResult['plan_image'])) {
                                     <?php } ?>
                                 </div>
                             </div>
-
                         </div>
                     </form>
                     <div id="cartTotal">
@@ -307,13 +280,8 @@ if (!empty($planResult['plan_image'])) {
                                                 <bdi><span class="Price-currencySymbol"></span>
                                                     <?php
                                                     $amount = ($cartData['orderNetAmount'] - $walletDeduction);
-                                                    echo $currencyCode .number_format((float)$amount, 2, '.', '');
+                                                    echo $currencyCode . number_format((float)$amount, 2, '.', '');
                                                     ?>
-                                                    <!-- <?php if (isset($EventsList)) { ?>
-                                                    <p id="subtotal-itemPrice"><?php echo $currencyCode . " " . $EventsList['itemNetPrice']; ?></p>
-                                                <?php } else { ?>
-                                                    <p id="subtotal-itemPrice"><?php echo $currencyCode . " 0"; ?></p>
-                                                <?php } ?> -->
                                                 </bdi>
                                             </span>
                                         </td>
@@ -328,11 +296,6 @@ if (!empty($planResult['plan_image'])) {
                                                         $amount = ($cartData['orderNetAmount'] - $walletDeduction);
                                                         echo $currencyCode . number_format((float)$amount, 2, '.', '');
                                                         ?>
-                                                        <!-- <?php if (isset($EventsList)) { ?>
-                                                        <p id="total-itemPrice"><?php echo $currencyCode . "" . $EventsList['itemNetPrice']; ?></p>
-                                                    <?php } else { ?>
-                                                        <p id="total-itemPrice"><?php echo $currencyCode . " 0"; ?></p>
-                                                    <?php } ?> -->
                                                     </bdi>
                                                 </span>
                                             </strong>
@@ -360,8 +323,6 @@ if (!empty($planResult['plan_image'])) {
 <script>
     eventCart.props.countOfTickets = <?php echo $ticketQty; ?>;
     eventCart.props.sponsershipPlan = <?php echo $plan; ?>;
-    console.log("ticket==", eventCart.props.countOfTickets);
-
     $("#update_cart").off('click');
     $('#cartTickets').change(function() {
         $('#update_cart').removeClass('cart-empty');
@@ -372,10 +333,7 @@ if (!empty($planResult['plan_image'])) {
 
     function updateCartData() {
         var qty = $('#cartTickets').val();
-        console.log("ticket==", qty);
-
         updateCart();
-        // window.location.href = fcom.makeUrl('EventUser', 'Cart', [qty, eventCart.props.sponsershipPlan]);
     }
 </script>
 

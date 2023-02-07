@@ -1,20 +1,11 @@
 <?php
 $checkoutCart = $_SESSION['checkoutCart'];
 $currencyCode = $checkoutCart['currencyCode'];
-
 $loggedIn = false;
 if (isset($userData)) {
     $loggedIn = true;
 }
 $cartData = $_SESSION['cart'];
-// if (isset($_SESSION['summary'])) {
-//     $cartData = $_SESSION['summary'];
-//     // $_SESSION['cart']=$_SESSION['summary'];
-// } elseif (isset($_SESSION['removeCoupon'])) {
-//     $cartData = $_SESSION['removeCoupon'];
-//     // $_SESSION['cart']=$_SESSION['removeCoupon'];
-// }
-
 ?>
 <style>
     .hide-form {
@@ -52,7 +43,6 @@ $cartData = $_SESSION['cart'];
 <section class="checkout-details section">
 
     <div class="container container--narrow">
-
         <div class="row">
             <div class="col-lg-8 ticket-information">
                 <div class="cart-top-div">
@@ -90,39 +80,27 @@ $cartData = $_SESSION['cart'];
                                         <div class="login-registration">
                                             <h6>
                                                 <div class="login-design">Already Have Account ? <span class="click-btn">Login</span></div>
-
                                             </h6>
                                         </div>
                                     <?php } ?>
-                                    <?php  //echo "<pre>";print_r($userData); 
-                                    ?>
                                     <div class="col-lg-6" style="display: none;">
                                         <div class="form-group">
                                             <label for="first_Name">First name <span style="color:red;">*</span></label>
-                                            <input type="text" class="form-control" name="firstName" id="firstName" aria-describedby="" placeholder="" value="<?php
-                                                                                                                                                                if (isset($loggedIn)) {
-                                                                                                                                                                    echo $userData['user_first_name'];
-                                                                                                                                                                } ?>">
+                                            <input type="text" class="form-control" name="firstName" id="firstName" aria-describedby="" placeholder="" value="<?php if (isset($loggedIn)) echo $userData['user_first_name'];  ?>">
                                         </div>
                                     </div>
 
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label for="lastName">First name <span style="color:red;">*</span></label>
-                                            <input type="text" class="form-control" name="middleName" id="middleName" aria-describedby="" placeholder="" value="<?php
-                                                                                                                                                                if (isset($loggedIn)) {
-                                                                                                                                                                    echo $userData['user_first_name'];
-                                                                                                                                                                } ?>">
+                                            <input type="text" class="form-control" name="middleName" id="middleName" aria-describedby="" placeholder="" value="<?php if (isset($loggedIn)) echo $userData['user_first_name']; ?>">
                                         </div>
                                     </div>
 
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label for="lastName">Last name <span style="color:red;">*</span></label>
-                                            <input type="text" class="form-control" name="lastName" id="lastName" aria-describedby="" placeholder="" value="<?php
-                                                                                                                                                            if (isset($loggedIn)) {
-                                                                                                                                                                echo $userData['user_last_name'];
-                                                                                                                                                            } ?>">
+                                            <input type="text" class="form-control" name="lastName" id="lastName" aria-describedby="" placeholder="" value="<?php if (isset($loggedIn)) echo $userData['user_last_name']; ?>">
                                         </div>
                                     </div>
 
@@ -136,39 +114,18 @@ $cartData = $_SESSION['cart'];
                                     <div class="col-lg-12">
                                         <div class="form-group address">
                                             <label for="citeyTown">Town / City <span style="color:red;">*</span></label>
-                                            <input type="text" class="form-control" name="cityTown1" id="citeyTown" aria-describedby="" placeholder="House number and street name" value="<?php
-                                                                                                                                                                                            if (isset($loggedIn)) {
-                                                                                                                                                                                                echo $userData['user_address1'];
-                                                                                                                                                                                            } ?>">
-                                            <input type="text" class="form-control" name="cityTown2" id="citeyTown" aria-describedby="" placeholder="Apartment, suite, unit, etc. (optional) " value="<?php
-                                                                                                                                                                                                        if (isset($loggedIn)) {
-                                                                                                                                                                                                            echo $userData['user_address2'];
-                                                                                                                                                                                                        } ?>">
+                                            <input type="text" class="form-control" name="cityTown1" id="citeyTown" aria-describedby="" placeholder="House number and street name" value="<?php if (isset($loggedIn))  echo $userData['user_address1']; ?>">
+                                            <input type="text" class="form-control" name="cityTown2" id="citeyTown" aria-describedby="" placeholder="Apartment, suite, unit, etc. (optional) " value="<?php if (isset($loggedIn)) echo $userData['user_address2']; ?>">
                                         </div>
                                     </div>
 
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="stateCounty">Country <span style="color:red;">*</span></label>
-                                            <select class="form-control" name="stateCounty" id="stateCounty" value="<?php
-                                                                                                                    if (isset($loggedIn)) {
-                                                                                                                        echo $userData['user_billing_country'];
-                                                                                                                    } ?>">
-
-                                                <?php
-
-                                                foreach ($CountryListing as $value) {
-                                                ?>
-
+                                            <select class="form-control" name="stateCounty" id="stateCounty" value="<?php if (isset($loggedIn)) echo $userData['user_billing_country']; ?>">
+                                                <?php foreach ($CountryListing as $value) { ?>
                                                     <option value="<?php echo $value['country_name']; ?>"><?php echo $value['country_name']; ?></option>
-                                                <?php
-                                                }
-                                                ?>
-                                                <!-- <?php foreach ($country_options as $key => $value) { ?>
-                                                    <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
-                                                <?php } ?> -->
-
-
+                                                <?php } ?>
                                             </select>
                                         </div>
                                     </div>
@@ -176,31 +133,21 @@ $cartData = $_SESSION['cart'];
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="postcode">Postcode / ZIP <span style="color:red;">*</span></label>
-                                            <input type="text" class="form-control" name="postcode" id="postcode" aria-describedby="" placeholder="" value="<?php
-                                                                                                                                                            if (isset($loggedIn)) {
-                                                                                                                                                                echo $userData['user_zip'];
-                                                                                                                                                            } ?>">
+                                            <input type="text" class="form-control" name="postcode" id="postcode" aria-describedby="" placeholder="" value="<?php if (isset($loggedIn)) echo $userData['user_zip']; ?>">
                                         </div>
                                     </div>
 
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="phone">Phone <span style="color:red;">*</span></label>
-                                            <input type="phone" class="form-control" name="phone" id="phone" aria-describedby="" placeholder="" value="<?php
-                                                                                                                                                        if (isset($loggedIn)) {
-                                                                                                                                                            echo $userData['user_phone'];
-                                                                                                                                                        } ?>">
+                                            <input type="phone" class="form-control" name="phone" id="phone" aria-describedby="" placeholder="" value="<?php if (isset($loggedIn)) echo $userData['user_phone']; ?>">
                                         </div>
                                     </div>
 
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="email-address">Email address <span style="color:red;">*</span></label>
-                                            <input type="email" class="form-control" name="email-address" id="email-address" aria-describedby="" <?php if ($loggedIn == true) {
-                                                                                                                                                        echo "readOnly ";
-                                                                                                                                                    } ?>placeholder="" value="<?php if (isset($loggedIn)) {
-                                                                                                                                                                                    echo $userCrendentialData['credential_email'];
-                                                                                                                                                                                } ?>">
+                                            <input type="email" class="form-control" name="email-address" id="email-address" aria-describedby="" <?php if ($loggedIn == true) echo "readOnly ";  ?>placeholder="" value="<?php if (isset($loggedIn)) echo $userCrendentialData['credential_email']; ?>">
                                         </div>
                                     </div>
                                     <?php if (!isset($_SESSION['Event_userId'])) {
@@ -255,18 +202,7 @@ $cartData = $_SESSION['cart'];
                     </div>
                     <div class="col-lg-6 additional_info_div">
                         <div class="additional-information">
-                            <!-- <h3>Additional information</h3>
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label for="exampleFormControlTextarea1">Example textarea</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-                                    </div>
-                                </div>
-                            </div> -->
                             <form id="checkout" name="checkout" action="" method="post">
-                                <!-- <button type="submit" class="btn btn-primary ml-3">Place</button> -->
-
                                 <?php
                                 $i = 1;
                                 $attendeeName = 1;
@@ -277,7 +213,6 @@ $cartData = $_SESSION['cart'];
                                 $Food = 1;
                                 $ticket = 1;
                                 for ($i = 0; $i < $checkoutCart['ticketQty']; $i++) {
-
                                 ?>
                                     <div class="Ticket-Form">
                                         <h3>Ticket <?php echo $ticket; ?>: <br><?php echo $EventsList['registration_plan_title']; ?></h3>
@@ -338,8 +273,6 @@ $cartData = $_SESSION['cart'];
                                 }
                                 ?>
                         </div>
-                        <!-- <input type="hidden" id="planId" name="planId" value=<?php echo $planId; ?>/> -->
-
                     </div>
                 </div>
                 <div class="order_review_heading">
@@ -369,7 +302,6 @@ $cartData = $_SESSION['cart'];
                                 </td>
                             </tr>
 
-
                             <?php if (!empty($cartData['cartDiscounts'])) { ?>
                                 <tr>
                                     <td>
@@ -383,40 +315,34 @@ $cartData = $_SESSION['cart'];
                                         <div>
                                             <b><?php echo '-' .  $cartData['currencyCode'] . ' ' . $cartData['cartDiscounts']['coupon_discount_total']; ?></b>
                                         </div>
+
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                        <tfoot>
+                            <tr class="cart-subtotal">
+                                <th>Subtotal</th>
+                                <td><span class="Price-amount amount"><bdi><span class="Price-currencySymbol_sub">ZK</span><?php echo $cartData['cartTotal']; ?></bdi></span>
+                                </td>
+                            </tr>
+                            <tr class="order-total">
+                                <th>Total</th>
+                                <td><strong><span class="Price-amount amount"><bdi><span class="Price-currencySymbol_total">ZK</span><?php echo  $cartData['orderNetAmount']; ?></bdi></span></strong>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
                 </div>
-                </td>
-                </tr>
-            <?php
-                            }
-            ?>
-            </tbody>
-            <tfoot>
-                <tr class="cart-subtotal">
-                    <th>Subtotal</th>
-                    <td><span class="Price-amount amount"><bdi><span class="Price-currencySymbol_sub">ZK</span><?php echo $cartData['cartTotal']; ?></bdi></span>
-                    </td>
-                </tr>
-                <tr class="order-total">
-                    <th>Total</th>
-                    <td><strong><span class="Price-amount amount"><bdi><span class="Price-currencySymbol_total">ZK</span><?php echo  $cartData['orderNetAmount']; ?></bdi></span></strong>
-                    </td>
-                </tr>
-            </tfoot>
-            </table>
-            </div>
-            <div class="checkout-payment">
-                <!-- <div class="box-top">
-                        <h4>DPO Group</h4>
-                        <p>Pay via DPO Group</p>
-                    </div> -->
-                <div class="box-bottom">
-                    <p>Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our <a href="#">privacy policy</a>.</p>
-                    <a href="javascript:void(0)" onClick="formData();" class="btn-green submit-order">Place order</a>
+                <div class="checkout-payment">
+                    <div class="box-bottom">
+                        <p>Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our <a href="#">privacy policy</a>.</p>
+                        <a href="javascript:void(0)" onClick="formData();" class="btn-green submit-order">Place order</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    </form>
+        </form>
     </div>
 </section>
 
@@ -441,15 +367,9 @@ $cartData = $_SESSION['cart'];
     });
 
     function submitForm() {
-        // $(".Registration-Form").removeClass("hide-form");
         ValidateLogin();
-        // $(".additional_info_div").removeClass("hide-form");
-        // $(".Login-Form").addClass("hide-form");
-        // $('#login').val('reg');
     }
     var fullName = '<?php echo $userDetails['user_full_name']; ?>';
-    // console.log("userr=",document.getElementsByName('attendeeName[]')[0]);
-
     if (fullName != null) {
         document.getElementsByName('attendeeName[]')[0].value = fullName;
         document.getElementsByName('attendeeEmail[]')[0].value = '<?php echo $userCrendentialData['credential_email']; ?>';
@@ -484,17 +404,13 @@ $cartData = $_SESSION['cart'];
         //check if the form is valid 
         if ($form.valid()) {
             //form is valid
-
             AddAttendeeDetails('valid');
         } else {
-
             AddAttendeeDetails('inValid');
-
         }
 
     }
     $('.Price-currencySymbol_count').text('<?php echo $currencyCode; ?>');
     $('.Price-currencySymbol_sub').text('<?php echo $currencyCode; ?>');
     $('.Price-currencySymbol_total').text('<?php echo $currencyCode; ?>');
-    //eventCart.props.currencyCode
 </script>

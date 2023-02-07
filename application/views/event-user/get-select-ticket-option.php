@@ -96,14 +96,11 @@
         <div class="selection-tabs selection--checkout selection--duration selection--onehalf sponsorship-tabs">
             <?php foreach ($CorporateplanResult as $value) { ?>
                 <label class="selection-tabs__label">
-                    <?php
-                    if ($type == 'Corporate Donation') {
-                    ?>
+                    <?php if ($type == 'Corporate Donation') { ?>
                         <span>
                             <?php echo $value['corporate_ticket_category_type'] . ' | ' . $value['corporate_ticket_discount'] . '% Dicsounts'; ?>
                         </span>
-                    <?php } else {
-                    ?>
+                    <?php } else { ?>
                         <input type="radio" onchange="onCorporateTicketChange('<?php echo $value['corporate_ticket_id']; ?>');" class="selection-tabs__input" value="<?php echo $value['corporate_ticket_id']; ?>" <?php echo ($ticket == $value['corporate_ticket_id']) ? 'checked' : ''; ?> name="corporate_type_tickets" id="<?php echo $value['corporate_ticket_id']; ?>">
                         <div class="selection-tabs__title">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
@@ -142,18 +139,15 @@
     var selected = eventCart.props.selectCorporateTicket;
     var corporateType = eventCart.props.selectCorporateEventPlan;
     if (selected != null && !corporateType.includes('Donation')) {
-        console.log("selectSponserEventPlan", selected);
         var check = parseInt(selected);
         document.getElementById(selected).checked = true;
     } else if (corporateType.includes('Donation') && selected != null) {
         $('#countOfTickets').val(selected);
     } else if (corporateType.includes('Donation') && selected == null) {
-
         eventCart.props.selectCorporateTicket = 1;
     }
 
     function onCorporateTicketChange(value) {
-        console.log("valu=ss=", value);
         eventCart.props.selectCorporateTicket = value;
     }
     $('#countOfTickets').change(function() {
@@ -162,21 +156,16 @@
     (function() {
 
         window.inputNumber = function(el) {
-
             var min = el.attr('min') || false;
             var max = el.attr('max') || false;
-
             var els = {};
-
             els.dec = el.prev();
             els.inc = el.next();
-
             el.each(function() {
                 init($(this));
             });
 
             function init(el) {
-
                 els.dec.on('click', decrement);
                 els.inc.on('click', increment);
 

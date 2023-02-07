@@ -13,6 +13,53 @@ $contactFrm->developerTags['colClassPrefix'] = 'col-md-';
 $contactFrm->developerTags['fld_default_col'] = 12;
 
 ?>
+<style>
+    .attend{
+        text-align: center;
+        text-decoration: underline;
+    }
+    /* DivTable.com */
+    .divTable {
+        display: table;
+        width: 100% !important;
+    }
+
+    .divTableRow {
+        display: table-row;
+    }
+
+    .divTableHeading {
+        background-color: #EEE;
+        display: table-header-group;
+    }
+
+    .divTableCell,
+    .divTableHead {
+        border: 1px solid #999999;
+        display: table-cell;
+        padding: 3px 10px;
+    }
+
+    .divTableHeading {
+        background-color: #EEE;
+        display: table-header-group;
+        font-weight: bold;
+    }
+
+    .divTableFoot {
+        background-color: #EEE;
+        display: table-footer-group;
+        font-weight: bold;
+    }
+
+    .divTableBody {
+        display: table-row-group;
+    }
+
+    .page-item.active .page-link {
+        z-index: 0 !important;
+    }
+</style>
 <script>
     var isCometChatMeetingToolActive = '<?php echo $activeMettingTool == ApplicationConstants::MEETING_COMET_CHAT ?>';
 </script>
@@ -357,6 +404,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                                 <th><?php echo Label::getLabel('LBL_No_of_Tickets'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Price'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Coupon_Code'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_Attendee_Details'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Tickets'); ?></th>
                                                             </tr>
                                                         </thead>
@@ -375,6 +423,8 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                                             <td><?php echo $value['plan_start_date']; ?></td>
                                                                             <td><?php echo $value['plan_end_date']; ?></td>
                                                                             <td><?php echo $value['event_user_ticket_count']; ?></td>
+                                                                            <td> - </td>
+                                                                            <td> - </td>
                                                                             <td class="expiry">Event Is Expired</td>
                                                                         <?php
                                                                         } else {
@@ -393,15 +443,73 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                                                 }
                                                                                 ?>
                                                                             </td>
+                                                                            <td><a class="attend" href="<?php echo "#" . $value['event_user_ticket_plan_id']; ?>">
+                                                                                    Attendee Details
+                                                                                </a></td>
                                                                             <td><a href="<?php echo $value['event_user_ticket_download_url']; ?>" download="<?php echo $value['plan_name'] . '.jpeg'; ?>"><i class="fa fa-ticket" style="font-size:24px;color:red"></i></a></td>
-
                                                                         <?php
                                                                         }
                                                                         ?>
 
                                                                     </tr>
-                                                            <?php
+                                                                    <?php
                                                                     $sr_no++;
+                                                                    ?>
+                                                                    <div class="gallery-lightboxes mc-lightbox">
+                                                                        <div class="image-lightbox" id="<?php echo $value['event_user_ticket_plan_id']; ?>">
+                                                                            <div class="image-lightbox-wrapper"><a href="#0" class="close"></a>
+                                                                                <div class="lightbox-detail-text">
+                                                                                    <h1>Attendee Information</h1>
+                                                                                    <div class="divTable" style="width: 1%;">
+                                                                                        <div class="divTableBody">
+                                                                                            <div class="divTableRow">
+                                                                                                <div class="divTableCell">Sr.No</div>
+                                                                                                <div class="divTableCell">Name</div>
+                                                                                                <div class="divTableCell">Email</div>
+                                                                                                <div class="divTableCell">Phone</div>
+                                                                                                <div class="divTableCell">Gender</div>
+                                                                                                <div class="divTableCell">Church</div>
+                                                                                                <div class="divTableCell">Food</div>
+                                                                                            </div>
+                                                                                            <?php
+                                                                                            $i = 1;
+                                                                                            foreach ($value['attendee_details'] as $value) { ?>
+                                                                                                <div class="divTableRow">
+                                                                                                    <div class="divTableCell">
+                                                                                                        <p><?php echo $i; ?></p>
+                                                                                                    </div>
+                                                                                                    <div class="divTableCell">
+                                                                                                        <p><?php echo $value['attendee_full_name']; ?></p>
+                                                                                                    </div>
+                                                                                                    <div class="divTableCell">
+                                                                                                        <p><?php echo $value['attendee_email']; ?></p>
+                                                                                                    </div>
+                                                                                                    <div class="divTableCell">
+                                                                                                        <p><?php echo $value['attendee_phone']; ?></p>
+                                                                                                    </div>
+                                                                                                    <div class="divTableCell">
+                                                                                                        <p><?php echo $value['attendee_gender']; ?></p>
+                                                                                                    </div>
+                                                                                                    <div class="divTableCell">
+                                                                                                        <p><?php echo $value['attendee_church']; ?></p>
+                                                                                                    </div>
+                                                                                                    <div class="divTableCell">
+                                                                                                        <p><?php echo $value['attendee_food']; ?></p>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            <?php
+                                                                                                $i++;
+                                                                                            }
+                                                                                            ?>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <!-- DivTable.com -->
+
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                            <?php
                                                                 }
                                                             } else {
                                                                 echo Label::getLabel('LBL_No_Records');
@@ -570,6 +678,8 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                                             <td><?php echo $value['plan_start_date']; ?></td>
                                                                             <td><?php echo $value['plan_end_date']; ?></td>
                                                                             <td><?php echo $value['event_user_ticket_count']; ?></td>
+                                                                            <td> - </td>
+                                                                            <td> - </td>
                                                                             <td class="expiry">Event Is Expired</td>
                                                                         <?php
                                                                         } else {
@@ -628,19 +738,19 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                             $sr_no = 1;
                                                             if (!empty($CorportePlanDataResult)) {
                                                                 foreach ($CorportePlanDataResult as $key => $value) {
-                                                                $Qty = $value['event_user_sponsership_qty'];
-                                                                $Ticket_Price = $value['price'];
-                                                                $Discount = $value['discount'];
-                                                                $Total =  $Qty * $Ticket_Price;
-                                                                $DiscountAmount = $Total * $Discount / 100;
-                                                                $TotalAmount = $Total - $DiscountAmount;
+                                                                    $Qty = $value['event_user_sponsership_qty'];
+                                                                    $Ticket_Price = $value['price'];
+                                                                    $Discount = $value['discount'];
+                                                                    $Total =  $Qty * $Ticket_Price;
+                                                                    $DiscountAmount = $Total * $Discount / 100;
+                                                                    $TotalAmount = $Total - $DiscountAmount;
                                                             ?>
                                                                     <tr>
                                                                         <td><?php echo $value['type']; ?></td>
                                                                         <td><?php echo $value['event_user_sponsership_qty']; ?></td>
                                                                         <td><?php echo $value['price']; ?></td>
-                                                                        <td><?php echo $value['discount'].'%'; ?></td>
-                                                                        <td><?php echo '$'.$TotalAmount; ?></td>
+                                                                        <td><?php echo $value['discount'] . '%'; ?></td>
+                                                                        <td><?php echo '$' . $TotalAmount; ?></td>
                                                                     </tr>
                                                             <?php
                                                                     $sr_no++;

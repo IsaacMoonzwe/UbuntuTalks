@@ -17,8 +17,36 @@ class GroupClassesController extends MyAppController
         $this->set('siteLangId', $this->siteLangId);
         $this->set('groupBanner', $groupBanner);
         $this->_template->addJs('js/jquery.datetimepicker.js');
+        $this->_template->addJs('js/jquery.form.js');
+        $this->_template->addJs('js/jquery.inputmask.bundle.js');
+        $this->_template->addJs('js/cropper.js');
+        $this->_template->addCss('css/event.css');
+        $this->_template->addJs('js/intlTelInput.js');
+        $this->_template->addCss('css/intlTelInput.css');
         $this->set('languages', TeachingLanguage::getAllLangsWithUserCount($this->siteLangId));
         $this->_template->render();
+    }
+    public function country()
+    {
+        $select_design = $_REQUEST['product_code'];
+        $con = new Country();
+        $FindObj = $con->getCountryById($select_design);
+        $country_codes = strval($FindObj["country_code"]);
+        $timezones = DateTimeZone::listIdentifiers(DateTimeZone::PER_COUNTRY, $country_codes);
+        $timezone_offsets = array();
+        foreach ($timezones as $timezone) {
+            $tz = new DateTimeZone($timezone);
+            $timezone_offsets[$timezone] = $tz->getOffset(new DateTime);
+        }
+        $timezone_list = array();
+        foreach ($timezone_offsets as $timezone => $offset) {
+            $offset_prefix = $offset < 0 ? '-' : '+';
+            $offset_formatted = gmdate('H:i', abs($offset));
+            $pretty_offset = "timezone ${offset_prefix}${offset_formatted}";
+            $timezone_list[$timezone] = "(${pretty_offset}) $timezone";
+        }
+        echo json_encode($timezone_list);
+        return $timezone_list;
     }
 
     public function groupClassesForm()
@@ -42,6 +70,20 @@ class GroupClassesController extends MyAppController
         $fld_phn = $frm->addRequiredField(Label::getLabel('LBL_Your_Phone', $langId), 'phone_number');
         $fld_phn->requirements()->setRegularExpressionToValidate('^[\s()+-]*([0-9][\s()+-]*){5,20}$');
         $fld_phn->requirements()->setCustomErrorMessage(Label::getLabel('VLD_ADD_VALID_PHONE_NUMBER', $langId));
+        $frm->addRequiredField(Label::getLabel('LBL_Organisation_Name', $langId), 'organisation_name', '');
+        $frm->addRequiredField(Label::getLabel('LBL_Organisation_Url', $langId), 'organisation_url', '');
+        $countryObj = new Country();
+        $countriesArr = $countryObj->getCountriesArr($this->siteLangId);
+        $fld = $frm->addSelectBox(Label::getLabel('LBL_Country'), 'user_country_id[]', $countriesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), array(), Label::getLabel('LBL_Select'));
+        // $fld->requirement->setRequired(true);
+        // $fld->requirement->setMultiple(true);
+        $timezonesArr = MyDate::timeZoneListing();
+        $fld2 = $frm->addSelectBox(Label::getLabel('LBL_TimeZone'), 'user_timezone[]', $timezonesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), array(), Label::getLabel('LBL_Select'));
+        // $fld2->requirement->setRequired(true);
+
+        $start_time_fld = $frm->addTextBox(Label::getLabel('LBl_Start_Time'), 'grpcls_start_datetime', '', ['id' => 'grpcls_start_datetime', 'autocomplete' => 'off']);
+        $end_time_fld = $frm->addTextBox(Label::getLabel('LBl_End_Time'), 'grpcls_end_datetime', '', ['id' => 'grpcls_end_datetime', 'autocomplete' => 'off']);
+        $frm->addRequiredField(Label::getLabel('LBL_Objective', $langId), 'objective_lesson', '');
         $frm->addRequiredField(Label::getLabel('LBL_Group_Size', $langId), 'group_size', '');
         $group_type = ['Private' => 'Private', 'Corporate' => 'Corporate', 'Faith-Based' => 'Faith-Based', 'Education' => 'Education'];
         $frm->addSelectBox(Label::getLabel('LBL_Group_Type', $langId), 'group_type', $group_type, -1, [], '');
@@ -59,6 +101,7 @@ class GroupClassesController extends MyAppController
             Message::addErrorMessage($frm->getValidationErrors());
             FatApp::redirectUser(CommonHelper::generateUrl('contact'));
         }
+      
         if (!CommonHelper::verifyCaptcha()) {
             Message::addErrorMessage(Label::getLabel('MSG_That_captcha_was_incorrect', $this->siteLangId));
             FatApp::redirectUser(CommonHelper::generateUrl('contact'));
@@ -70,6 +113,11 @@ class GroupClassesController extends MyAppController
                 continue;
             }
             $email = new EmailHandler();
+            $country = FatApp::getPostedData('country', FatUtility::VAR_STRING, '');
+            $post['country'] = $country;
+            $time = FatApp::getPostedData('timeZone', FatUtility::VAR_STRING, '');
+            $post['user_timezone'] = '('.$time;
+         
             if (!$email->GroupsendContactFormEmail($emailId, $this->siteLangId, $post)) {
                 Message::addErrorMessage(Label::getLabel('MSG_email_not_sent_server_issue', $this->siteLangId));
             } else {

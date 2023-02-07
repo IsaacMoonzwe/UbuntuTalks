@@ -53,6 +53,10 @@ if (!isset($langname)) {
 <?php if ($teachers) { ?>
     <div class="sorting__head">
         <div class="sorting__title">
+            <div style="font-size: 18px;text-align: center;font-weight: 400;color: #333;">
+                To request a personalized group class, <a href="javascript:void(0);" onclick="groupClassesForm();" class="groupcontact">
+                    Click here and fill out a form. </a>
+            </div>
             <h1><?php echo sprintf(Label::getLabel('LBL_Found_the_best_%s_teachers_for_you', $siteLangId), $recordCount) ?></h1>
         </div>
         <div class="sorting__box">

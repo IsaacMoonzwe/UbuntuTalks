@@ -307,7 +307,7 @@ $frmOnlineContact->getField('grpcls_end_datetime')->setFieldTagAttribute('data-f
             var product_code = $("[name='user_country_id[]'] option:selected").val();
             $.ajax({
                 type: "post",
-                url: fcom.makeUrl('GroupClasses', 'country'),
+                url: fcom.makeUrl('Teachers', 'country'),
                 data: {
                     product_code: product_code
                 },

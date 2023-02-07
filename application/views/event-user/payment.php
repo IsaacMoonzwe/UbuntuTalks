@@ -17,7 +17,6 @@ if ($userWalletBalance >= 0) {
         }
         if (isset($_SESSION['walletSummary'])) {
             if ($remainingWalletBalance > 0) {
-                //        $paymentMethods = [];
             }
         }
     }
@@ -81,8 +80,6 @@ if (!empty($planResult['plan_image'])) {
             $htmlAfterField = '<img src="' . CommonHelper::generateFullUrl('EventUser', 'image', array($testimonialImg['afile_record_id'], $testimonialImg['afile_lang_id'], 'HIGH')) . '?' . time() . '">';
         }
     }
-    // echo "<pre>";
-    // print_r($_SESSION['cart']);
     ?>
     <section class="payment-details" id="paymentData">
         <div class="container">
@@ -146,16 +143,6 @@ if (!empty($planResult['plan_image'])) {
                                                     <input type="" class="form-control" id="" aria-describedby="" placeholder="City" value="<?php echo $EventUserListingDetails['user_address2']; ?>" readonly>
                                                 </div>
                                             </div>
-                                            <!-- <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <input type="" class="form-control" id="" aria-describedby="" placeholder="gender" value="<?php if ($EventUserListingDetails['user_gender'] == 1) {
-                                                                                                                                                    echo 'Male';
-                                                                                                                                                } else if ($EventUserListingDetails['user_gender'] == 2) {
-                                                                                                                                                    echo 'Female';
-                                                                                                                                                } //echo $EventUserListingDetails['user_city']; 
-                                                                                                                                                ?>" readonly>
-                                                </div>
-                                            </div> -->
                                             <div class="col-lg-6">
                                                 <div class="form-group">
                                                     <input type="" class="form-control" id="" aria-describedby="" placeholder="Country" value="<?php echo $EventUserListingDetails['user_billing_country']; ?>" readonly>
@@ -200,68 +187,11 @@ if (!empty($planResult['plan_image'])) {
                                                     <span>Card</span>
                                                 </a>
                                             </li>
-                                            <!-- <li class="nav-item">
-                                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">
-                                                    <i class="fas fa-mobile-alt"></i>
-                                                    <span>Mobile</span>
-                                                </a>
-                                            </li> -->
-
                                         </ul>
                                         <div class="tab-content" id="paymenttabContent">
                                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                                <!-- <div class="row">
-                                                    
-                                                    <?php $counter = 0; ?>
-                                                    <?php foreach ($paymentMethods as $key => $value) { ?>
-                                                        <label class="selection-tabs__label payment-method-js">
-                                                            <input type="radio" class="selection-tabs__input" value="<?php echo $value['pmethod_id']; ?>" <?php echo empty($counter) ? 'checked' : ''; ?> name="payment_method">
-                                                            <div class="selection-tabs__title">
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-                                                                    <g>
-                                                                        <path d="M12,22A10,10,0,1,1,22,12,10,10,0,0,1,12,22Zm-1-6,7.07-7.071L16.659,7.515,11,13.172,8.174,10.343,6.76,11.757Z" transform="translate(-2 -2)" />
-                                                                    </g>
-                                                                </svg>
-                                                                <?php
-                                                                if ($value['pmethod_name'] == "PayPal Payments Standard") { ?>
-                                                                    <img id="paypal-payment" style="display: inline-block;max-width:70px;" src="../../../public/images/PayPal-Logo.png" alt="Paypal" />
-                                                                <?php } else if ($value['pmethod_name'] == "Stripe") { ?>
-                                                                    <img style="display: inline-block;max-width:140px;" src="../../../public/images/stripe.svg" alt="Paypal" />
-                                                                <?php } else {
-                                                                    echo $value['pmethod_name'];
-                                                                }
-                                                                ?>
-                                                            </div>
-                                                        </label>
-                                                        <?php $counter++; ?>
-                                                    <?php } ?>
-                                                    <div class="col-lg-12">
-                                                        <div class="button-box">
-                                                            <a href="#" class="btn-green">Pay Now</a>
-                                                        </div>
-                                                    </div>
-                                                </div> -->
                                                 <div class="row">
-
-                                                    <?php //if ($cartData['orderNetAmount'] > 0) {  
-                                                    ?>
                                                     <div class="col-md-12 col-xl-12">
-                                                        <!-- <div>
-                                                            <?php
-                                                            $currecyPrice = $registrationPlanResultData['registration_plan_zk_price'];
-                                                            if ($currecyPrice) {
-                                                            ?>
-                                                                <div class="selection-title">
-                                                                    <p><?php echo Label::getLabel('LBL_Currency_Switcher'); ?></p>
-                                                                </div>
-                                                                <select name="currencyswitchers" id="currencyswitchers">
-                                                                    <?php foreach ($currencySwitcherResultData as $value) { ?>
-                                                                        <option data-curr=<?php echo $value['currencies_switcher_symbol_left']; ?> value="<?php echo $value['currencies_switcher_code']; ?>"><?php echo "(" . $value['currencies_switcher_symbol_left'] . ") " . $value['currencies_switcher_code']; ?></option>
-                                                                    <?php } ?>
-                                                                </select>
-                                                            <?php } ?>
-
-                                                        </div> -->
                                                         <div class="payment-wrapper">
                                                             <?php if ($userWalletBalance >= 0) { ?>
                                                                 <label class="selection-tabs__label selection--wallet wallet-section">
@@ -435,130 +365,12 @@ if (!empty($planResult['plan_image'])) {
                                 </div>
                             </div>
                             <div class="bottom-payment-box">
-                                <!-- <div>
-                                    <span>Payment Reference</span>
-                                    <p>R43897584</p>
-                                </div> -->
-                                <!-- <div>
-                                    <span>PROVIDER REF NO.</span>
-                                    <p>465</p>
-                                </div> -->
                                 <div>
                                     <span>SERVICE DATE</span>
                                     <p><?php echo $today = date("D M j G:i:s T Y");  ?></p>
                                 </div>
                             </div>
-                            <!-- <div class="paymentcoupon">
-                                <div id="coupon_data" class="coupon_data">
-                                    <?php
-                                    $amount = ($cartData['orderNetAmount'] - $walletDeduction);
-                                    if ($amount > 5) { ?>
-                                        <div class="selection-title">
-                                            <p><?php echo Label::getLabel('LBL_Have_a_Coupon?'); ?></p>
-                                            <a href="javascript:void(0);" class="color-primary btn--link slide-toggle-coupon-js"><?php echo Label::getLabel('LBL_View_Coupons'); ?></a>
-                                        </div>
 
-                                        <div class="apply-coupon">
-                                            <svg class="icon icon--price-tag">
-                                                <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#price-tag'; ?>"></use>
-                                            </svg>
-                                            <input type="text" id="coupon_code" name="coupon_code" placeholder="<?php echo Label::getLabel('LBL_ENTER_COUPON_CODE'); ?>">
-                                            <a href="javascript:void(0);" onclick="eventPlanApplyPromoCode(document.getElementById('coupon_code').value);" class="btn btn--secondary btn--small color-white"><?php echo Label::getLabel('LBL_APPLY'); ?></a>
-                                        </div>
-                                    <?php } ?>
-                                    <?php if (!empty($cartData['cartDiscounts']['coupon_code'])) { ?>
-                                        <div class="coupon-applied">
-                                            <div class="coupon-type">
-                                                <span class="bold-600 coupon-code"><?php echo $cartData['cartDiscounts']['coupon_code']; ?></span>
-                                                <p><?php echo Label::getLabel('LBL_COUPON_APPLIED'); ?></p>
-                                            </div>
-                                            <a href="javascript:void(0);" onclick="eventPlanRemovePromoCode('registrationPlan');" class="btn btn--coupon btn--small"><?php echo Label::getLabel('LBL_REMOVE'); ?></a>
-                                        </div>
-                                    <?php } ?>
-                                    <?php if (!empty($cartData['cartDiscounts'])) { ?>
-                                        <div class="payment__row">
-                                            <div>
-                                                <b><?php echo Label::getLabel('LBL_COUPON_DISCOUNT'); ?></b>
-                                            </div>
-                                            <div>
-                                                <b><?php echo '-' .  $cartData['currencyCode'] . ' ' . $cartData['cartDiscounts']['coupon_discount_total']; ?></b>
-                                            </div>
-                                        </div>
-                                    <?php
-                                    }
-
-                                    if ($walletDeduction > 0) {
-                                    ?>
-                                        <div class="payment__row">
-                                            <div>
-                                                <b><?php echo Label::getLabel('LBL_WALLET_DEDUCTION'); ?></b>
-                                            </div>
-                                            <div>
-                                                <b><?php echo '-' . $cartData['currencyCode'] . ' ' . $walletDeduction; ?></b>
-                                            </div>
-                                        </div>
-                                    <?php } ?>
-                                    <div class="payment__row">
-                                        <div>
-                                            <b class="color-primary"><?php echo Label::getLabel('LBL_Total'); ?></b>
-                                        </div>
-                                        <div>
-                                            <b class="color-primary NR">
-                                                <span class="symbol"><?php echo  $cartData['currencyCode']; ?></span>
-                                                <?php
-                                                $amount = ($cartData['orderNetAmount'] - $walletDeduction);
-                                                echo number_format((float)$amount, 2, '.', '');
-                                                ?>
-                                            </b>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> -->
-                            <!-- <div class="coupon-box slide-target-coupon-js">
-                                <?php
-                                foreach ($EventTicketsCouponCodeFinalListing as $value) {
-                                    if ($value['coupon_end_date'] > date('Y-m-d')) {
-                                ?>
-                                        <div class="coupon-box__head">
-                                            <p><?PHP echo Label::getLabel('LBL_AVAILABLE_COUPONS'); ?></p>
-                                            <a href="javascript:void(0);" class="btn btn--bordered color-black btn--close">
-                                                <svg class="icon icon--close">
-                                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#close'; ?>"></use>
-                                                </svg>
-                                            </a>
-                                        </div>
-                                    <?php
-                                    } else {
-                                    ?>
-                                        <div class="coupon-box__head">
-                                            <p><?PHP echo Label::getLabel('LBL_NOT_AVAILABLE_COUPONS'); ?></p>
-                                            <a href="javascript:void(0);" class="btn btn--bordered color-black btn--close">
-                                                <svg class="icon icon--close">
-                                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#close'; ?>"></use>
-                                                </svg>
-                                            </a>
-                                        </div>
-                                <?php
-                                    }
-                                }
-                                ?>
-                                <div class="coupon-box__body">
-                                    <?php foreach ($couponsList as $key => $coupon) { ?>
-                                        <div class="coupon-list">
-                                            <div class="coupon-list__head">
-                                                <span class="badge color-secondary"><?php echo $coupon['coupon_code']; ?></span>
-                                                <a href="javascript:void(0);" onclick="cart.applyPromoCode('<?php echo $coupon['coupon_code']; ?>');" class="btn btn--coupon btn--small color-primary"><?php echo Label::getLabel('LBL_APPLY'); ?></a>
-                                            </div>
-                                            <div class="coupon-list__content">
-                                                <p class="bold-600"><?php echo $coupon['coupon_title']; ?></p>
-                                                <?php if (!empty($coupon['coupon_description'])) { ?>
-                                                    <p><?php echo $coupon['coupon_description']; ?> </p>
-                                                <?php } ?>
-                                            </div>
-                                        </div>
-                                    <?php } ?>
-                                </div>
-                            </div> -->
 
                             <div class="total-box" id="pay_total_box">
                                 <div class="payment-total">
@@ -569,12 +381,9 @@ if (!empty($planResult['plan_image'])) {
                                         </select>
                                         <?php $amount = ($cartData['orderNetAmount'] - $walletDeduction); ?>
                                         <input type="text" class="form-control" id="total_cart" value="<?php echo number_format((float)$amount, 2, '.', ''); ?>">
-                                        <!--  <input type="text" class="form-control" id="total_cart" value="<?php echo $cartData['orderNetAmount']; ?>"> -->
                                     </div>
-
                                 </div>
                             </div>
-                            <!-- <span class="dccTitle">Choose your preferred currency </span> -->
                         </div>
                     </div>
                 </div>
@@ -596,54 +405,23 @@ if (!empty($planResult['plan_image'])) {
             $(".personal-details-block").removeClass("hide-block");
             $(".edit-btn").addClass("hide-btn");
         });
-        console.log("  eventCart.props.currency==", eventCart.props.currencyCode);
         $(document).ready(function() {
-            // if (eventCart.props.currency == undefined || eventCart.props.currencyCode == undefined) {
             eventCart.props.currency = '<?php echo $cartData['currency']; ?>';
             eventCart.props.currencyCode = '<?php echo $cartData['currencyCode']; ?>';
-            // }
-            console.log("curr==", eventCart.props.currency);
-            //     $('#currencyswitchers option').each(function() {
-            //         var symbols = $(this).val();
-            //         if (symbols == eventCart.props.currency) {
-            //             $(this).attr("selected", "selected");
-            //             var value = $('.symbol').text();
-            //             var symbol = $('option:selected').data('curr');
-            //             console.log("old--", $('option:selected').data('curr'));
-            //             var oldsymbol = symbol;
-            //             eventCart.props.currencyCode = oldsymbol;
-            //             $('.symbol').text(oldsymbol);
-            //         }
-            //     })
-
         });
-        // $("#currencyswitchers").change(function() {
-        // var data = $(this).val();
         var data = '<?php echo $cartData['currency']; ?>';
         $.loader.show();
-
         if (data == 'ZMW') {
             console.log("data", data);
             $('#paypal-payment').parents('label').addClass('hide-section');
             $('#google-pay').parents('label').addClass('hide-section');
             $('.wallet-section').addClass('hide-section');
-            // eventCart.props.currencyCode = 'ZK';
         } else {
             $('#paypal-payment').parents('label').removeClass('hide-section');
             $('#google-pay').parents('label').removeClass('hide-section');
             $('.wallet-section').removeClass('hide-section');
-            // eventCart.props.currencyCode = '$';
-
         }
-
-
         $.loader.hide();
-        console.log("currSymbol==", $(this).data('curr'))
-        // eventCart.props.currency = $(this).val();
-        // updateCurrency(eventCart.props.currency)
-        // window.location.href=window.location.href;
-        // GetPlanTicketsPaymentSummary(eventCart.props.sponsershipPlan, eventCart.props.countOfTickets);
-        // });
     </script>
 </body>
 

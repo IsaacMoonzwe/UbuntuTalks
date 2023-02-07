@@ -1,5 +1,4 @@
-<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); #step2 
-?>
+<?php defined('SYSTEM_INIT') or die('Invalid Usage.'); ?>
 <style>
     .input-number {
         width: 110px !important;
@@ -85,8 +84,6 @@
             <label class="selection-tabs__label">
                 <div class="number-controls">
                     <h3><?php echo Label::getLabel('LBL_Select_The_Number_Of_Tickets'); ?></h3>
-                    <!-- <h5><?php echo Label::getLabel('LBL_Select_Number_Of_Tickets'); ?></h5>
-                <input type="number" class="" required="true" min="1" value="<?php echo $tickets; ?>" id="countOfTickets" name="countOfTickets"> -->
                     <div class="numbers-section">
                         <span class="input-number-decrement"><i class="fa fa-minus"></i></span>
                         <input class="input-number" required="true" type="text" value="<?php echo $tickets; ?>" min="1" id="countOfTickets" name="countOfTickets">
@@ -94,8 +91,6 @@
                     </div>
                 </div>
             </label>
-
-
         </div>
     </div>
     <div class="box-foot">
@@ -116,7 +111,6 @@
         </div>
         <div class="box-foot__right">
             <a href="javascript:void(0);" class="btn btn--primary color-white" onclick="RegisterPlanEventUser(eventCart.props.sponsershipPlan,eventCart.props.countOfTickets);"><?php echo Label::getLabel('LBL_NEXT'); ?></a>
-            <!-- <a href="javascript:void(0);" class="btn btn--primary color-white" onclick="GetEventTicketsPaymentSummary(eventCart.props.sponsershipPlan,eventCart.props.countOfTickets);"><?php echo Label::getLabel('LBL_NEXT'); ?></a> -->
         </div>
     </div>
 </div>
@@ -127,28 +121,21 @@
     });
 
     (function() {
-
         window.inputNumber = function(el) {
-
             var min = el.attr('min') || false;
             var max = el.attr('max') || false;
-
             var els = {};
-
             els.dec = el.prev();
             els.inc = el.next();
-
             el.each(function() {
                 init($(this));
             });
 
             function init(el) {
-
                 els.dec.on('click', decrement);
                 els.inc.on('click', increment);
 
                 function decrement() {
-
                     var value = el[0].value;
                     value--;
                     if (!min || value >= min) {
@@ -158,7 +145,6 @@
                 }
 
                 function increment() {
-
                     var value = el[0].value;
                     value++;
                     if (!max || value <= max) {

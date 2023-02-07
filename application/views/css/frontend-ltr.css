@@ -165,7 +165,7 @@ nav.menu.nav--primary-offset {
 }
 
 @media (min-width: 992px) {
-  .Mobile-Profile-View{
+  .Mobile-Profile-View {
     display: none !important;
   }
 
@@ -1090,7 +1090,10 @@ nav.menu.nav--primary-offset {
   .header-dropwown--profile .teacher__name {
     font-size: 13px;
   }
-  .Desktop-Profile-View{display: none !important;}
+
+  .Desktop-Profile-View {
+    display: none !important;
+  }
 }
 
 @media (max-width: 767px) {
@@ -13513,6 +13516,16 @@ body .widget_calendr tbody td .cell-lightgreen-50 {
 }
 
 @media only screen and (max-width: 768px) {
+  #loginForm input[type="password"] {
+    width: 100%;
+    padding: 1px 10px;
+    height: 48px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-shadow: 0px 2px 0px #d2d2d2;
+  }
+
   .sidebar-btns.download-flyer-button {
     width: 100% !important;
   }

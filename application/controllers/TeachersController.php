@@ -25,6 +25,13 @@ class TeachersController extends MyAppController
         $this->set('aboutdesc',$aboutdesc);
         $this->set('langname',$langname);
         $this->set('image',$image);
+        $this->_template->addJs('js/jquery.datetimepicker.js');
+        $this->_template->addJs('js/jquery.form.js');
+        $this->_template->addJs('js/jquery.inputmask.bundle.js');
+        $this->_template->addJs('js/cropper.js');
+        $this->_template->addCss('css/event.css');
+        $this->_template->addJs('js/intlTelInput.js');
+        $this->_template->addCss('css/intlTelInput.css');
         $this->_template->addJs('js/enscroll-0.6.2.min.js');
         $this->_template->addJs('js/moment.min.js');
         $this->_template->addJs('js/fullcalendar-luxon.min.js');
@@ -36,9 +43,110 @@ class TeachersController extends MyAppController
         $this->_template->render(true, true, 'teachers/index.php');
     }
 
+    public function country()
+    {
+        $select_design = $_REQUEST['product_code'];
+        $con = new Country();
+        $FindObj = $con->getCountryById($select_design);
+        $country_codes = strval($FindObj["country_code"]);
+        $timezones = DateTimeZone::listIdentifiers(DateTimeZone::PER_COUNTRY, $country_codes);
+        $timezone_offsets = array();
+        foreach ($timezones as $timezone) {
+            $tz = new DateTimeZone($timezone);
+            $timezone_offsets[$timezone] = $tz->getOffset(new DateTime);
+        }
+        $timezone_list = array();
+        foreach ($timezone_offsets as $timezone => $offset) {
+            $offset_prefix = $offset < 0 ? '-' : '+';
+            $offset_formatted = gmdate('H:i', abs($offset));
+            $pretty_offset = "timezone ${offset_prefix}${offset_formatted}";
+            $timezone_list[$timezone] = "(${pretty_offset}) $timezone";
+        }
+        echo json_encode($timezone_list);
+        return $timezone_list;
+    }
+
+    public function groupClassesForm()
+    {
+        $this->set('frmOnlineContact', $this->getGroupClassesForm());
+        $this->_template->render(false, false);
+    }
+
+    private function getGroupClassesForm()
+    {
+        $groupLanguages = array();
+        $languages = new SearchBase('tbl_spoken_languages');
+        $allLanguages = FatApp::getDb()->fetchAll($languages->getResultSet());
+        foreach ($allLanguages as $key => $value) {
+            $groupLanguages[$value['slanguage_identifier']] = $value['slanguage_identifier'];
+        }
+        $frm = new Form('frmOnlineContact');
+        $frm->addRequiredField(Label::getLabel('LBL_First_Name', $langId), 'first_name', '');
+        $frm->addRequiredField(Label::getLabel('LBL_Last_Name', $langId), 'last_name', '');
+        $frm->addEmailField(Label::getLabel('LBL_Your_Email', $langId), 'email_address', '');
+        $fld_phn = $frm->addRequiredField(Label::getLabel('LBL_Your_Phone', $langId), 'phone_number');
+        $fld_phn->requirements()->setRegularExpressionToValidate('^[\s()+-]*([0-9][\s()+-]*){5,20}$');
+        $fld_phn->requirements()->setCustomErrorMessage(Label::getLabel('VLD_ADD_VALID_PHONE_NUMBER', $langId));
+        $frm->addRequiredField(Label::getLabel('LBL_Organisation_Name', $langId), 'organisation_name', '');
+        $frm->addRequiredField(Label::getLabel('LBL_Organisation_Url', $langId), 'organisation_url', '');
+        $countryObj = new Country();
+        $countriesArr = $countryObj->getCountriesArr($this->siteLangId);
+        $fld = $frm->addSelectBox(Label::getLabel('LBL_Country'), 'user_country_id[]', $countriesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), array(), Label::getLabel('LBL_Select'));
+        // $fld->requirement->setRequired(true);
+        $timezonesArr = MyDate::timeZoneListing();
+        $fld2 = $frm->addSelectBox(Label::getLabel('LBL_TimeZone'), 'user_timezone[]', $timezonesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), array(), Label::getLabel('LBL_Select'));
+        // $fld2->requirement->setRequired(true);
+        $start_time_fld = $frm->addTextBox(Label::getLabel('LBl_Start_Time'), 'grpcls_start_datetime', '', ['id' => 'grpcls_start_datetime', 'autocomplete' => 'off']);
+        $end_time_fld = $frm->addTextBox(Label::getLabel('LBl_End_Time'), 'grpcls_end_datetime', '', ['id' => 'grpcls_end_datetime', 'autocomplete' => 'off']);
+       
+        $frm->addRequiredField(Label::getLabel('LBL_Objective', $langId), 'objective_lesson', '');
+        $frm->addRequiredField(Label::getLabel('LBL_Group_Size', $langId), 'group_size', '');
+        $group_type = ['Private' => 'Private', 'Corporate' => 'Corporate', 'Faith-Based' => 'Faith-Based', 'Education' => 'Education'];
+        $frm->addSelectBox(Label::getLabel('LBL_Group_Type', $langId), 'group_type', $group_type, -1, [], '');
+        $frm->addSelectBox(Label::getLabel('LBL_Language', $langId), 'Language', $groupLanguages, -1, [], '');
+        $frm->addRequiredField(Label::getLabel('LBL_Others', $langId), 'others', '');
+        $frm->addSubmitButton('', 'btn_submit', Label::getLabel('BTN_SUBMIT', $langId));
+        return $frm;
+    }
+
+    public function contactSubmit1()
+    {
+        $frm = $this->getGroupClassesForm($this->siteLangId);
+        $post = $frm->getFormDataFromArray(FatApp::getPostedData());
+        if (false === $post) {
+            Message::addErrorMessage($frm->getValidationErrors());
+            FatApp::redirectUser(CommonHelper::generateUrl('contact'));
+        }
+        if (!CommonHelper::verifyCaptcha()) {
+            Message::addErrorMessage(Label::getLabel('MSG_That_captcha_was_incorrect', $this->siteLangId));
+            FatApp::redirectUser(CommonHelper::generateUrl('contact'));
+        }
+        $email = explode(',', FatApp::getConfig('CONF_CONTACT_EMAIL'));
+        foreach ($email as $emailId) {
+            $emailId = trim($emailId);
+            if (false === filter_var($emailId, FILTER_VALIDATE_EMAIL)) {
+                continue;
+            }
+            $country = FatApp::getPostedData('country', FatUtility::VAR_STRING, '');
+            $post['country'] = $country;
+            $time = FatApp::getPostedData('timeZone', FatUtility::VAR_STRING, '');
+            $post['user_timezone'] = '('.$time;
+         
+            $email = new EmailHandler();
+            if (!$email->GroupsendContactFormEmail($emailId, $this->siteLangId, $post)) {
+                Message::addErrorMessage(Label::getLabel('MSG_email_not_sent_server_issue', $this->siteLangId));
+            } else {
+                Message::addMessage(Label::getLabel('MSG_your_message_sent_successfully', $this->siteLangId));
+            }
+        }
+        $this->set('redirectUrl', CommonHelper::generateUrl('Teachers'));
+        $this->set('msg', Label::getLabel('MSG_Redirecting', $this->siteLangId));
+        $this->_template->render(false, false, 'json-success.php');
+    }
+
     public function contactSubmit()
     {
-        $frm = $this->contactUsForm($this->siteLangId);
+       $frm = $this->contactUsForm($this->siteLangId);
         $post = $frm->getFormDataFromArray(FatApp::getPostedData());
         if (false === $post) {
             Message::addErrorMessage($frm->getValidationErrors());

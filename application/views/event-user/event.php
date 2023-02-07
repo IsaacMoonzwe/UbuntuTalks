@@ -26,45 +26,35 @@
                         </a>
                     </div>
                     <form name="event_selection">
-                    <div class="cart-top-div">
-                        <div class="backbtn">
-                            <a href="javascript:history.go(-1)" class="btn btn--bordered color-black btn--back Cartbackbtn">
-                                <svg class="icon icon--back">
-                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
-                                </svg>
-                                <?php echo Label::getLabel('LBL_BACK'); ?>
-                            </a>
-                        </div>
-                        <?php if (EventUserAuthentication::isUserLogged()) {
-                            $fullName = $userDetails['user_full_name'];
-                        ?>
-                            <div class="user-information">
-                                <div class="username">
-                                    <p><i class='fas fa-user-alt'></i></p>
-                                    <p><?php echo $fullName ?></p>
-                                </div>
-                                <div class="logout">
-                                    <p><i class="fa fa-sign-out"></i></p>
-                                    <p><a href="<?php echo CommonHelper::generateUrl('EventUser', 'logout'); ?>">Logout</a></p>
-                                </div>
-                            </div>
-                        <?php } ?>
-                    </div>
-                        <div class="row">
-                            <div class="col-lg-8">
-                                <!-- <a href="javascript:history.go(-1)" class="btn btn--bordered color-black btn--back">
+                        <div class="cart-top-div">
+                            <div class="backbtn">
+                                <a href="javascript:history.go(-1)" class="btn btn--bordered color-black btn--back Cartbackbtn">
                                     <svg class="icon icon--back">
                                         <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
                                     </svg>
                                     <?php echo Label::getLabel('LBL_BACK'); ?>
-                                </a> -->
+                                </a>
+                            </div>
+                            <?php if (EventUserAuthentication::isUserLogged()) {
+                                $fullName = $userDetails['user_full_name'];
+                            ?>
+                                <div class="user-information">
+                                    <div class="username">
+                                        <p><i class='fas fa-user-alt'></i></p>
+                                        <p><?php echo $fullName ?></p>
+                                    </div>
+                                    <div class="logout">
+                                        <p><i class="fa fa-sign-out"></i></p>
+                                        <p><a href="<?php echo CommonHelper::generateUrl('EventUser', 'logout'); ?>">Logout</a></p>
+                                    </div>
+                                </div>
+                            <?php } ?>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-8">
                                 <div class="equip-left">
                                     <div class="equip-title-box">
                                         <h5><?php echo $EventsList['registration_plan_title']; ?></h5>
-                                        <!-- <p>by <a href="#" class="wpem-tooltiptext">
-                                                <i class="fas fa-eye"></i> 116
-                                                <span class="wpem-tooltiptext">120 people viewed this event.</span>
-                                            </a><span class="wpem-event-type-text">Paid</span></p> -->
                                     </div>
                                     <div class="ticket-information-box">
                                         <div class="ticket-information-title">
@@ -80,13 +70,11 @@
                                                     <?php for ($i = 1; $i <= 10; $i++) {
                                                         echo '<option value="' . $i . '">' . $i . '</option>';
                                                     } ?>
-
                                                 </select>
                                                 <input type="hidden" id="planId" name="planId" value=<?php echo $planId; ?> />
                                             </div>
                                         </div>
                                         <div>
-
                                             <div class="selection-title currencySwitcher">
                                                 <p><?php echo Label::getLabel('LBL_Currency_Switcher'); ?></p>
                                             </div>
@@ -96,8 +84,6 @@
                                                     <option data-curr=<?php echo $value['currencies_switcher_symbol_left']; ?> value="<?php echo $value['currencies_switcher_code']; ?>"><?php echo "(" . $value['currencies_switcher_symbol_left'] . ") " . $value['currencies_switcher_code']; ?></option>
                                                 <?php } ?>
                                             </select>
-
-
                                         </div>
                                         <?php
                                         $date = $EventsList['registration_booking_endiing_date'];
@@ -110,12 +96,6 @@
                                                 <a onclick="GotToCart();" class="btn-green"><?php echo Label::getLabel('LBL_Order_Now'); ?></a>
                                             <?php } ?>
                                         </div>
-                                        <!-- <div class="alert alert-warning" role="alert">
-                                        This is a warning alert—check it out!
-                                    </div>
-                                    <div class="alert alert-success" role="alert">
-                                        This is a success alert—check it out!
-                                    </div> -->
                                     </div>
                                 </div>
                             </div>
@@ -124,8 +104,6 @@
                                     <div>
                                         <h3><?php echo Label::getLabel('LBL_Date_And_Time'); ?></h3>
                                         <p><?php echo $EventsList['registration_starting_date']; ?> To <br><?php echo $EventsList['registration_ending_date']; ?></p>
-                                        <!-- <p></p>
-                                        <p></p> -->
                                     </div>
                                     <div>
                                         <h3><?php echo Label::getLabel('LBL_Registration_End_Date'); ?></h3>
@@ -177,26 +155,19 @@
             </div>
         </div>
     </section>
-    <!-- Separate Popper, Bootstrap JS and Custom JS -->
 </body>
 <script>
     var selectedPlan = '<?php echo $planId; ?>';
-    console.log("sponsershipPlan==", selectedPlan);
     eventCart.props.sponsershipPlan = selectedPlan;
 
     function GoToEventCart() {
-        //eventCart.props.sponsershipPlan,eventCart.props.countOfTickets
-        console.log("eventCart.props.countOfTickets==", parseInt(eventCart.props.countOfTickets));
         window.location.href = fcom.makeUrl('EventUser', 'goToCart', [parseInt(eventCart.props.countOfTickets), selectedPlan, eventCart.props.currencyCode, eventCart.props.currency]);
         var data = "plan=" + eventCart.props.sponsershipPlan + "&ticketQty=" + eventCart.props.countOfTickets;
-
     }
     $(document).ready(function() {
         eventCart.props.currency = 'USD';
         eventCart.props.currencyCode = '$';
         $('#code').val('$');
-
-        console.log("curr==", eventCart.props.currency);
         $('#code').val(eventCart.props.currencyCode);
         $('#event_currencyswitchers option').each(function() {
             var symbols = $(this).val();
@@ -204,7 +175,6 @@
                 $(this).attr("selected", "selected");
                 var value = $('.cur_symbol').text();
                 var symbol = $('option:selected').data('curr');
-                console.log("old--", $('option:selected').data('curr'));
                 var oldsymbol = symbol;
                 eventCart.props.currencyCode = oldsymbol;
                 $('.cur_symbol').text(oldsymbol);
@@ -214,31 +184,23 @@
     });
     $("#event_currencyswitchers").change(function() {
         var data = $(this).val();
-
         $.loader.show();
-
         if (data == 'ZMW') {
-            console.log("data", data);
             $('#paypal-payment').parents('label').addClass('hide-section');
             $('#google-pay').parents('label').addClass('hide-section');
             $('.wallet-section').addClass('hide-section');
             eventCart.props.currencyCode = 'ZK';
             $('#code').val('ZK');
-
         } else {
             $('#paypal-payment').parents('label').removeClass('hide-section');
             $('#google-pay').parents('label').removeClass('hide-section');
             $('.wallet-section').removeClass('hide-section');
             $('#code').val('$');
             eventCart.props.currencyCode = '$';
-
         }
         $.loader.hide();
         console.log("currSymbol==", $(this).data('curr'))
         eventCart.props.currency = $(this).val();
-        // updateCurrency(eventCart.props.currency);
-        // window.location.href=window.location.href;
-        // GetPlanTicketsPaymentSummary(eventCart.props.sponsershipPlan, eventCart.props.countOfTickets);
     });
 </script>
 

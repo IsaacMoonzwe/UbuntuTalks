@@ -41,7 +41,6 @@ class DashboardEventVisitorController extends MyEventAppController
             $EventsTicketsplanData->addCondition('three_reasons_deleted', '=', 0);
             $EventsTicketsplanData->addCondition('three_reasons_id', '=', $value['event_user_plan_id']);
             $EventsTicketsplanResult = FatApp::getDb()->fetch($EventsTicketsplanData->getResultSet());
-
             $OrderProductDatas = new SearchBase('tbl_order_products');
             $OrderProductDatas->addCondition('op_grpcls_id', '=', $value['event_user_ticket_plan_id']);
             $OrderProductDatas->addCondition('op_teacher_id', '=', $userId);
@@ -54,7 +53,10 @@ class DashboardEventVisitorController extends MyEventAppController
             $OrderDatass->addCondition('order_id', '=', $OrderProductsResults['op_order_id']);
             $OrderDatass->addCondition('order_is_paid', '=', 1);
             $OrderResultss = FatApp::getDb()->fetch($OrderDatass->getResultSet());
-
+            $AttendDetails = new SearchBase('tbl_three_reason_tickets_attendee_details');
+            $AttendDetails->addCondition('event_user_ticket_plan', '=', $value['event_user_ticket_plan_id']);
+            $AttendDetailsListing = FatApp::getDb()->fetchAll($AttendDetails->getResultSet()); 
+            $value['attendee_details']=$AttendDetailsListing;
             $value['order_data'] = $OrderProductsResults;
             $value['coupon_code'] = $OrderResults['order_discount_coupon_code'];
             $value['plan_name'] = $EventsTicketsplanResult['registration_plan_title'];
@@ -63,6 +65,7 @@ class DashboardEventVisitorController extends MyEventAppController
             $value['plan_price'] = $EventsTicketsplanResult['registration_plan_price'];
             $value['order_net_amount'] = $OrderResultss['order_net_amount'];
             $value['order_currency_code'] = $OrderResultss['order_currency_code'];
+            $value['attendee_full_name'] = $AttendDetailsListing['attendee_full_name'];
             $EventplanResult[$key] = $value;
         }
         $BenefitConcertplanData = new SearchBase('tbl_event_concert_ticket_plan');

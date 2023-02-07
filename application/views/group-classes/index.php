@@ -71,6 +71,9 @@ $language->setFieldTagAttribute('id', 'language');
     </div>
 </section>
 <!-- ] -->
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
 <script>
     if (window.history.replaceState) {
         window.history.replaceState(null, null, window.location.href);

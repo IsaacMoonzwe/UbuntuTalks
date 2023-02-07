@@ -29,7 +29,7 @@ $("document").ready(function () {
     $('.select-teach-lang-js').click(function () {
         var langId = parseInt($(this).attr('data-id'));
         var langName = $(this).html();
-        if(1 > langId){
+        if (1 > langId) {
             langName = '';
             langId = '';
         }
@@ -42,7 +42,7 @@ $("document").ready(function () {
         search(frm);
     });
 
-    $(document).on('keyup',"input[name='keyword']",function (e) {
+    $(document).on('keyup', "input[name='keyword']", function (e) {
         var code = e.which;
         if (code == 13) {
             e.preventDefault();
@@ -76,17 +76,39 @@ $("document").ready(function () {
     };
 
     contactSubmit = function (frm) {
-        if (!$(frm).validate()) return;
+
+        //if (!$(frm).validate()) return;
+        $.loader.show();
         var data = fcom.frmData(frm);
+        var country_name = '';
+        var timezone = '';
+        $('.select2-selection__rendered li').each(function (i) {
+            var name1 = $(this).attr('title');
+            if (name1 == undefined) {
+                console.log("hi");
+            }
+            else {
+                country_name = country_name +  $(this).attr('title') +','; // This is your rel value
+            }
+        });
+
+        var count = country_name.split('(')[0];
+        const alltimezones = country_name.slice(country_name.indexOf('(') + 1);
+        console.log(alltimezones);
+        timezone = alltimezones;
+        data = data + '&country=' + count + '&timeZone=' + timezone;
+        console.log("data==", data);
         fcom.updateWithAjax(fcom.makeUrl('GroupClasses', 'contactSubmit'), data, function (t) {
+
             if (t.redirectUrl) {
-                window.location = t.redirectUrl;
+                $.loader.hide();
+                window.location.href = window.location.href;
             }
         });
     }
 
 
-    
+
     setTeachLangId = function (el, id, name) {
         if (typeof page == undefined || page == null) {
             page = 1;

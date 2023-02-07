@@ -340,9 +340,9 @@ function htmlEncode(value) {
         $(dv).html(fcom.getLoader());
 
         fcom.ajax(fcom.makeUrl('Teachers', 'teachersList'), data, function (ans) {
-            var pageFind=data.substr(data.indexOf('page'));
-            var sepPage=pageFind.split('&');
-            var pagesNumber =sepPage[0];
+            var pageFind = data.substr(data.indexOf('page'));
+            var sepPage = pageFind.split('&');
+            var pagesNumber = sepPage[0];
             var id_number = parseInt(pagesNumber.replace(/[^0-9.]/g, ""));
             $(".process-page").load(location.href + " .process-page");
             $.mbsmessage.close();
@@ -350,6 +350,47 @@ function htmlEncode(value) {
             window.scroll(0, 0);
         });
     };
+
+    groupClassesForm = function () {
+        $.loader.show();
+        $.facebox(function () {
+            fcom.ajax(fcom.makeUrl('Teachers', 'groupClassesForm'), '', function (t) {
+                $.facebox(t, 'faceboxWidth');
+                $.loader.hide();
+            });
+        });
+    };
+
+    contactSubmit = function (frm) {
+        // if (!$(frm).validate()) return;
+        $.loader.show();
+        var data = fcom.frmData(frm);
+        var country_name = '';
+        var timezone = '';
+        $('.select2-selection__rendered li').each(function (i) {
+            var name1 = $(this).attr('title');
+            if (name1 == undefined) {
+                console.log("hi");
+            }
+            else {
+                country_name = country_name +  $(this).attr('title') +',';
+            }
+        });
+
+        console.log(country_name);
+        var count = country_name.split('(')[0];
+        const alltimezones = country_name.slice(country_name.indexOf('(') + 1);
+        console.log(alltimezones);
+        timezone = alltimezones;
+        data = data + '&country=' + count + '&timeZone=' + timezone;
+        console.log("data==", data);
+        fcom.updateWithAjax(fcom.makeUrl('Teachers', 'contactSubmit1'), data, function (t) {
+            if (t.redirectUrl) {
+                $.loader.hide();
+                window.location.href = window.location.href;
+            }
+        });
+    }
 
     goToSearchPage = function (page) {
         if (typeof page == undefined || page == null) {
