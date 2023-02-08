@@ -12,10 +12,9 @@ $timeZoneField = $frmOnlineContact->getField('user_timezone[]');
 $dateformat = FatApp::getConfig('CONF_DATEPICKER_FORMAT', FatUtility::VAR_STRING, 'Y-m-d');
 $timeformat = FatApp::getConfig('CONF_DATEPICKER_FORMAT_TIME', FatUtility::VAR_STRING, 'H:i');
 $frmOnlineContact->getField('grpcls_start_datetime')->setFieldTagAttribute('data-fatdatetimeformat', $dateformat . ' ' . $timeformat);
-$frmOnlineContact->getField('grpcls_end_datetime')->setFieldTagAttribute('data-fatdatetimeformat', $dateformat . ' ' . $timeformat);
 ?>
-<div class="box box--narrow">
-    <h2 class="-align-center"><?php echo Label::getLabel('LBL_Contact_Form'); ?></h2>
+<div class="box box--narrow group-contact-form">
+    <h2 class="-align-center"><?php echo Label::getLabel('LBL_Group_Contact_Request'); ?></h2>
     <?php //echo $frmOnlineContact->getFormHtml(); 
     ?>
     <?php echo $frmOnlineContact->getFormTag() ?>
@@ -85,37 +84,7 @@ $frmOnlineContact->getField('grpcls_end_datetime')->setFieldTagAttribute('data-f
             <div class="field-set">
                 <div class="caption-wraper">
                     <label class="field_label">
-                        <?php echo Label::getLabel('LBL_Start_time', $siteLangId) ?>
-                    </label>
-                </div>
-                <div class="field-wraper">
-                    <div class="field_cover">
-                        <?php echo $frmOnlineContact->getFieldHTML('grpcls_start_datetime'); ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="field-set">
-                <div class="caption-wraper">
-                    <label class="field_label">
-                        <?php echo Label::getLabel('LBL_End_time', $siteLangId) ?>
-                    </label>
-                </div>
-                <div class="field-wraper">
-                    <div class="field_cover">
-                        <?php echo $frmOnlineContact->getFieldHTML('grpcls_end_datetime'); ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="field-set">
-                <div class="caption-wraper">
-                    <label class="field_label">
-                        <?php echo Label::getLabel('LBL_Organisation_Name', $siteLangId) ?>
+                        <?php echo Label::getLabel('LBL_Organization_Name', $siteLangId) ?>
                     </label>
                 </div>
                 <div class="field-wraper">
@@ -129,7 +98,7 @@ $frmOnlineContact->getField('grpcls_end_datetime')->setFieldTagAttribute('data-f
             <div class="field-set">
                 <div class="caption-wraper">
                     <label class="field_label">
-                        <?php echo Label::getLabel('LBL_Organisation_Url', $siteLangId) ?>
+                        <?php echo Label::getLabel('LBL_Organization_Url', $siteLangId) ?>
                     </label>
                 </div>
                 <div class="field-wraper">
@@ -175,19 +144,33 @@ $frmOnlineContact->getField('grpcls_end_datetime')->setFieldTagAttribute('data-f
                 </div>
             </div>
         </div>
-        <input type="hidden" name="timezone"/>
+        <input type="hidden" name="timezone" />
     </div>
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-6">
             <div class="field-set">
                 <div class="caption-wraper">
                     <label class="field_label">
-                        <?php echo Label::getLabel('LBL_Objective', $siteLangId) ?>
+                        <?php echo Label::getLabel('LBL_Objective_Lesson', $siteLangId) ?>
                     </label>
                 </div>
                 <div class="field-wraper">
                     <div class="field_cover">
                         <?php echo $frmOnlineContact->getFieldHTML('objective_lesson'); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="field-set">
+                <div class="caption-wraper">
+                    <label class="field_label">
+                        <?php echo Label::getLabel('LBL_Group_Meeting_Time', $siteLangId) ?>
+                    </label>
+                </div>
+                <div class="field-wraper">
+                    <div class="field_cover">
+                        <?php echo $frmOnlineContact->getFieldHTML('grpcls_start_datetime'); ?>
                     </div>
                 </div>
             </div>
@@ -244,7 +227,7 @@ $frmOnlineContact->getField('grpcls_end_datetime')->setFieldTagAttribute('data-f
             <div class="field-set">
                 <div class="caption-wraper">
                     <label class="field_label">
-                        <?php echo Label::getLabel('LBL_Others', $siteLangId) ?>
+                        <?php echo Label::getLabel('LBL_Other', $siteLangId) ?>
                     </label>
                 </div>
                 <div class="field-wraper">
@@ -285,63 +268,56 @@ $frmOnlineContact->getField('grpcls_end_datetime')->setFieldTagAttribute('data-f
 <script src="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" />
 <script src='https://www.google.com/recaptcha/api.js'></script>
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.full.min.js" integrity="sha512-RtZU3AyMVArmHLiW0suEZ9McadTdegwbgtiQl5Qqo9kunkVg1ofwueXD8/8wv3Af8jkME3DDe3yLfR8HSJfT2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
 <script>
-    // setTimeout(function() {
-    // $(".select2-hidden-accessible").select2({
-    //         multiple: true,
-    //     });
-    // }, 100);
     $(document).ready(function() {
         $("[name='user_country_id[]']").select2({
             multiple: true,
         });
         $("[name='user_timezone[]']").select2({
-            multiple:true,
+            multiple: true,
         });
         var selectedTimeZone = $("[name='user_timezone[]'] option:selected").val();
         var selectedCountry = $("[name='user_country_id[]'] option:selected").val();
 
-        function coun_timezone() {
-            var product_code = $("[name='user_country_id[]'] option:selected").val();
-            $.ajax({
-                type: "post",
-                url: fcom.makeUrl('GroupClasses', 'country'),
-                data: {
-                    product_code: product_code
-                },
-                dataType: 'json',
-                success: function(data) {
-                    var len = data.length;
-                    $("[name='user_timezone[]']").empty();
-                    $.each(data, function(k, v) {
-                        var id = k;
-                        var name = v;
-                        if (id == selectedTimeZone) {
-                            $("[name='user_timezone[]']").append("<option value='" + id + "' selected>" + name + "</option>");
-                        } else
-                            $("[name='user_timezone[]']").append("<option value='" + id + "'>" + name + "</option>");
-                        // $("[name='user_timezone']").select2("val","Pacific/Honolulu HST");
-                    })
-                }
-            });
-        }
+        // function coun_timezone() {
+        //     var product_code = $("[name='user_country_id[]'] option:selected").val();
+        //     $.ajax({
+        //         type: "post",
+        //         url: fcom.makeUrl('GroupClasses', 'country'),
+        //         data: {
+        //             product_code: product_code
+        //         },
+        //         dataType: 'json',
+        //         success: function(data) {
+        //             var len = data.length;
+        //             $("[name='user_timezone[]']").empty();
+        //             $.each(data, function(k, v) {
+        //                 var id = k;
+        //                 var name = v;
+        //                 if (id == selectedTimeZone) {
+        //                     $("[name='user_timezone[]']").append("<option value='" + id + "' selected>" + name + "</option>");
+        //                 } else
+        //                     $("[name='user_timezone[]']").append("<option value='" + id + "'>" + name + "</option>");
+        //                 // $("[name='user_timezone']").select2("val","Pacific/Honolulu HST");
+        //             })
+        //         }
+        //     });
+        // }
         var country_name = selectedCountry;
 
-        function country_timezone() {
-            var product_code = $("[name='user_country_id[]'] option:selected").val();
-            $("[name='user_country_id[]']").select2().on('select2:select', function(e) {
-                coun_timezone();
-            });
-        }
-        
+        // function country_timezone() {
+        //     var product_code = $("[name='user_country_id[]'] option:selected").val();
+        //     $("[name='user_country_id[]']").select2().on('select2:select', function(e) {
+        //         coun_timezone();
+        //     });
+        // }
+
         $(document).ready(function() {
             $("[name='user_country_id[]']").val(selectedCountry);
             $("[name='user_country_id[]']").trigger('change.select2');
-            country_timezone();
-            coun_timezone();
-            // $("[name='user_timezone[]']").trigger('change.select2');
+            // country_timezone();
+            // coun_timezone();
+            $("[name='user_timezone[]']").trigger('change.select2');
 
         });
     });

@@ -94,10 +94,10 @@ class TeachersController extends MyAppController
         $fld = $frm->addSelectBox(Label::getLabel('LBL_Country'), 'user_country_id[]', $countriesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), array(), Label::getLabel('LBL_Select'));
         // $fld->requirement->setRequired(true);
         $timezonesArr = MyDate::timeZoneListing();
-        $fld2 = $frm->addSelectBox(Label::getLabel('LBL_TimeZone'), 'user_timezone[]', $timezonesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), array(), Label::getLabel('LBL_Select'));
+        $fld2 = $frm->addSelectBox(Label::getLabel('LBL_TimeZone'), 'user_timezone[]', $timezonesArr, FatApp::getConfig('CONF_COUNTRY', FatUtility::VAR_INT, 0), array(), Label::getLabel(''));
         // $fld2->requirement->setRequired(true);
         $start_time_fld = $frm->addTextBox(Label::getLabel('LBl_Start_Time'), 'grpcls_start_datetime', '', ['id' => 'grpcls_start_datetime', 'autocomplete' => 'off']);
-        $end_time_fld = $frm->addTextBox(Label::getLabel('LBl_End_Time'), 'grpcls_end_datetime', '', ['id' => 'grpcls_end_datetime', 'autocomplete' => 'off']);
+        //$end_time_fld = $frm->addTextBox(Label::getLabel('LBl_End_Time'), 'grpcls_end_datetime', '', ['id' => 'grpcls_end_datetime', 'autocomplete' => 'off']);
        
         $frm->addRequiredField(Label::getLabel('LBL_Objective', $langId), 'objective_lesson', '');
         $frm->addRequiredField(Label::getLabel('LBL_Group_Size', $langId), 'group_size', '');

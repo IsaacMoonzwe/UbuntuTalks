@@ -1039,18 +1039,36 @@ p.location-title {
     display: flex;
     justify-content: end;
 }
-.username , .logout {
+
+.username,
+.logout {
     font-size: 15px;
 }
-.cart-top-div{
+
+.cart-top-div {
     display: flex;
     justify-content: space-between;
 }
 
-section.equip.section .ticket-information .cart-top-div{
+section.equip.section .ticket-information .cart-top-div {
     padding: 20px 0px 0px 0px !important;
 }
 
+p.location-title span {
+    text-align: initial;
+}
+
+.location-title.venue {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    font-style: normal !important;
+    line-height: 19px !important;
+    color: rgb(72 72 72 / 71%) !important;
+}
+
+.sitename {
+    text-align: center;
+}
 
 
 @media (max-width: 1199px) {}
@@ -1058,9 +1076,12 @@ section.equip.section .ticket-information .cart-top-div{
 @media (max-width: 991px) {}
 
 @media (max-width: 768px) {
-    .username p, .logout p{
+
+    .username p,
+    .logout p {
         font-size: 16px !important;
     }
+
     .paymentcoupon {
         width: 100% !important;
     }

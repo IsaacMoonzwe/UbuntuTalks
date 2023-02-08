@@ -52,7 +52,7 @@ if (!empty($planResult['plan_image'])) {
         .selection-tabs__title {
             cursor: pointer;
             width: 100%;
-            height: 70px;
+            height: auto;
         }
 
         .hide-section {
@@ -69,6 +69,10 @@ if (!empty($planResult['plan_image'])) {
 
         label.selection-tabs__label.payment-method-js {
             width: 100%;
+        }
+
+        .selection-tabs__title svg {
+            margin-bottom: 10px;
         }
     </style>
 </head>
@@ -345,19 +349,22 @@ if (!empty($planResult['plan_image'])) {
                                                     </p>
                                                 </button>
                                             </h5>
-                                            <div class="location-title">
-                                                <span>Website:&nbsp;&nbsp;</span><a href="#">https://www.micc.co.zm</a>
+                                            <div class="location-title venue">
+                                                <span>WEBSITE:&nbsp;&nbsp;</span><a href="#">https://www.micc.co.zm</a>
                                             </div>
                                         </div>
 
                                         <div id="collapseOne" class="collapse show" aria-labelledby="church-accordian" data-parent="#accordion">
                                             <div class="card-body">
+                                                <div class="sitename">
+                                                    <h5>UbuntuTalks</h5>
+                                                </div>
                                                 <p>Events Ticketing - <?php echo $cartData['itemName']; ?></p>
                                                 <div>
-                                                    <span>WEBSITE</span><a href="#">https://ubuntutalks.com</a>
+                                                    <span>WEBSITE:</span><a href="#">https://ubuntutalks.com</a>
                                                 </div>
                                                 <div>
-                                                    <span>E-MAIL</span><a href="#">admin@ubuntutalks.com</a>
+                                                    <span>E-MAIL:</span><a href="#">admin@ubuntutalks.com</a>
                                                 </div>
                                             </div>
                                         </div>
