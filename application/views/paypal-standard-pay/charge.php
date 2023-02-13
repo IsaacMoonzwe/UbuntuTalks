@@ -53,6 +53,7 @@ $currencySymbolRight = CommonHelper::getCurrencySymbolRight();
                             <path d="m303.347 405.541c25.167 25.167 25.167 65.971 0 91.138s-65.971 25.167-91.138 0-25.167-65.971 0-91.138c25.166-25.167 65.97-25.167 91.138 0" />
                         </svg>
                     </a>
+
                     <div class="header__logo">
                         <a href="<?php echo CommonHelper::generateUrl(); ?>">
                             <?php if (CommonHelper::demoUrl()) { ?>
@@ -82,6 +83,13 @@ $currencySymbolRight = CommonHelper::getCurrencySymbolRight();
                 <div class="row justify-content-center">
                     <div class="col-xl-6 col-lg-8 col-md-10">
                         <div class="box -padding-30 -skin">
+                            <a href="javascript:history.go(-1)" class="btn btn--bordered color-black btn--back Cartbackbtn">
+                                <svg class="icon icon--back">
+                                    <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
+                                </svg>
+                                <?php //echo Label::getLabel('LBL_BACK'); 
+                                ?>
+                            </a>
                             <div class="header__logo">
                                 <a href="/">
                                     <img src="https://ubuntutalks.com/image/site-logo/1" alt="Ubuntu Talks logo">

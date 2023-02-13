@@ -55,8 +55,8 @@ class DashboardEventVisitorController extends MyEventAppController
             $OrderResultss = FatApp::getDb()->fetch($OrderDatass->getResultSet());
             $AttendDetails = new SearchBase('tbl_three_reason_tickets_attendee_details');
             $AttendDetails->addCondition('event_user_ticket_plan', '=', $value['event_user_ticket_plan_id']);
-            $AttendDetailsListing = FatApp::getDb()->fetchAll($AttendDetails->getResultSet()); 
-            $value['attendee_details']=$AttendDetailsListing;
+            $AttendDetailsListing = FatApp::getDb()->fetchAll($AttendDetails->getResultSet());
+            $value['attendee_details'] = $AttendDetailsListing;
             $value['order_data'] = $OrderProductsResults;
             $value['coupon_code'] = $OrderResults['order_discount_coupon_code'];
             $value['plan_name'] = $EventsTicketsplanResult['registration_plan_title'];
@@ -512,7 +512,7 @@ class DashboardEventVisitorController extends MyEventAppController
         $userRow = EventUser::getAttributesById(EventUserAuthentication::getLoggedUserId(), array(
             'user_id', 'user_url_name', 'user_first_name', 'user_last_name', 'user_address1', 'user_address2',
             'user_gender', 'user_food_department', 'user_phone', 'user_phone_code', 'user_country_id',
-            'user_is_teacher', 'user_timezone', 'user_profile_info', 'user_food_allergies', 'user_other_food_restriction', 'user_other_requirement'
+            'user_is_teacher', 'user_timezone', 'user_profile_info', 'user_food_allergies', 'user_other_food_restriction', 'user_other_requirement', 'user_zip'
         ));
         $userRow['user_phone'] = ($userRow['user_phone'] == 0) ? '' : $userRow['user_phone'];
         $food_data = explode(',', $userRow['user_food_department']);
@@ -577,7 +577,7 @@ class DashboardEventVisitorController extends MyEventAppController
         $userRow = EventUser::getAttributesById(EventUserAuthentication::getLoggedUserId(), array(
             'user_id', 'user_url_name', 'user_first_name', 'user_last_name', 'user_address1', 'user_address2',
             'user_gender', 'user_food_department', 'user_phone', 'user_phone_code', 'user_country_id',
-            'user_is_teacher', 'user_timezone', 'user_profile_info', 'user_food_allergies', 'user_other_food_restriction', 'user_other_requirement'
+            'user_is_teacher', 'user_timezone', 'user_profile_info', 'user_food_allergies', 'user_other_food_restriction', 'user_other_requirement', 'user_zip'
         ));
         $userRow['user_phone'] = ($userRow['user_phone'] == 0) ? '' : $userRow['user_phone'];
         $profileFrm = $this->getProfileInfoForm($userRow['user_is_teacher']);
@@ -641,6 +641,7 @@ class DashboardEventVisitorController extends MyEventAppController
         $fldLname = $frm->addRequiredField(Label::getLabel('LBL_Last_Name'), 'user_last_name');
         $fldAddress1 = $frm->addRequiredField(Label::getLabel('LBL_Address1'), 'user_address1');
         $fldAddress2 = $frm->addRequiredField(Label::getLabel('LBL_Address2'), 'user_address2');
+        $fldZipCode = $frm->addRequiredField(Label::getLabel('LBL_Zip_Code'), 'user_zip');
         $fldRegisterPlan = $frm->addRequiredField(Label::getLabel('LBL_Registeration_Plan'), 'user_sponsorship_plan');
         $fldRegisterPlan->requirement->setRequired(false);
         $fldSponserShipPlan = $frm->addRequiredField(Label::getLabel('LBL_SponserShip_Plan'), 'user_become_sponsership_plan');
@@ -678,7 +679,7 @@ class DashboardEventVisitorController extends MyEventAppController
         $userRow = EventUser::getAttributesById(EventUserAuthentication::getLoggedUserId(), array(
             'user_id', 'user_url_name', 'user_first_name', 'user_last_name', 'user_address1', 'user_address2',
             'user_gender', 'user_food_department as user_food_department', 'user_phone', 'user_phone_code', 'user_country_id',
-            'user_is_teacher', 'user_timezone', 'user_profile_info', 'user_food_allergies as user_food_allergies', 'user_other_food_restriction as user_other_food_restriction', 'user_other_requirement as user_other_requirement'
+            'user_is_teacher', 'user_timezone', 'user_profile_info', 'user_food_allergies as user_food_allergies', 'user_other_food_restriction as user_other_food_restriction', 'user_other_requirement as user_other_requirement', 'user_zip'
         ));
         $userRow['user_phone'] = ($userRow['user_phone'] == 0) ? '' : $userRow['user_phone'];
         $profileFrm = $this->getProfileInfoForm($userRow['user_is_teacher']);

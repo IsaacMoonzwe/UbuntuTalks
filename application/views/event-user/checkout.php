@@ -122,9 +122,9 @@ $cartData = $_SESSION['cart'];
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <label for="stateCounty">Country <span style="color:red;">*</span></label>
-                                            <select class="form-control" name="stateCounty" id="stateCounty" value="<?php if (isset($loggedIn)) echo $userData['user_billing_country']; ?>">
+                                            <select class="form-control" name="stateCounty" id="stateCounty">
                                                 <?php foreach ($CountryListing as $value) { ?>
-                                                    <option value="<?php echo $value['country_name']; ?>"><?php echo $value['country_name']; ?></option>
+                                                    <option id="<?php echo $value['countrylang_country_id']; ?>" value="<?php echo $value['country_name']; ?>"><?php echo $value['country_name']; ?></option>
                                                 <?php } ?>
                                             </select>
                                         </div>
@@ -298,7 +298,7 @@ $cartData = $_SESSION['cart'];
                                     </dl>
                                 </td>
                                 <td class="product-total">
-                                    <span class="Price-amount amount"><bdi><span class="Price-currencySymbol_count">ZK</span> <?php echo $EventsList['itemNetPrice']; ?></bdi></span>
+                                    <span class="Price-amount amount"><bdi><span class="Price-currencySymbol_count">ZK</span><?php echo $EventsList['itemNetPrice']; ?></bdi></span>
                                 </td>
                             </tr>
 
@@ -351,6 +351,12 @@ $cartData = $_SESSION['cart'];
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.min.js"></script>
 
 <script type="text/javascript">
+    $(document).ready(function() {
+        var userCountry = '<?php echo $userData['user_country_id']; ?>';
+        if (userCountry != null) {
+            $('#stateCounty option[id='+userCountry+']').attr("selected", "selected");
+        }
+    });
     jQuery(document).on('click', '.click-btn', function() {
         $(".Registration-Form").addClass("hide-form");
         $(".Login-Form").removeClass("hide-form");

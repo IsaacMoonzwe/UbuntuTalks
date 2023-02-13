@@ -1508,6 +1508,10 @@ ul {
 	padding: 0;
 }
 
+span.selection {
+    display: inherit !important;
+}
+
 @media (max-width: 767px) {
 	html {
 		font-size: 13px;

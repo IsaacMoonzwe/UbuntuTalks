@@ -168,11 +168,11 @@ class TeachersController extends MyAppController
             if (!$email->sendRequestContactFormEmail($post['email'], $this->siteLangId, $post)) {
                 Message::addErrorMessage(Label::getLabel('MSG_email_not_sent_server_issue', $this->siteLangId));
             } else {
-                Message::addMessage(Label::getLabel('MSG_your_message_sent_successfully', $this->siteLangId));
+                //Message::addMessage(Label::getLabel('MSG_your_message_sent_successfully', $this->siteLangId));
             }
         }
         $this->set('redirectUrl',"teacher");
-        $this->set('msg', Label::getLabel('MSG_Redirecting', $this->siteLangId));
+        $this->set('msg', Label::getLabel('MSG_your_message_sent_successfully', $this->siteLangId));
         $this->_template->render(false, false, 'json-success.php');
         // FatApp::redirectUser(CommonHelper::generateUrl('teachers'));
     }

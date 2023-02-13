@@ -22,7 +22,7 @@
                 <div class="col-lg-8 ticket-information">
                     <div class="equip-banner">
                         <a href="#">
-                            <img src="https://localhost:444/image/event-second-slider-campaign/1" class="img-fluid" alt="">
+                            <img src="/image/event-campaign/1" class="img-fluid" alt="">
                         </a>
                     </div>
                     <form name="event_selection">

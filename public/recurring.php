@@ -35,7 +35,7 @@ $fri->modify('next friday');
 $friday = $fri->format('Y-m-d');
 
 /* Start - Moday */
-$sql = "INSERT INTO `tbl_recurring_group_classes`(
+$sql = "INSERT INTO `tbl_group_classes`(
     `grpcls_id`,
     `grpcls_tlanguage_id`,
     `grpcls_title`,
@@ -78,12 +78,12 @@ if ($conn->query($sql) === TRUE) {
 }
 
 /* Update the Slug Id */
-$sqls = "SELECT grpcls_id FROM `tbl_recurring_group_classes` ORDER BY grpcls_id DESC LIMIT 1";
+$sqls = "SELECT grpcls_id FROM `tbl_group_classes` ORDER BY grpcls_id DESC LIMIT 1";
 $result = mysqli_query($conn, $sqls);
 $row = mysqli_fetch_array($result, MYSQLI_NUM);
 
 /* ALTER Table Query */
-$update_Query = "UPDATE `tbl_recurring_group_classes` SET grpcls_slug='Free-30-min-Chichewa-Trial-$row[0]' WHERE grpcls_id=$row[0]";
+$update_Query = "UPDATE `tbl_group_classes` SET grpcls_slug='Free-30-min-Chichewa-Trial-$row[0]' WHERE grpcls_id=$row[0]";
 
 
 if ($conn->query($update_Query) === TRUE) {
@@ -97,7 +97,7 @@ if ($conn->query($update_Query) === TRUE) {
 
 
 /* Start - Tuesday */
-$sql = "INSERT INTO `tbl_recurring_group_classes`(
+$sql = "INSERT INTO `tbl_group_classes`(
     `grpcls_id`,
     `grpcls_tlanguage_id`,
     `grpcls_title`,
@@ -140,12 +140,12 @@ if ($conn->query($sql) === TRUE) {
 }
 
 /* Update the Slug Id */
-$sqls = "SELECT grpcls_id FROM `tbl_recurring_group_classes` ORDER BY grpcls_id DESC LIMIT 1";
+$sqls = "SELECT grpcls_id FROM `tbl_group_classes` ORDER BY grpcls_id DESC LIMIT 1";
 $result = mysqli_query($conn, $sqls);
 $row = mysqli_fetch_array($result, MYSQLI_NUM);
 
 /* ALTER Table Query */
-$update_Query = "UPDATE `tbl_recurring_group_classes` SET grpcls_slug='Free-30-min-Chichewa-Trial-$row[0]' WHERE grpcls_id=$row[0]";
+$update_Query = "UPDATE `tbl_group_classes` SET grpcls_slug='Free-30-min-Chichewa-Trial-$row[0]' WHERE grpcls_id=$row[0]";
 
 
 if ($conn->query($update_Query) === TRUE) {
@@ -158,7 +158,7 @@ if ($conn->query($update_Query) === TRUE) {
 
 
 /* Start - Wednesday */
-$sql = "INSERT INTO `tbl_recurring_group_classes`(
+$sql = "INSERT INTO `tbl_group_classes`(
     `grpcls_id`,
     `grpcls_tlanguage_id`,
     `grpcls_title`,
@@ -201,12 +201,12 @@ if ($conn->query($sql) === TRUE) {
 }
 
 /* Update the Slug Id */
-$sqls = "SELECT grpcls_id FROM `tbl_recurring_group_classes` ORDER BY grpcls_id DESC LIMIT 1";
+$sqls = "SELECT grpcls_id FROM `tbl_group_classes` ORDER BY grpcls_id DESC LIMIT 1";
 $result = mysqli_query($conn, $sqls);
 $row = mysqli_fetch_array($result, MYSQLI_NUM);
 
 /* ALTER Table Query */
-$update_Query = "UPDATE `tbl_recurring_group_classes` SET grpcls_slug='Free-30-min-Chichewa-Trial-$row[0]' WHERE grpcls_id=$row[0]";
+$update_Query = "UPDATE `tbl_group_classes` SET grpcls_slug='Free-30-min-Chichewa-Trial-$row[0]' WHERE grpcls_id=$row[0]";
 
 
 if ($conn->query($update_Query) === TRUE) {
@@ -219,7 +219,7 @@ if ($conn->query($update_Query) === TRUE) {
 
 
 /* Start - Thursday */
-$sql = "INSERT INTO `tbl_recurring_group_classes`(
+$sql = "INSERT INTO `tbl_group_classes`(
     `grpcls_id`,
     `grpcls_tlanguage_id`,
     `grpcls_title`,
@@ -262,12 +262,12 @@ if ($conn->query($sql) === TRUE) {
 }
 
 /* Update the Slug Id */
-$sqls = "SELECT grpcls_id FROM `tbl_recurring_group_classes` ORDER BY grpcls_id DESC LIMIT 1";
+$sqls = "SELECT grpcls_id FROM `tbl_group_classes` ORDER BY grpcls_id DESC LIMIT 1";
 $result = mysqli_query($conn, $sqls);
 $row = mysqli_fetch_array($result, MYSQLI_NUM);
 
 /* ALTER Table Query */
-$update_Query = "UPDATE `tbl_recurring_group_classes` SET grpcls_slug='Free-30-min-Chichewa-Trial-$row[0]' WHERE grpcls_id=$row[0]";
+$update_Query = "UPDATE `tbl_group_classes` SET grpcls_slug='Free-30-min-Chichewa-Trial-$row[0]' WHERE grpcls_id=$row[0]";
 
 
 if ($conn->query($update_Query) === TRUE) {
@@ -279,7 +279,7 @@ if ($conn->query($update_Query) === TRUE) {
 /* End - Thursday */
 
 /* Start - Friday */
-$sql = "INSERT INTO `tbl_recurring_group_classes`(
+$sql = "INSERT INTO `tbl_group_classes`(
     `grpcls_id`,
     `grpcls_tlanguage_id`,
     `grpcls_title`,
@@ -322,12 +322,12 @@ if ($conn->query($sql) === TRUE) {
 }
 
 /* Update the Slug Id */
-$sqls = "SELECT grpcls_id FROM `tbl_recurring_group_classes` ORDER BY grpcls_id DESC LIMIT 1";
+$sqls = "SELECT grpcls_id FROM `tbl_group_classes` ORDER BY grpcls_id DESC LIMIT 1";
 $result = mysqli_query($conn, $sqls);
 $row = mysqli_fetch_array($result, MYSQLI_NUM);
 
 /* ALTER Table Query */
-$update_Query = "UPDATE `tbl_recurring_group_classes` SET grpcls_slug='Free-30-min-Chichewa-Trial-$row[0]' WHERE grpcls_id=$row[0]";
+$update_Query = "UPDATE `tbl_group_classes` SET grpcls_slug='Free-30-min-Chichewa-Trial-$row[0]' WHERE grpcls_id=$row[0]";
 
 
 if ($conn->query($update_Query) === TRUE) {

@@ -22,6 +22,7 @@ $user_become_sponsership_plan = $profileFrm->getField('user_become_sponsership_p
 $user_become_sponsership_plan->addFieldTagAttribute('readonly', true);
 $genderField = $profileFrm->getField('user_gender');
 $phoneField = $profileFrm->getField('user_phone');
+$ZipCode = $profileFrm->getField('user_zip');
 $countryField = $profileFrm->getField('user_country_id');
 $timeZoneField = $profileFrm->getField('user_timezone');
 $profileFrm->getField('user_phone')->addFieldTagAttribute('id', 'user_phone');
@@ -45,14 +46,11 @@ $ChangenewPassword = $ChnagePasswordfrm->getField('new_password');
 $ChangeconfNewPassword = $ChnagePasswordfrm->getField('conf_new_password');
 $ChangesubmitBtn = $ChnagePasswordfrm->getField('btn_submit');
 $ChangesubmitBtn->setFieldTagAttribute('form', $ChnagePasswordfrm->getFormTagAttribute('id'));
-
-// Profile Image
 $profileImgFrm->setFormTagAttribute('action', CommonHelper::generateUrl('DashboardEventVisitor', 'setUpProfileImage'));
 $profileImgFrm->setFormTagAttribute('onsubmit', 'sumbmitProfileImage(false); return(false);');
 $profileImgFrm->setFormTagAttribute('id', 'frmProfile');
 $profileImgFrm->setFormTagAttribute('class', 'form form--horizontal');
 $profileImageField = $profileImgFrm->getField('user_profile_image');
-
 ?>
 
 <script>
@@ -63,7 +61,6 @@ $profileImageField = $profileImgFrm->getField('user_profile_image');
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="tab-content" id="myTabContent">
     <div class="dashboard-section account-section">
-
         <div class="tab">
             <button class="tablinks" onclick="openCity(event, 'PersonalInfo')" id="defaultOpen">Personal Info</button>
             <button class="tablinks" onclick="openCity(event, 'ProfileImage')">Photos</button>
@@ -71,7 +68,6 @@ $profileImageField = $profileImgFrm->getField('user_profile_image');
             <button class="tablinks" onclick="openCity(event, 'Password')">Password</button>
             <button class="tablinks" onclick="getCookieConsentForm(false)">Cookie Consent</button>
         </div>
-
         <div id="PersonalInfo" class="tabcontent">
             <!-- Contact Form Information -->
             <div class="padding-6 events-tickets-section">
@@ -83,7 +79,6 @@ $profileImageField = $profileImgFrm->getField('user_profile_image');
                         echo $profileFrm->getFieldHtml('user_id');
                     }
                     ?>
-
                     <div class="row">
                         <div class="col-md-12">
                             <div>
@@ -137,8 +132,6 @@ $profileImageField = $profileImgFrm->getField('user_profile_image');
                         </div>
                     </div>
 
-
-
                     <div class="row">
                         <div class="col-md-12">
                             <div class="field-set">
@@ -164,10 +157,10 @@ $profileImageField = $profileImgFrm->getField('user_profile_image');
                             <div class="field-set">
                                 <div class="caption-wraper">
                                     <label class="field_label"><?php echo Label::getLabel('LBL_Address'); ?>
-                                        <?php if ($addressFirstField->requirement->isRequired()) { 
+                                        <?php if ($addressFirstField->requirement->isRequired()) {
                                         ?>
-                                        <span class="spn_must_field">*</span>
-                                        <?php } 
+                                            <span class="spn_must_field">*</span>
+                                        <?php }
                                         ?>
                                     </label>
                                 </div>
@@ -179,6 +172,25 @@ $profileImageField = $profileImgFrm->getField('user_profile_image');
                                                 <li class="event-second-name"><?php echo $addressSecondField->getHTML('user_address2'); ?></li>
                                             </ul>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="field-set">
+                                <div class="caption-wraper">
+                                    <label class="field_label"> <?php echo $ZipCode->getCaption(); ?>
+                                        <?php if ($ZipCode->requirement->isRequired()) { ?>
+                                            <span class="spn_must_field">*</span>
+                                        <?php } ?>
+                                    </label>
+                                </div>
+                                <div class="field-wraper">
+                                    <div class="field_cover">
+                                        <?php echo $ZipCode->getHTML(); ?>
                                     </div>
                                 </div>
                             </div>
@@ -203,7 +215,6 @@ $profileImageField = $profileImgFrm->getField('user_profile_image');
                             </div>
                         </div>
                     </div>
-
 
                     <div class="row">
                         <div class="col-md-12">
@@ -241,7 +252,6 @@ $profileImageField = $profileImgFrm->getField('user_profile_image');
                 </div>
             </div>
         </div>
-
 
         <div id="ProfileImage" class="tabcontent">
             <div class="padding-6">

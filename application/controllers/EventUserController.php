@@ -1371,7 +1371,7 @@ class EventUserController extends MyEventAppController
                 'coupon_id' => $CorporateplanResult["corporate_ticket_id"],
                 'coupon_discount_in_percent' => 1,
             ];
-            $couponDiscountValue = $cartSubTotal * $CorporateplanResult['corporate_ticket_discount'] / 100; 
+            $couponDiscountValue = $cartSubTotal * $CorporateplanResult['corporate_ticket_discount'] / 100;
             if ($cartSubTotal < $couponDiscountValue) {
                 $couponDiscountValue = $cartSubTotal;
             }
@@ -4738,7 +4738,7 @@ class EventUserController extends MyEventAppController
         Message::addMessage(Label::getLabel('MSG_Email_Updated._Please_Login_again_in_your_profile_with_new_email'));
         $this->logout();
     }
-    
+
     private static function verifyFacebookUserAccessToken($facebookUserAccessToken, $userFacebookId, &$error = '')
     {
         $facebookUserAccessToken = filter_var($facebookUserAccessToken, FILTER_SANITIZE_STRING);

@@ -357,7 +357,7 @@ if (!empty($planResult['plan_image'])) {
                                         <div id="collapseOne" class="collapse show" aria-labelledby="church-accordian" data-parent="#accordion">
                                             <div class="card-body">
                                                 <div class="sitename">
-                                                    <h5>UbuntuTalks</h5>
+                                                    <h5>Ubuntu Talks</h5>
                                                 </div>
                                                 <p>Events Ticketing - <?php echo $cartData['itemName']; ?></p>
                                                 <div>

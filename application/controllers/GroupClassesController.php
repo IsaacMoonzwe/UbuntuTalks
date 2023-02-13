@@ -99,7 +99,7 @@ class GroupClassesController extends MyAppController
             Message::addErrorMessage($frm->getValidationErrors());
             FatApp::redirectUser(CommonHelper::generateUrl('contact'));
         }
-      
+
         if (!CommonHelper::verifyCaptcha()) {
             Message::addErrorMessage(Label::getLabel('MSG_That_captcha_was_incorrect', $this->siteLangId));
             FatApp::redirectUser(CommonHelper::generateUrl('contact'));
@@ -114,16 +114,16 @@ class GroupClassesController extends MyAppController
             $country = FatApp::getPostedData('country', FatUtility::VAR_STRING, '');
             $post['country'] = $country;
             $time = FatApp::getPostedData('timeZone', FatUtility::VAR_STRING, '');
-            $post['user_timezone'] = '('.$time;
-         
+            $post['user_timezone'] = '(' . $time;
+
             if (!$email->GroupsendContactFormEmail($emailId, $this->siteLangId, $post)) {
                 Message::addErrorMessage(Label::getLabel('MSG_email_not_sent_server_issue', $this->siteLangId));
             } else {
-                Message::addMessage(Label::getLabel('MSG_your_message_sent_successfully', $this->siteLangId));
+                //Message::addMessage(Label::getLabel('MSG_your_message_sent_successfully', $this->siteLangId));
             }
         }
         $this->set('redirectUrl', CommonHelper::generateUrl('GroupClasses'));
-        $this->set('msg', Label::getLabel('MSG_Redirecting', $this->siteLangId));
+        $this->set('msg', Label::getLabel('MSG_your_message_sent_successfully', $this->siteLangId));
         $this->_template->render(false, false, 'json-success.php');
     }
 

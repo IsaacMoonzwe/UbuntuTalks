@@ -71,7 +71,6 @@ class EventsController extends MyEventAppController
         $srch_agenda_details->addGroupBy('DATE(agenda_start_time)');
         $agenda_categories = $srch_agenda_details->getResultSet();
         $AgendaCategoriesList = FatApp::getDb()->fetchAll($agenda_categories);
-
         $AgendaEventsrecods = FatApp::getDb()->fetchAll($agenda_categories);
         foreach ($AgendaCategoriesList as $key => $value) {
             $srch_agends_events_details = new SearchBase('tbl_three_reasons');

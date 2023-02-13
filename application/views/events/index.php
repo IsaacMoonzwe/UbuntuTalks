@@ -1007,6 +1007,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                        <div class="ticket-card-nav">
                                           <div>
                                              <h2 class="ticket-price"><?php echo "USD " . $value['benefit_concert_plan_price']; ?></h2>
+                                             <h2 class="ticket-price"><?php echo "kwacha " . $value['benefit_concert_plan_zk_price']; ?></h2>
                                              <div class="ticket-date">
                                                 <p class="ticket-decription"><?php echo $value['benefit_concert_plan_description']; ?></p>
                                                 <div class="ticket-information">
