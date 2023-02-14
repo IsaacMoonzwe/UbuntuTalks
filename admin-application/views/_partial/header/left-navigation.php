@@ -123,6 +123,9 @@ $adminLoggedId = AdminAuthentication::getLoggedAdminId();
                             <li><a href="<?php echo CommonHelper::generateUrl('PreSymposiumDinnerInformation', 'viewSchedules', ['all']); ?>"><?php echo Label::getLabel('LBL_Symposium_Dinner_Booking_Listing', $adminLangId); ?></a></li>
                         <?php } ?>
                         <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
+                            <li><a href="<?php echo CommonHelper::generateUrl('CorporatesInformation', 'viewSchedules', ['all']); ?>"><?php echo Label::getLabel('LBL_Corporate_Sponsor_Ticket_Listing', $adminLangId); ?></a></li>
+                        <?php } ?>
+                        <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>
                             <li><a href="<?php echo CommonHelper::generateUrl('LanguageSymposium'); ?>"><?php echo Label::getLabel('LBL_UT_Content_Blocks', $adminLangId); ?></a></li>
                         <?php } ?>
                         <?php if ($objPrivilege->canViewUsers($adminLoggedId, true)) { ?>

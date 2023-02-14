@@ -120,8 +120,8 @@ if (!empty($planResult['plan_image'])) {
 
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
-                                        <label class="form-check-label" for="exampleRadios1">Personal Details</label>
-                                        <a href="JavaScript:Void(0);" class="edit-btn hide-btn">Show</a>
+                                        <label class="form-check-label" for="exampleRadios1"><?php echo Label::getLabel('LBL_Personal_Details'); ?></th></label>
+                                        <a href="JavaScript:Void(0);" class="edit-btn hide-btn"><?php echo Label::getLabel('LBL_Show'); ?></th></a>
                                     </div>
                                 </div>
                                 <div class="payment-details-block personal-details-block">
@@ -169,7 +169,7 @@ if (!empty($planResult['plan_image'])) {
                                             </div>
                                         </div>
                                         <div class="button-box">
-                                            <a href="JavaScript:Void(0);" class="btn-green continue-btn">Continue</a>
+                                            <a href="JavaScript:Void(0);" class="btn-green continue-btn"><?php echo Label::getLabel('LBL_Continue'); ?></a>
                                         </div>
                                     </form>
                                 </div>
@@ -179,7 +179,7 @@ if (!empty($planResult['plan_image'])) {
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option2">
                                         <label class="form-check-label" for="exampleRadios1">
-                                            Choose Payment Method
+                                        <?php echo Label::getLabel('LBL_Choose_Payment_Method'); ?>
                                         </label>
                                     </div>
                                 </div>
@@ -188,7 +188,7 @@ if (!empty($planResult['plan_image'])) {
                                         <ul class="nav nav-tabs" id="paymenttab" role="tablist">
                                             <li class="nav-item">
                                                 <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true"><i class="fas fa-credit-card"></i>
-                                                    <span>Card</span>
+                                                    <span><?php echo Label::getLabel('LBL_Card'); ?></span>
                                                 </a>
                                             </li>
                                         </ul>
@@ -350,21 +350,21 @@ if (!empty($planResult['plan_image'])) {
                                                 </button>
                                             </h5>
                                             <div class="location-title venue">
-                                                <span>WEBSITE:&nbsp;&nbsp;</span><a href="#">https://www.micc.co.zm</a>
+                                                <span><?php echo Label::getLabel('LBL_WEBSITE'); ?>:&nbsp;&nbsp;</span><a href="https://www.micc.co.zm">https://www.micc.co.zm</a>
                                             </div>
                                         </div>
 
                                         <div id="collapseOne" class="collapse show" aria-labelledby="church-accordian" data-parent="#accordion">
                                             <div class="card-body">
                                                 <div class="sitename">
-                                                    <h5>Ubuntu Talks</h5>
+                                                    <h5><?php echo Label::getLabel('LBL_Ubuntu_Talks'); ?></h5>
                                                 </div>
-                                                <p>Events Ticketing - <?php echo $cartData['itemName']; ?></p>
+                                                <p><?php echo Label::getLabel('LBL_Event_Tickting'); ?> - <?php echo $cartData['itemName']; ?></p>
                                                 <div>
-                                                    <span>WEBSITE:</span><a href="#">https://ubuntutalks.com</a>
+                                                    <span><?php echo Label::getLabel('LBL_WEBSITE'); ?>:</span><a href="https://ubuntutalks.com/">https://ubuntutalks.com</a>
                                                 </div>
                                                 <div>
-                                                    <span>E-MAIL:</span><a href="#">admin@ubuntutalks.com</a>
+                                                    <span><?php echo Label::getLabel('LBL_EMAIL'); ?>:</span><a href="#">admin@ubuntutalks.com</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -373,7 +373,7 @@ if (!empty($planResult['plan_image'])) {
                             </div>
                             <div class="bottom-payment-box">
                                 <div>
-                                    <span>SERVICE DATE</span>
+                                    <span><?php echo Label::getLabel('LBL_Service_Date'); ?></span>
                                     <p><?php echo $today = date("D M j G:i:s T Y");  ?></p>
                                 </div>
                             </div>
@@ -381,7 +381,7 @@ if (!empty($planResult['plan_image'])) {
 
                             <div class="total-box" id="pay_total_box">
                                 <div class="payment-total">
-                                    <h3>Total</h3>
+                                    <h3><?php echo Label::getLabel('LBL_Total'); ?></h3>
                                     <div class="input-group">
                                         <select class="form-control" id="exampleFormControlSelect1">
                                             <option><?php echo $cartData['currency']; ?></option>

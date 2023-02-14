@@ -158,8 +158,6 @@
                     <svg class="icon icon--back">
                       <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
                     </svg>
-                    <?php //echo Label::getLabel('LBL_BACK'); 
-                    ?>
                   </a>
                 </div>
                 <div class="header__logo">
@@ -192,30 +190,18 @@
   </div>
 </section>
 <script>
-  // $(function() {
-  //     stripe.redirectToCheckout({
-  //         sessionId: '<?php //echo $stripeSessionId 
-                          ?>'
-  //     });
-  // });
 </script>
 <script src="https://js.stripe.com/v3/"></script>
 <script type="text/javascript">
-  const stripe = Stripe("pk_live_51JwGHMEBydRe3lMmmahLFCh1YNTKub0lzgFJjhXDlDYD5Jt0LadbEhxKJ2vQKoRptpyXyVXt4Sax6C2gTlkPudQn00zyBXlhX3");
+  //const stripe = Stripe("pk_live_51JwGHMEBydRe3lMmmahLFCh1YNTKub0lzgFJjhXDlDYD5Jt0LadbEhxKJ2vQKoRptpyXyVXt4Sax6C2gTlkPudQn00zyBXlhX3");
 
-  //const stripe = Stripe("pk_test_51JwGHMEBydRe3lMmSMnKBfxpsc6QoqlBI7vQMsj53qfdPSNNq97yVUHEpUaoeckkrFIx2aFVTH8YZdYpxQSrGcya00je6gTKLD");
+  const stripe = Stripe("<?php echo $stripe['publishable_key']; ?>");
+ // console.log(stripe);
 
   // The items the customer wants to buy
   const items = [{
     id: <?php echo $paymentAmount; ?>
   }];
-
-  //  const items = [{
-  //     id: <?php echo $currency_amount; ?>
-  //   }];
-
-  // console.log("it--",items);
-
   let elements;
 
   initialize();
@@ -306,7 +292,6 @@
   }
 
   // ------- UI helpers -------
-
   function showMessage(messageText) {
     const messageContainer = document.querySelector("#payment-message");
 

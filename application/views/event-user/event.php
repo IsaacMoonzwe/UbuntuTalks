@@ -64,7 +64,8 @@
                                             <div class="book-ticket">
                                                 <span>
                                                     <h3><?php echo $EventsList['registration_plan_title']; ?></h3>
-                                                    <p><?php echo "USD" . $EventsList['registration_plan_price']; ?></p>
+                                                    <p><?php //echo "USD" . $EventsList['registration_plan_price']; ?></p>
+                                                    <p id='ccode'><?php echo "$" . $EventsList['registration_plan_price']; ?></p>
                                                 </span>
                                                 <select class="form-control" name="ticketCount" onchange="eventCart.props.countOfTickets=parseInt(this.value);">
                                                     <?php for ($i = 1; $i <= 10; $i++) {
@@ -180,26 +181,28 @@
                 $('.cur_symbol').text(oldsymbol);
             }
         })
-
     });
     $("#event_currencyswitchers").change(function() {
         var data = $(this).val();
         $.loader.show();
         if (data == 'ZMW') {
+            var currprice  = '<?php echo $EventsList['registration_plan_zk_price']; ?>';
             $('#paypal-payment').parents('label').addClass('hide-section');
             $('#google-pay').parents('label').addClass('hide-section');
             $('.wallet-section').addClass('hide-section');
             eventCart.props.currencyCode = 'ZK';
             $('#code').val('ZK');
+            $('#ccode').text(eventCart.props.currencyCode+currprice);
         } else {
+            var currprice  = '<?php echo $EventsList['registration_plan_price']; ?>';
             $('#paypal-payment').parents('label').removeClass('hide-section');
             $('#google-pay').parents('label').removeClass('hide-section');
             $('.wallet-section').removeClass('hide-section');
             $('#code').val('$');
             eventCart.props.currencyCode = '$';
+            $('#ccode').text(eventCart.props.currencyCode+currprice);
         }
         $.loader.hide();
-        console.log("currSymbol==", $(this).data('curr'))
         eventCart.props.currency = $(this).val();
     });
 </script>

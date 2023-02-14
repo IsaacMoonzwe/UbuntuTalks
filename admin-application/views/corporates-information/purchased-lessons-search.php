@@ -40,37 +40,33 @@
                     <thead>
                         <tr>
                             <th><?php echo Label::getLabel('LBL_SR_No', $adminLangId); ?></th>
-                            <th><?php echo Label::getLabel('LBL_Concert_Id', $adminLangId); ?></th>
+                            <th><?php echo Label::getLabel('LBL_Corporate_Id', $adminLangId); ?></th>
                             <th><?php echo Label::getLabel('LBL_Visitor_Email', $adminLangId); ?></th>
                             <th><?php echo Label::getLabel('LBL_Visitor_Name', $adminLangId); ?></th>
                             <th><?php echo Label::getLabel('LBL_Visitor_Phone', $adminLangId); ?></th>
-                            <th><?php echo Label::getLabel('LBL_Tickert_Category', $adminLangId); ?></th>
-                            <th><?php echo Label::getLabel('LBL_Starting_Date', $adminLangId); ?></th>
-                            <th><?php echo Label::getLabel('LBL_Ending_Date', $adminLangId); ?></th>
+                            <th><?php echo Label::getLabel('LBL_Corporate_Category', $adminLangId); ?></th>
+                            <th><?php echo Label::getLabel('LBL_Discount', $adminLangId); ?></th>
                             <th><?php echo Label::getLabel('LBL_Total_Ticket', $adminLangId); ?></th>
-                            <th><?php echo Label::getLabel('LBL_Download_Ticket_Receipt', $adminLangId); ?></th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $i = 1;
-                        foreach ($BenefitConcertCategoriesList as $value) {  ?>
+                        foreach ($CorporateCategoriesList as $value) {  ?>
                             <tr class="pending-class">
                                 <td><?php echo $i++; ?></td>
-                                <td><?php echo $value['event_user_concert_id']; ?></td>
+                                <td><?php echo $value['event_user_corporate_id']; ?></td>
                                 <td><?php echo $value['user_email']; ?></td>
                                 <td><?php echo $value['user_first_name'] . " " . $value['user_last_name']; ?></td>
                                 <td><?php echo $value['user_phone_code'] . " " . $value['user_phone']; ?></td>
-                                <td><?php echo $value['registration_plan_title']; ?></td>
-                                <td><?php echo $value['registration_starting_date']; ?></td>
-                                <td><?php echo $value['registration_ending_date']; ?></td>
-                                <td><?php echo $value['event_user_ticket_count']; ?></td>
-                                <td><a href="<?php echo $value['event_user_ticket_download_url']; ?>" download="<?php echo $value['registration_plan_title'] . '.jpeg'; ?>">Download</a></td>
+                                <td><?php echo $value['corporate_ticket_title']; ?></td>
+                                <td><?php echo $value['corporate_discount'] . '%'; ?></td>
+                                <td><?php echo $value['event_user_sponsership_qty']; ?></td>
                             </tr>
                         <?php } ?>
                     </tbody>
                 </table>
                 <?php
-                if (!empty($BenefitConcertCategoriesList)) {
+                if (!empty($CorporateCategoriesList)) {
                 } else {
                 ?>
                     <h3 style="text-align:center;padding-top:15px;">No Records Found..!!</h3>
