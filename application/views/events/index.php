@@ -10,6 +10,14 @@ $contactFrm->setFormTagAttribute('action', CommonHelper::generateUrl('Events', '
 $contactFrm->developerTags['colClassPrefix'] = 'col-md-';
 $contactFrm->developerTags['fld_default_col'] = 12;
 ?>
+<style>
+   .topHeading-block {
+      padding: 15px;
+   }
+   .others-speakers .topHeading-block img{
+      margin-top: 0px !important;
+   }
+</style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
 <section class="section">
    <div class="container container--narrow">
@@ -312,7 +320,6 @@ $contactFrm->developerTags['fld_default_col'] = 12;
 
 
                         <div class="tab-content" id="seperrateprogramTabContent">
-
                            <div class="tab-pane fade show active" id="seperrateprogram" role="tabpanel" aria-labelledby="seperrateprogram-tab">
                               <div class="seperrateprogramTab-data">
                                  <?php echo FatUtility::decodeHtmlEntities($ProgramSpeakersDescription); ?>
@@ -322,17 +329,88 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                            <div class="tab-pane fade" id="speakers" role="tabpanel" aria-labelledby="speakers-tab">
                               <div class="seperrateprogramTab-data">
                                  <div class="others-speakers">
-                                    <div class="row topHeading-block">
-                                       <div class="col-lg-12">
-                                          <?php echo FatUtility::decodeHtmlEntities($ProgramSpeakersFirstKeyNoteDescription); ?>
+                                    <div class="topHeading-block">
+                                       <div class="row">
+                                          <div class="col-lg-12">
+                                             <?php echo FatUtility::decodeHtmlEntities($ProgramSpeakersFirstKeyNoteDescription); ?>
+                                          </div>
+                                          <div class="col-lg-12">
+                                             <?php echo FatUtility::decodeHtmlEntities($ProgramSpeakersSecondKeyNoteDescription); ?>
+                                          </div>
+                                          <div class="col-lg-12">
+                                             <?php echo FatUtility::decodeHtmlEntities($ProgramSpeakersThirdKeyNoteDescription); ?>
+                                          </div>
                                        </div>
-                                       <div class="col-lg-12">
-                                          <?php echo FatUtility::decodeHtmlEntities($ProgramSpeakersSecondKeyNoteDescription); ?>
+                                       <!-- Light Box -->
+                                       <div class="gallery-wrapper">
+                                          <div class="row">
+                                             <?php
+                                             foreach ($records as  $value) {
+                                                if ($value['speakers_positions_listing'] == 'Honorary and Keynote Speakers') {
+                                                   if (!empty($value['speaker_image'])) {
+                                                      foreach ($value['speaker_image'] as $testimonialImg) {
+                                                         $htmlAfterField = '<img src="' . CommonHelper::generateFullUrl('Events', 'sponsorshipimage', array($testimonialImg['afile_record_id'], $testimonialImg['afile_lang_id'], 'HIGH')) . '?' . time() . '">';
+                                                      }
+                                                   }
+                                             ?>
+                                                   <div class="col-lg-4">
+                                                      <div class="image-wrapper">
+                                                         <a href=<?php echo "#" . $value['speakers_id']; ?>>
+                                                            <div class="lightbox-image-box entertainment-image">
+                                                               <?php echo $htmlAfterField; ?>
+                                                               <div class="lightbox-image-hover">
+                                                                  <span><?php echo Label::getLabel('LBL_View_Profile_>', $adminLangId); ?></span>
+                                                               </div>
+                                                            </div>
+                                                            <div class="image-title">
+                                                               <h3><?php echo $value['speakers_user_name']; ?></h3>
+                                                               <p class="list-sub-title"><?php echo $value['speakers_positions']; ?></p>
+                                                            </div>
+                                                         </a>
+                                                      </div>
+                                                   </div>
+                                             <?php }
+                                             } ?>
+                                          </div>
                                        </div>
-                                       <div class="col-lg-12">
-                                          <?php echo FatUtility::decodeHtmlEntities($ProgramSpeakersThirdKeyNoteDescription); ?>
+                                       <div class="gallery-lightboxes">
+                                          <?php foreach ($records as  $value) {
+                                             if ($value['speakers_positions_listing'] == 'Honorary and Keynote Speakers') {
+                                                if (!empty($value['speaker_image'])) {
+                                                   foreach ($value['speaker_image'] as $testimonialImg) {
+                                                      $htmlAfterField = '<img src="' . CommonHelper::generateFullUrl('Events', 'sponsorshipimage', array($testimonialImg['afile_record_id'], $testimonialImg['afile_lang_id'], 'MEDIUM')) . '?' . time() . '">';
+                                                   }
+                                                }    ?>
+                                                <div class="image-lightbox" id=<?php echo $value['speakers_id']; ?>>
+                                                   <div class="image-lightbox-wrapper">
+                                                      <a href="#0" class="close"></a>
+                                                      <div class="lightbox-detail-text">
+                                                         <div class="lightbox-top-detail">
+                                                            <div class="lightbox-image-box">
+                                                               <?php echo $htmlAfterField; ?>
+                                                            </div>
+                                                            <div class="image-title">
+                                                               <h3><?php echo $value['speakers_user_name']; ?></h3>
+                                                               <p class="list-sub-title"><?php echo $value['speakers_positions']; ?></p>
+                                                            </div>
+                                                         </div>
+                                                         <div class="lightbox-bottom-detail">
+                                                            <div class="profile-details">
+                                                               <h5 class="strong"><?php echo Label::getLabel('LBL_About_The_Speaker', $adminLangId); ?></h5>
+                                                               <div class="profile-description">
+                                                                  <?php echo $value['speakers_description']; ?>
+                                                               </div>
+                                                            </div>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                          <?php }
+                                          } ?>
                                        </div>
+                                       <!-- End Lightbox-->
                                     </div>
+
                                     <div class="speakers-heading-main">
                                        <h4 class="speaker_heading"><?php echo Label::getLabel('LBL_Others_Speakers', $adminLangId); ?></h4>
                                        <h3 class="speaker_heading"><?php echo Label::getLabel('LBL_Complete_List_Comming_Soon', $adminLangId); ?></h3>
@@ -1152,6 +1230,9 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                 <span><img src="https://iili.io/SXumsS.png" alt=""><?php echo $duration; ?></span>
                                                 <?php if (!empty($value['agenda_event_location'])) { ?>
                                                    <span><img src="https://iili.io/SXubX2.png" alt=""><?php echo $value['agenda_event_location']; ?></span>
+                                                <?php }  ?>
+                                                <?php if (!empty($value['agenda_information'])) { ?>
+                                                   <span><img src="https://iili.io/HEmDQAx.png" alt=""><?php echo $value['agenda_information']; ?></span>
                                                 <?php }  ?>
                                              </p>
                                           </div>

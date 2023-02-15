@@ -152,11 +152,9 @@ class EventUser extends MyAppModel
             $langId = CommonHelper::getLangId();
         }
         return [
-            'Gluten Free'=>Label::getLabel('LBL_Gluten_Free', $langId),
+            'Chiken'=>Label::getLabel('LBL_Chiken', $langId),
             'Vegan'=>Label::getLabel('LBL_Vegan', $langId),
-            'Vegatarian'=>Label::getLabel('LBL_Vegatarian', $langId),
-            'Pescatarian'=>Label::getLabel('LBL_Pescatarian', $langId),
-            'Dairy Free'=>Label::getLabel('LBL_Dairy_Free', $langId),
+            'Beef'=>Label::getLabel('LBL_Beef', $langId),
             'Other'=>Label::getLabel('LBL_Other', $langId),
         ];
     }

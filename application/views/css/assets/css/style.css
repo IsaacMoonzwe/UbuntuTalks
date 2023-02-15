@@ -820,13 +820,19 @@ a.edit-btn {
     margin-bottom: 10px !important;
 }
 
-.church-accordian div#church-accordian h5 button p {
+#church-accordian p.location-title span {
+    color: #292b2c;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* .church-accordian div#church-accordian h5 button p {
     display: flex;
     justify-content: space-between;
     width: 100%;
     flex: 1 1 100%;
     text-decoration: none;
-}
+} */
 
 .card {
     padding: 0px !important;

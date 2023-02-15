@@ -74,7 +74,7 @@ $cartData = $_SESSION['cart'];
                     <div class="col-lg-6 info_form_div">
                         <div class="billing-details-box">
                             <form id="billing" name="billing" action="#">
-                                <h3 class="form_head"><?php echo Label::getLabel('LBL_Billing_Detail'); ?></h3>
+                                <h3 class="form_head"><?php echo Label::getLabel('LBL_Billing_Details'); ?></h3>
                                 <div class="row Registration-Form">
                                     <?php if (isset($loggedIn) && $loggedIn == false) { ?>
                                         <div class="login-registration">
@@ -106,7 +106,7 @@ $cartData = $_SESSION['cart'];
 
                                     <div class="col-lg-12">
                                         <div class="form-group">
-                                            <label for="companyName"><?php echo Label::getLabel('LBL_Company_Name'); ?>(optional)</label>
+                                            <label for="companyName"><?php echo Label::getLabel('LBL_Company_Name'); ?> (optional)</label>
                                             <input type="text" class="form-control" name="companyName" id="companyName" aria-describedby="" placeholder="">
                                         </div>
                                     </div>
@@ -215,7 +215,7 @@ $cartData = $_SESSION['cart'];
                                 for ($i = 0; $i < $checkoutCart['ticketQty']; $i++) {
                                 ?>
                                     <div class="Ticket-Form">
-                                        <h3>Ticket <?php echo $ticket; ?>: <br><?php echo $EventsList['registration_plan_title']; ?></h3>
+                                        <h3>Ticket <?php echo '('.$ticket.')'; ?><br><?php echo $EventsList['registration_plan_title']; ?></h3>
                                         <div class="row">
                                             <div class="col-lg-12">
                                                 <div class="form-group">

@@ -158,6 +158,7 @@
                     <svg class="icon icon--back">
                       <use xlink:href="<?php echo CONF_WEBROOT_URL . 'images/sprite.yo-coach.svg#back'; ?>"></use>
                     </svg>
+                    <?php echo Label::getLabel('LBL_BACK'); ?>
                   </a>
                 </div>
                 <div class="header__logo">

@@ -1125,7 +1125,7 @@ ValidateLogin=function(){
   eventWalletSelection = function (el, walletBalance, fromSelector = '') {
     if (walletBalance <= 0) {
       $.loader.hide();
-      $.mbsmessage("InSufficient wallet balance", true, "alert alert--danger");
+      $.mbsmessage("Insufficient wallet balance", true, "alert alert--danger");
       $(el).prop('checked', false);
       return false;
     }

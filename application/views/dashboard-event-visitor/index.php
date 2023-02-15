@@ -401,7 +401,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                                 <th><?php echo Label::getLabel('LBL_Events'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Starting_Date'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Ending_Date'); ?></th>
-                                                                <th><?php echo Label::getLabel('LBL_No_of_Tickets'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_#_of_Tickets'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Price'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Coupon_Code'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Attendee_Details'); ?></th>
@@ -586,7 +586,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                                 <th><?php echo Label::getLabel('LBL_Concert_Tickets_Category'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Starting_Date'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Ending_Date'); ?></th>
-                                                                <th><?php echo Label::getLabel('LBL_No_of_Tickets'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_#_of_Tickets'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Price'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Coupon_Code'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Tickets'); ?></th>
@@ -656,7 +656,7 @@ $contactFrm->developerTags['fld_default_col'] = 12;
                                                                 <th><?php echo Label::getLabel('LBL_Concert_Tickets_Category'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Starting_Date'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Ending_Date'); ?></th>
-                                                                <th><?php echo Label::getLabel('LBL_No_of_Tickets'); ?></th>
+                                                                <th><?php echo Label::getLabel('LBL_#_of_Tickets'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Price'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Coupon_Code'); ?></th>
                                                                 <th><?php echo Label::getLabel('LBL_Tickets'); ?></th>

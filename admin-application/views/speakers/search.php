@@ -7,6 +7,7 @@ $arr_flds = array(
     'testimonial_image' => Label::getLabel('LBL_Image', $adminLangId) ,
     'speakers_user_name' => Label::getLabel('LBL_Speakers_Name', $adminLangId) ,
     'speakers_positions' => Label::getLabel('LBL_Speaker_Positions', $adminLangId) ,
+    'speakers_positions_listing' => Label::getLabel('LBL_Category', $adminLangId) ,
     'speakers_description' => Label::getLabel('LBL_Description', $adminLangId) ,
     'speakers_active' => Label::getLabel('LBL_Status', $adminLangId) ,
     'action' => Label::getLabel('LBL_Action', $adminLangId) ,

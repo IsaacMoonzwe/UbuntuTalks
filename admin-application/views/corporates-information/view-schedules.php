@@ -24,7 +24,7 @@
                     <div class="row">
                         <div class="col--first col-lg-6">
                             <span class="page__icon"><i class="ion-android-star"></i></span>
-                            <h5><?php echo Label::getLabel('LBL_Benefit_Concert_Report_Listing', $adminLangId); ?> </h5>
+                            <h5><?php echo Label::getLabel('LBL_Corporate_Report_Listing', $adminLangId); ?> </h5>
                             <?php $this->includeTemplate('_partial/header/header-breadcrumb.php'); ?>
                         </div>
                     </div>

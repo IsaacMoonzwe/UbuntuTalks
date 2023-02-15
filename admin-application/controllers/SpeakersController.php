@@ -78,7 +78,8 @@ class SpeakersController extends AdminBaseController
                 'speakers_user_name',
                 'speakers_positions',
                 'speakers_description',
-                'speakers_positions_listing'
+                'speakers_positions_listing',
+                'user_food_department'
             ]);
             if ($data === false) {
                 FatUtility::dieWithError($this->str_invalid_request);
@@ -106,7 +107,18 @@ class SpeakersController extends AdminBaseController
         if ($testimonialId == 0) {
             $post['speakers_added_on'] = date('Y-m-d H:i:s');
         }
+        // $user_food_department  = implode(',', $post['user_food_department']);
+        // if (isset($post['user_food_department']) && !empty($post['user_food_department']) && $user_food_department[0] != '') {
+        //     $user_food_department  = implode(',', $post['user_food_department']);
+        //     $post['user_food_department'] = $user_food_department;
+        // } else {
+        //     $post['user_food_department'] = "";
+        // }
         $record = new Speakers($testimonialId);
+        if (false === $post) {
+            Message::addErrorMessage(current($frm->getValidationErrors()));
+            FatUtility::dieWithError(Message::getHtml());
+        }
         $record->assignValues($post);
         if (!$record->save()) {
             Message::addErrorMessage($record->getError());
@@ -357,6 +369,11 @@ class SpeakersController extends AdminBaseController
         $frm->addRequiredField(Label::getLabel('LBL_Speakers_Positions', $this->adminLangId), 'speakers_positions');
         $frm->addTextarea(Label::getLabel('LBL_Description', $this->adminLangId), 'speakers_description')->requirements()->setRequired();
         $frm->addSelectBox(Label::getLabel('LBL_Positions', $this->adminLangId), 'speakers_positions_listing', $speakers_positions, '', [], '')->requirements()->setRequired();
+
+        //$diets_data = EventUser::getFoodDepartmentArr();
+        // foreach ($diets_data as $key => $week) {
+        //     $speekLangField = $frm->addCheckBox($week, 'user_food_department[' . $key . ']', $week, ['class' => 'diet-boxes'], false, 0);
+        // }
         $activeInactiveArr = applicationConstants::getActiveInactiveArr($this->adminLangId);
         $frm->addSelectBox(Label::getLabel('LBL_Status', $this->adminLangId), 'speakers_active', $activeInactiveArr, '', [], '');
         $frm->addSubmitButton('', 'btn_submit', Label::getLabel('LBL_Save_Changes', $this->adminLangId));

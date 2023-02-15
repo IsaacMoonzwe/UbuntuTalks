@@ -345,7 +345,7 @@ if (!empty($planResult['plan_image'])) {
                                                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                                     <p class="location-title">
                                                         <span>Mulungushi International Conference Centre. <br>Lusaka, Zambia</span>
-                                                        <i class="fas fa-chevron-down"></i>
+                                                        <!-- <i class="fas fa-chevron-down"></i> -->
                                                     </p>
                                                 </button>
                                             </h5>

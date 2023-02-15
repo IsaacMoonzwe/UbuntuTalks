@@ -8,6 +8,7 @@ $arr_flds = array(
     'agenda_end_time' => Label::getLabel('LBL_Agenda_End_Time', $adminLangId),
     'agenda_schedule' => Label::getLabel('LBL_Agenda_Schedule', $adminLangId),
     'agenda_event_location' => Label::getLabel('LBL_Location', $adminLangId),
+    'agenda_information' => Label::getLabel('LBL_Notes', $adminLangId),
     'action' => Label::getLabel('LBL_Action', $adminLangId),
 );
 $tbl = new HtmlElement('table', array(
